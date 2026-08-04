@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+*.log
+coverage/
+.prisma/
+*.db
+tsconfig.tsbuildinfo
+scratch_audit.*
+

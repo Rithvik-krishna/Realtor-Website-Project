@@ -1,0 +1,335 @@
+// Prisma Schema for Canadian Realtor Website Backend (SQLite & PostgreSQL Compatible)
+// BTDD Version 1.0 Compliant
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String       @id @default(uuid())
+  email            String       @unique
+  passwordHash     String
+  firstName        String
+  lastName         String
+  phone            String?
+  avatarUrl        String?
+  isEmailVerified  Boolean      @default(false)
+  isActive         Boolean      @default(true)
+  deletedAt        DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  userRoles        UserRole[]
+  savedProperties  SavedProperty[]
+  savedSearches    SavedSearch[]
+  appointments     Appointment[]     @relation("BuyerAppointments")
+  agentAppointments Appointment[]    @relation("AgentAppointments")
+  valuations       HomeValuationRequest[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  aiConversations  AIConversation[]
+  comparisons      PropertyComparison[]
+
+  @@index([email])
+  @@index([isActive])
+}
+
+model Role {
+  id          String     @id @default(uuid())
+  name        String     @unique // e.g. "GUEST", "BUYER", "SELLER", "AGENT", "ADMIN", "SUPER_ADMIN"
+  description String?
+  createdAt   DateTime   @default(now())
+
+  userRoles   UserRole[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String     @id @default(uuid())
+  code        String     @unique // e.g. "property:create", "user:delete"
+  description String?
+  createdAt   DateTime   @default(now())
+
+  roles       RolePermission[]
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model Community {
+  id             String     @id @default(uuid())
+  name           String     @unique // e.g. "Brampton", "Downtown Toronto", "Mississauga"
+  slug           String     @unique
+  description    String?
+  city           String
+  province       String     @default("ON")
+  avgPrice       Float?
+  crimeRateScore Float?
+  schoolRating   Float?
+  transitScore   Float?
+  imageUrl       String?
+  isFeatured     Boolean    @default(false)
+  deletedAt      DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  properties     Property[]
+
+  @@index([city])
+  @@index([slug])
+}
+
+model Property {
+  id                 String          @id @default(uuid())
+  mlsId              String?         @unique
+  title              String
+  slug               String          @unique
+  description        String
+  price              Float
+  propertyType       String          // DETACHED, SEMI_DETACHED, TOWNHOUSE, CONDO_APARTMENT, etc.
+  status             String          @default("ACTIVE") // ACTIVE, PENDING, SOLD, LEASED, DRAFT, ARCHIVED
+  bedrooms           Int
+  bathrooms          Float
+  squareFeet         Int?
+  lotAreaSqFt        Int?
+  yearBuilt          Int?
+  address            String
+  city               String
+  province           String          @default("ON")
+  postalCode         String
+  neighborhood       String?
+  communityId        String?
+  latitude           Float?
+  longitude          Float?
+  
+  // Scoring & Meta
+  walkScore          Int?
+  transitScore       Int?
+  schoolRating       Float?
+  hoaFee             Float?
+  propertyTax        Float?
+  hasFinishedBasement Boolean        @default(false)
+  isFeatured         Boolean         @default(false)
+  virtualTour360Url  String?
+  droneVideoUrl      String?
+  floorPlanUrl       String?
+
+  // Lifestyle Tags (comma separated or search flags)
+  lifestyleTags      String?         // "Family Friendly, Near Transit, Downtown Living"
+
+  deletedAt          DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  community          Community?      @relation(fields: [communityId], references: [id])
+  images             PropertyImage[]
+  features           PropertyFeature[]
+  priceHistory       PriceHistory[]
+  savedByUsers       SavedProperty[]
+
+  @@index([city, propertyType, price])
+  @@index([status])
+  @@index([bedrooms, bathrooms])
+  @@index([price])
+  @@index([isFeatured])
+}
+
+model PropertyImage {
+  id          String   @id @default(uuid())
+  propertyId  String
+  url         String
+  caption     String?
+  isPrimary   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+}
+
+model PropertyFeature {
+  id          String   @id @default(uuid())
+  propertyId  String
+  featureName String   // e.g., "Hardwood Floors", "Swimming Pool", "Central AC"
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+}
+
+model PriceHistory {
+  id          String   @id @default(uuid())
+  propertyId  String
+  price       Float
+  event       String   // "Listed", "Price Drop", "Sold"
+  createdAt   DateTime @default(now())
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+}
+
+model SavedProperty {
+  id          String   @id @default(uuid())
+  userId      String
+  propertyId  String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+}
+
+model SavedSearch {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  filtersJson String   // JSON string of criteria
+  alertEmail  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PropertyComparison {
+  id           String   @id @default(uuid())
+  userId       String
+  propertyIds  String   // Comma-separated property UUIDs
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model HomeValuationRequest {
+  id                 String   @id @default(uuid())
+  userId             String?
+  address            String
+  city               String
+  bedrooms           Int
+  bathrooms          Float
+  estimatedValueMin  Float?
+  estimatedValueMax  Float?
+  contactName        String
+  contactEmail       String
+  contactPhone       String?
+  notes              String?
+  createdAt          DateTime @default(now())
+
+  user               User?    @relation(fields: [userId], references: [id])
+
+  @@index([contactEmail])
+}
+
+model Appointment {
+  id              String            @id @default(uuid())
+  propertyId      String?
+  buyerId         String
+  agentId         String?
+  appointmentDate DateTime
+  status          String            @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED, RESCHEDULED
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  buyer           User              @relation("BuyerAppointments", fields: [buyerId], references: [id], onDelete: Cascade)
+  agent           User?             @relation("AgentAppointments", fields: [agentId], references: [id])
+
+  @@index([buyerId])
+  @@index([status])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // "PRICE_DROP", "APPOINTMENT", "NEW_LISTING", "VALUATION"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String   // "LOGIN", "PROPERTY_UPDATE", "USER_ROLE_CHANGE"
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model AIConversation {
+  id        String      @id @default(uuid())
+  userId    String?
+  title     String      @default("Real Estate Assistant Session")
+  createdAt DateTime    @default(now())
+
+  user      User?       @relation(fields: [userId], references: [id])
+  messages  AIMessage[]
+}
+
+model AIMessage {
+  id             String         @id @default(uuid())
+  conversationId String
+  sender         String         // "USER" or "ASSISTANT"
+  content        String
+  filtersApplied String?        // JSON if natural language search parsed
+  createdAt      DateTime       @default(now())
+
+  conversation   AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model MarketStatistic {
+  id               String   @id @default(uuid())
+  region           String   // e.g. "Toronto", "Brampton", "GTA"
+  avgSellingPrice  Float
+  homesSoldThisWeek Int
+  avgDaysOnMarket  Int
+  priceAppreciation Float
+  marketType       String   // "BUYER_MARKET", "SELLER_MARKET", "BALANCED"
+  createdAt        DateTime @default(now())
+
+  @@index([region])
+}
+
+model SyncJob {
+  id           String     @id @default(uuid())
+  source       String     // "TRREB_MLS"
+  status       String     @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, FAILED
+  recordsSynced Int       @default(0)
+  errorMessage String?
+  startedAt    DateTime   @default(now())
+  completedAt  DateTime?
+}
