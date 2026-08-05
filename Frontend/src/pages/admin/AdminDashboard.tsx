@@ -54,9 +54,9 @@ export const AdminDashboard: React.FC = () => {
   const [appointmentStatusFilter, setAppointmentStatusFilter] = useState('all');
 
   // Settings Tab State
-  const [brandName, setBrandName] = useState('NovaEstate Luxury');
-  const [primaryColor, setPrimaryColor] = useState('#6366f1');
-  const [accentColor, setAccentColor] = useState('#a78bfa');
+  const [brandName, setBrandName] = useState('Kang Homes');
+  const [primaryColor, setPrimaryColor] = useState('#E31837');
+  const [accentColor, setAccentColor] = useState('#111827');
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [smsAlerts, setSmsAlerts] = useState(true);
 

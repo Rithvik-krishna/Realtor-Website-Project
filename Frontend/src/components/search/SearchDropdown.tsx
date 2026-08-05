@@ -78,14 +78,14 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
       <style>{`
         .search-dropdown-trigger {
           width: 100%;
-          height: 46px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(167, 139, 250, 0.15);
+          height: 44px;
+          background: #f8fafc;
+          border: 1px solid #cbd5e1;
           border-radius: 12px;
-          color: #ffffff;
+          color: #111827;
           padding: 0 16px;
-          font-size: 0.85rem;
-          font-weight: 500;
+          font-size: 0.88rem;
+          font-weight: 600;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -95,24 +95,23 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
           text-align: left;
         }
         .search-dropdown-trigger:hover, .search-dropdown-trigger:focus-visible {
-          background: rgba(167, 139, 250, 0.08);
-          border-color: rgba(167, 139, 250, 0.4);
-          box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
+          background: #f1f5f9;
+          border-color: #E31837;
+          box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.12);
         }
         .search-dropdown-list {
           position: absolute;
           top: 115%;
           left: 0;
           width: 100%;
-          background: rgba(10, 8, 30, 0.98);
-          backdrop-filter: blur(16px);
-          border: 1px solid rgba(167, 139, 250, 0.35);
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 14px;
           padding: 8px;
           list-style: none;
           margin: 0;
           z-index: 99999;
-          box-shadow: 0 12px 30px rgba(0,0,0,0.8), 0 0 20px rgba(124, 58, 237, 0.1);
+          box-shadow: 0 12px 30px rgba(0,0,0,0.12);
           max-height: 240px;
           overflow-y: auto;
           display: flex;
@@ -121,9 +120,10 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
         }
         .search-dropdown-item {
           padding: 8px 12px;
-          font-size: 0.8rem;
+          font-size: 0.85rem;
+          font-weight: 500;
           border-radius: 8px;
-          color: #ffffff;
+          color: #334155;
           cursor: pointer;
           transition: all 0.15s ease;
           display: flex;
@@ -131,8 +131,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
           justify-content: space-between;
         }
         .search-dropdown-item:hover, .search-dropdown-item.highlighted {
-          background: rgba(167, 139, 250, 0.15) !important;
-          color: var(--color-lavender) !important;
+          background: rgba(227, 24, 55, 0.08) !important;
+          color: #E31837 !important;
+          font-weight: 700;
         }
       `}</style>
 

@@ -1,187 +1,130 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Compass, ShieldCheck, Heart } from 'lucide-react';
+import { ShieldCheck, Award, MapPin, Building2, CheckCircle2, ArrowRight } from 'lucide-react';
+import { RealtorProfileCard } from '../../components/RealtorProfileCard';
 
 export const About: React.FC = () => {
   const { setCurrentPage } = useApp();
 
-  const milestones = [
-    { year: '2018', title: 'Conceptual Genesis', desc: 'Formed as an exclusive offline family wealth advisory partnership focusing on high-wealth Canadian estates.' },
-    { year: '2021', title: 'The Billion-Dollar Threshold', desc: 'Surpassed $1.2B in privately brokered real estate volume, prompting the creation of a secure digital ledger platform.' },
-    { year: '2024', title: 'NovaAI Integration', desc: 'Unveiled natural-language AI property search, structural analysis algorithms, and responsive mortgage automation tools.' },
-    { year: '2026', title: 'Continental Hegemony', desc: 'Establishing flagship offices in Vancouver, Toronto, Montreal, and Calgary, dominating the luxury alpine & waterfront domains.' }
-  ];
-
-  const valuePillars = [
-    { icon: <Compass size={24} className="text-gradient" />, title: 'Architectural Critic standards', desc: 'We select properties based on strict design critique, spatial integrity, material authenticity, and geographic privilege.' },
-    { icon: <ShieldCheck size={24} style={{ color: 'var(--color-lavender)' }} />, title: 'Sovereign Discretion', desc: 'Our clients value absolute privacy. Transactions are brokered through private ledgers, blind trusts, and secure escrow accounts.' },
-    { icon: <Heart size={24} style={{ color: '#ef4444' }} />, title: 'Spatial Legacies', desc: 'We believe premium properties are physical art portfolios that increase generational wealth and cultural significance over centuries.' }
+  const areasServed = [
+    { city: 'Oakville', desc: 'Lakeshore waterfront estates, Joshua Creek family homes, Glen Abbey & Bronte Creek.' },
+    { city: 'Mississauga', desc: 'Lorne Park, Mineola, Port Credit waterfront, and City Centre luxury condominiums.' },
+    { city: 'Toronto & GTA', desc: 'Yorkville, Forest Hill, Lawrence Park, Markham, Vaughan, and Brampton.' },
+    { city: 'Greater Ontario', desc: 'Waterfront properties, cottage country, investment portfolios across Southern Ontario.' }
   ];
 
   return (
-    <div className="fade-in" style={{ paddingTop: '20px', minHeight: '100vh', paddingBottom: '40px' }}>
+    <div className="fade-in" style={{ paddingTop: '24px', minHeight: '100vh', paddingBottom: '60px', background: '#ffffff' }}>
       <div className="container">
         
-        {/* 1. Immersive Story Headline */}
-        <section style={{ textAlign: 'center', maxWidth: '850px', margin: '16px auto 40px auto' }}>
-          <span className="badge badge-lavender" style={{ marginBottom: '12px' }}>ESTABLISHED 2018</span>
-          <h1 style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 600, lineHeight: '1.25', marginBottom: '16px' }}>
-            Designing spatial legacies for the <span className="text-gradient-electric">world’s elite.</span>
+        {/* 1. HERO BRAND SECTION */}
+        <section style={{ textAlign: 'center', maxWidth: '800px', margin: '16px auto 40px auto' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(227, 24, 55, 0.08)',
+              color: '#E31837',
+              padding: '6px 16px',
+              borderRadius: '30px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              marginBottom: '16px',
+              border: '1px solid rgba(227, 24, 55, 0.18)'
+            }}
+          >
+            <Award size={14} /> KANG HOMES &amp; ROYAL LEPAGE PINNACLE
+          </div>
+
+          <h1 style={{ fontSize: 'clamp(2.2rem, 3.8vw, 3rem)', fontWeight: 800, color: '#111827', lineHeight: '1.25', marginBottom: '16px' }}>
+            Dedicated Real Estate Representation in Ontario
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.98rem', lineHeight: '1.6' }}>
-            NovaEstate is a design-centric luxury real estate advisory and software engine. We cater to sovereign family offices, design purists, and institutional investors looking to acquire architectural masterpieces across Canada.
+
+          <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.6', fontWeight: 500 }}>
+            At <strong>Kang Homes</strong>, led by <strong>Karan Kang, REALTOR®</strong> at Royal LePage Pinnacle Real Estate, we deliver unparalleled market expertise, personal dedication, and strategic real estate solutions across Oakville and the Greater Toronto Area.
           </p>
         </section>
 
-        {/* 2. Brand Value Pillars (Stripe style column layout) */}
-        <section style={{ marginBottom: '48px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            {valuePillars.map((pillar, idx) => (
-              <div
-                key={idx}
-                className="glass-panel"
-                style={{ padding: '24px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', gap: '12px' }}
-              >
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {pillar.icon}
-                </div>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#ffffff' }}>{pillar.title}</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: '1.6' }}>{pillar.desc}</p>
-              </div>
-            ))}
-          </div>
+        {/* 2. REALTOR PROFILE CARD */}
+        <section style={{ marginBottom: '50px' }}>
+          <RealtorProfileCard />
         </section>
 
-        {/* 3. Chronological Milestone Timeline (Linear style vertical line) */}
-        <section style={{ marginBottom: '48px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <span className="badge badge-blue">OUR EVOLUTION</span>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 600, marginTop: '8px' }}>Milestones in Spatial Brokerage</h2>
-          </div>
-
-          <div style={{ position: 'relative', maxWidth: '800px', margin: '0 auto' }}>
-            {/* Center spine */}
-            <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 0, bottom: 0, width: '1px', background: 'rgba(167, 139, 250, 0.15)' }} className="timeline-spine" />
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
-              {milestones.map((ms, idx) => {
-                const isEven = idx % 2 === 0;
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      justifyContent: isEven ? 'flex-start' : 'flex-end',
-                      width: '100%',
-                      position: 'relative',
-                    }}
-                    className="timeline-item"
-                  >
-                    {/* Node on spine */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: '50%',
-                        top: '20px',
-                        transform: 'translateX(-50%)',
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '50%',
-                        background: 'var(--color-lavender)',
-                        border: '2px solid #020617',
-                        boxShadow: '0 0 10px var(--color-lavender)',
-                        zIndex: 10
-                      }}
-                    />
-
-                    {/* Timeline card */}
-                    <div
-                      className="glass-panel timeline-card"
-                      style={{
-                        width: '45%',
-                        padding: '24px',
-                        border: '1px solid rgba(255,255,255,0.04)'
-                      }}
-                    >
-                      <span style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-display)', color: 'var(--color-lavender)' }}>{ms.year}</span>
-                      <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#ffffff', margin: '4px 0 8px 0' }}>{ms.title}</h4>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', lineHeight: '1.6' }}>{ms.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
+        {/* 3. ABOUT KARAN KANG & MISSION */}
+        <section style={{ marginBottom: '50px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px' }}>
+            
+            <div className="glass-panel" style={{ padding: '32px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '20px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(227, 24, 55, 0.1)', color: '#E31837', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                <ShieldCheck size={22} />
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#111827', marginBottom: '12px' }}>
+                About Karan Kang
+              </h3>
+              <p style={{ color: '#475569', fontSize: '0.92rem', lineHeight: '1.7', marginBottom: '12px' }}>
+                Karan Kang is a licensed REALTOR® with Royal LePage Pinnacle Real Estate, specializing in residential home sales, luxury acquisitions, and real estate investments in Ontario.
+              </p>
+              <p style={{ color: '#475569', fontSize: '0.92rem', lineHeight: '1.7' }}>
+                With a deep understanding of local neighborhood dynamics, pricing trends, and negotiation strategies, Karan provides clients with a seamless and rewarding real estate experience from consultation to closing.
+              </p>
             </div>
+
+            <div className="glass-panel" style={{ padding: '32px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '20px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#f1f5f9', color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                <Building2 size={22} />
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#111827', marginBottom: '12px' }}>
+                Our Mission
+              </h3>
+              <p style={{ color: '#475569', fontSize: '0.92rem', lineHeight: '1.7', marginBottom: '12px' }}>
+                To empower home buyers and sellers with transparent advice, accurate market data, and top-tier promotional reach backed by Royal LePage Canada's nationwide network.
+              </p>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
+                {['Client-first advisory and integrity', 'Data-driven market valuations', 'Targeted marketing for maximum exposure', 'Personalized support 7 days a week'].map((item, idx) => (
+                  <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', color: '#111827', fontWeight: 600 }}>
+                    <CheckCircle2 size={16} style={{ color: '#E31837' }} /> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </section>
 
-        {/* 4. Leadership Partners grid */}
-        <section>
-          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <span className="badge badge-lavender">THE VISIONARIES</span>
-            <h2 style={{ fontSize: '2rem', fontWeight: 500, marginTop: '8px' }}>Licensed Advisory Council</h2>
+        {/* 4. AREAS SERVED */}
+        <section style={{ marginBottom: '50px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <span className="badge badge-lavender" style={{ marginBottom: '6px', background: 'rgba(227, 24, 55, 0.08)', color: '#E31837' }}>COMMUNITIES</span>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#111827' }}>Key Areas Served</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '40px' }}>
-            {[
-              {
-                name: 'Jean-Pierre Cardin',
-                role: 'Founder & Managing Director',
-                phone: '+1 (514) 555-0122',
-                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop'
-              },
-              {
-                name: 'Victoria Hastings',
-                role: 'Senior Executive Partner - Toronto',
-                phone: '+1 (416) 555-0144',
-                avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&auto=format&fit=crop'
-              },
-              {
-                name: 'Sébastien LeClerc',
-                role: 'Director of High-End Acquisitions',
-                phone: '+1 (604) 555-0199',
-                avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=150&auto=format&fit=crop'
-              }
-            ].map(partner => (
-              <div
-                key={partner.name}
-                className="glass-panel"
-                style={{ padding: '30px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.05)' }}
-              >
-                <img
-                  src={partner.avatar}
-                  alt={partner.name}
-                  style={{ width: '90px', height: '90px', borderRadius: '50%', objectFit: 'cover', marginBottom: '20px', border: '2px solid var(--color-lavender)' }}
-                />
-                <h4 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#ffffff' }}>{partner.name}</h4>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>{partner.role}</p>
-                <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', marginBottom: '16px' }} />
-                <button
-                  onClick={() => setCurrentPage('contact')}
-                  className="btn btn-secondary"
-                  style={{ width: '100%', padding: '10px', fontSize: '0.78rem', borderRadius: '8px' }}
-                >
-                  Direct Consultation
-                </button>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+            {areasServed.map((area, idx) => (
+              <div key={idx} className="glass-panel" style={{ padding: '24px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#E31837', fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px' }}>
+                  <MapPin size={18} /> {area.city}
+                </div>
+                <p style={{ color: '#475569', fontSize: '0.88rem', lineHeight: '1.6' }}>{area.desc}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* 5. CALL TO ACTION */}
+        <section>
+          <div style={{ padding: '40px', borderRadius: '20px', background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)', color: '#ffffff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff' }}>Schedule a Consultation with Karan Kang</h2>
+            <p style={{ color: '#d1d5db', fontSize: '0.95rem', maxWidth: '580px', lineHeight: '1.6' }}>
+              Whether you are looking to purchase your first home, upgrade your current property, or sell for maximum value, we are here to assist.
+            </p>
+            <button onClick={() => setCurrentPage('contact')} className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '0.92rem' }}>
+              Contact Karan Kang <ArrowRight size={16} />
+            </button>
           </div>
         </section>
 
       </div>
-
-      {styleStyles}
     </div>
   );
 };
-
-// CSS style override for responsive timeline
-const styleStyles = (
-  <style>{`
-    @media (max-width: 768px) {
-      .timeline-spine { left: 16px !important; transform: none !important; }
-      .timeline-item { justify-content: flex-start !important; }
-      .timeline-item div:nth-child(1) { left: 16px !important; transform: none !important; }
-      .timeline-card { width: calc(100% - 40px) !important; margin-left: 40px !important; }
-    }
-  `}</style>
-);

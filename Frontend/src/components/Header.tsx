@@ -201,9 +201,9 @@ export const Header: React.FC = () => {
                       background: 'none',
                       border: 'none',
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '0.85rem',
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#ffffff' : 'var(--text-secondary)',
+                      fontSize: '0.88rem',
+                      fontWeight: isActive ? 700 : 500,
+                      color: isActive ? '#E31837' : '#374151',
                       cursor: 'pointer',
                       transition: 'var(--transition-fast)',
                       position: 'relative',
@@ -217,12 +217,11 @@ export const Header: React.FC = () => {
                         style={{
                           position: 'absolute',
                           bottom: 0,
-                          left: '15%',
-                          width: '70%',
+                          left: '10%',
+                          width: '80%',
                           height: '2px',
-                          background: 'linear-gradient(90deg, var(--color-lavender), var(--color-blue-primary))',
-                          borderRadius: '2px',
-                          boxShadow: '0 0 10px rgba(167, 139, 250, 0.6)'
+                          background: '#E31837',
+                          borderRadius: '2px'
                         }}
                       />
                     )}
@@ -232,9 +231,9 @@ export const Header: React.FC = () => {
             })}
           </ul>
 
-          <div style={{ height: '20px', width: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+          <div style={{ height: '20px', width: '1px', background: '#e2e8f0' }} />
 
-          {/* Avatar Profile Icon (Small Circular Avatar) */}
+          {/* Avatar Profile Icon */}
           <div style={{ position: 'relative' }}>
             <button
               onClick={toggleProfileDropdown}
@@ -244,18 +243,18 @@ export const Header: React.FC = () => {
                 height: '40px',
                 borderRadius: '50%',
                 background: user 
-                  ? 'linear-gradient(135deg, var(--color-lavender) 0%, var(--color-blue-primary) 100%)' 
-                  : 'rgba(255, 255, 255, 0.08)',
+                  ? '#E31837' 
+                  : '#f1f5f9',
                 border: user 
-                  ? '2px solid rgba(167, 139, 250, 0.5)' 
-                  : '1px solid rgba(255, 255, 255, 0.15)',
+                  ? '2px solid #E31837' 
+                  : '1px solid #cbd5e1',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#ffffff',
+                color: user ? '#ffffff' : '#334155',
                 cursor: 'pointer',
                 transition: 'var(--transition-fast)',
-                boxShadow: user ? '0 0 15px rgba(167, 139, 250, 0.4)' : 'none'
+                boxShadow: user ? '0 2px 8px rgba(227, 24, 55, 0.3)' : 'none'
               }}
               className="hover-lift"
             >
@@ -278,10 +277,9 @@ export const Header: React.FC = () => {
                   width: '290px',
                   padding: '16px',
                   borderRadius: '16px',
-                  background: 'rgba(11, 18, 32, 0.98)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45)',
-                  backdropFilter: 'blur(12px)',
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 12px 36px rgba(0, 0, 0, 0.12)',
                   zIndex: 2000,
                   display: 'flex',
                   flexDirection: 'column',
@@ -291,11 +289,11 @@ export const Header: React.FC = () => {
                 {!user ? (
                   // UNAUTHENTICATED DROPDOWN OPTIONS
                   <>
-                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                      <p style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff', marginBottom: '2px' }}>
+                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid #f1f5f9' }}>
+                      <p style={{ fontSize: '16px', fontWeight: 700, color: '#111827', marginBottom: '2px' }}>
                         Portal Account
                       </p>
-                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                      <p style={{ fontSize: '13px', color: '#64748b' }}>
                         Sign in or register to manage portfolios
                       </p>
                     </div>
@@ -306,7 +304,7 @@ export const Header: React.FC = () => {
                         height: '46px',
                         width: '100%',
                         borderRadius: '12px',
-                        background: 'linear-gradient(135deg, #6D5BFF 0%, #8A63FF 100%)',
+                        background: '#0f172a',
                         color: '#ffffff',
                         fontWeight: 600,
                         fontSize: '15px',
@@ -316,7 +314,7 @@ export const Header: React.FC = () => {
                         padding: '0 16px',
                         border: 'none',
                         cursor: 'pointer',
-                        boxShadow: '0 4px 14px rgba(109, 91, 255, 0.25)',
+                        boxShadow: '0 4px 14px rgba(15, 23, 42, 0.2)',
                         margin: '2px 0'
                       }}
                     >
@@ -326,9 +324,9 @@ export const Header: React.FC = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       {[
-                        { label: 'Buyer Portal', role: 'buyer', icon: Search, color: '#818cf8' },
-                        { label: 'Seller Portal', role: 'seller', icon: Building, color: '#a78bfa' },
-                        { label: 'Admin Portal', role: 'admin', icon: Shield, color: '#38bdf8' }
+                        { label: 'Buyer Portal', role: 'buyer', icon: Search, color: '#4f46e5' },
+                        { label: 'Seller Portal', role: 'seller', icon: Building, color: '#0284c7' },
+                        { label: 'Admin Portal', role: 'admin', icon: Shield, color: '#E31837' }
                       ].map((item) => (
                         <button
                           key={item.role}
@@ -341,20 +339,20 @@ export const Header: React.FC = () => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
-                            color: '#ffffff',
+                            color: '#0f172a',
                             fontSize: '15px',
-                            fontWeight: 500,
+                            fontWeight: 600,
                             background: 'transparent',
                             border: 'none',
                             cursor: 'pointer',
                             textAlign: 'left',
                             transition: 'all 0.2s ease'
                           }}
-                          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(109, 91, 255, 0.15)')}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = '#f1f5f9')}
                           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                         >
                           <item.icon size={20} style={{ color: item.color }} />
-                          <span>{item.label}</span>
+                          <span style={{ color: '#0f172a' }}>{item.label}</span>
                         </button>
                       ))}
                     </div>
@@ -363,11 +361,11 @@ export const Header: React.FC = () => {
                   // AUTHENTICATED DROPDOWN OPTIONS
                   <>
                     {/* Header */}
-                    <div style={{ paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                      <p style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff', marginBottom: '2px', lineHeight: '1.2' }}>
+                    <div style={{ paddingBottom: '10px', borderBottom: '1px solid #e2e8f0' }}>
+                      <p style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginBottom: '2px', lineHeight: '1.2' }}>
                         {user.name}
                       </p>
-                      <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                      <p style={{ fontSize: '14px', fontWeight: 500, color: '#475569', marginBottom: '8px' }}>
                         {user.email}
                       </p>
                       <span
@@ -379,9 +377,9 @@ export const Header: React.FC = () => {
                           fontWeight: 700,
                           letterSpacing: '0.05em',
                           textTransform: 'uppercase',
-                          background: 'linear-gradient(135deg, #6D5BFF 0%, #8A63FF 100%)',
+                          background: '#0f172a',
                           color: '#ffffff',
-                          boxShadow: '0 2px 8px rgba(109, 91, 255, 0.25)'
+                          boxShadow: '0 2px 8px rgba(15, 23, 42, 0.2)'
                         }}
                       >
                         {user.role} ACCOUNT
@@ -395,7 +393,7 @@ export const Header: React.FC = () => {
                         height: '46px',
                         width: '100%',
                         borderRadius: '12px',
-                        background: 'linear-gradient(135deg, #6D5BFF 0%, #8A63FF 100%)',
+                        background: '#0f172a',
                         color: '#ffffff',
                         fontWeight: 600,
                         fontSize: '15px',
@@ -405,7 +403,7 @@ export const Header: React.FC = () => {
                         padding: '0 16px',
                         border: 'none',
                         cursor: 'pointer',
-                        boxShadow: '0 4px 14px rgba(109, 91, 255, 0.25)',
+                        boxShadow: '0 4px 14px rgba(15, 23, 42, 0.2)',
                         margin: '4px 0 2px 0'
                       }}
                     >
@@ -416,10 +414,10 @@ export const Header: React.FC = () => {
                     {/* Menu Items */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       {[
-                        { label: 'Profile', icon: User, iconColor: 'var(--color-lavender)' },
-                        { label: 'My Dashboard', icon: LayoutDashboard, iconColor: '#818cf8' },
-                        { label: 'Notifications', icon: Bell, iconColor: '#38bdf8' },
-                        { label: 'Settings', icon: Settings, iconColor: 'var(--text-muted)' }
+                        { label: 'Profile', icon: User, iconColor: '#0f172a' },
+                        { label: 'My Dashboard', icon: LayoutDashboard, iconColor: '#4f46e5' },
+                        { label: 'Notifications', icon: Bell, iconColor: '#0284c7' },
+                        { label: 'Settings', icon: Settings, iconColor: '#64748b' }
                       ].map((item, idx) => (
                         <button
                           key={idx}
@@ -432,20 +430,20 @@ export const Header: React.FC = () => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
-                            color: '#ffffff',
+                            color: '#0f172a',
                             fontSize: '15px',
-                            fontWeight: 500,
+                            fontWeight: 600,
                             background: 'transparent',
                             border: 'none',
                             cursor: 'pointer',
                             textAlign: 'left',
                             transition: 'all 0.2s ease'
                           }}
-                          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(109, 91, 255, 0.15)')}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = '#f1f5f9')}
                           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                         >
                           <item.icon size={20} style={{ color: item.iconColor }} />
-                          <span>{item.label}</span>
+                          <span style={{ color: '#0f172a' }}>{item.label}</span>
                         </button>
                       ))}
                     </div>

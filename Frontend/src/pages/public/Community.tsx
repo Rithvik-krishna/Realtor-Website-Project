@@ -284,32 +284,66 @@ export const Community: React.FC = () => {
         </section>
 
         {/* 4. HISTORICAL APPRECIATION GROWTH LINE CHARTS */}
-        <section>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
-            <TrendingUp size={18} style={{ color: 'var(--color-lavender)' }} />
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#ffffff', letterSpacing: '-0.01em' }}>
-              Historical Valuation Slopes (2016-2026)
-            </h3>
-          </div>
-
-          <div className="glass-panel" style={{ padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(7,13,36,0.3)' }}>
-            
-            {/* Legend */}
-            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <div style={{ width: '12px', height: '12px', borderRadius: '4px', background: 'var(--color-lavender)' }} />
-                <span style={{ fontSize: '0.72rem', color: '#ffffff', fontWeight: 600 }}>{cityAData.name} ({cityAData.growth}% slope)</span>
+        <section style={{ marginTop: '40px' }}>
+          <div
+            style={{
+              padding: '36px 40px',
+              borderRadius: '24px',
+              border: '2px solid #E6D2B5',
+              background: 'linear-gradient(135deg, #FFFDF8 0%, #FFF8EE 45%, #FAF2E3 100%)',
+              boxShadow: '0 16px 40px rgba(212, 175, 55, 0.12), 0 4px 20px rgba(0,0,0,0.04)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Header Title & Pill */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 14px', borderRadius: '20px', background: '#FAF0E6', border: '1px solid #D4AF37', color: '#8B5E34', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+                  <TrendingUp size={14} style={{ color: '#D4AF37' }} />
+                  <span>10-Year Valuation Matrix</span>
+                </div>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', margin: 0 }}>
+                  Historical Valuation Slopes <span style={{ color: '#E31837' }}>(2016–2026)</span>
+                </h3>
+                <p style={{ color: '#475569', fontSize: '0.82rem', marginTop: '4px', maxWidth: '600px' }}>
+                  Interactive 10-year appreciation trajectory comparing {cityAData.name} and {cityBData.name} across Canadian real estate cycles.
+                </p>
               </div>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <div style={{ width: '12px', height: '12px', borderRadius: '4px', background: '#3b82f6' }} />
-                <span style={{ fontSize: '0.72rem', color: '#ffffff', fontWeight: 600 }}>{cityBData.name} ({cityBData.growth}% slope)</span>
+
+              {/* Legend Badges */}
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ffffff', border: '1px solid #E31837', padding: '6px 14px', borderRadius: '30px', boxShadow: '0 2px 8px rgba(227,24,55,0.1)' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#E31837' }} />
+                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A' }}>{cityAData.name} (+{cityAData.growth}%)</span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ffffff', border: '1px solid #0F172A', padding: '6px 14px', borderRadius: '30px', boxShadow: '0 2px 8px rgba(15,23,42,0.1)' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#0F172A' }} />
+                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A' }}>{cityBData.name} (+{cityBData.growth}%)</span>
+                </div>
               </div>
             </div>
 
-            {/* Custom SVG line plot chart representing growth */}
-            <div style={{ width: '100%', height: '260px', position: 'relative' }}>
-              <svg style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-                {/* Chart Grid Lines */}
+            {/* Custom Interactive Wave Chart */}
+            <div style={{ width: '100%', minHeight: '280px', position: 'relative', background: 'rgba(255, 255, 255, 0.7)', borderRadius: '16px', padding: '24px 20px 10px 20px', border: '1px solid #E2E8F0', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.02)' }}>
+              
+              <svg style={{ width: '100%', height: '220px', overflow: 'visible' }}>
+                <defs>
+                  {/* Area Gradient A (Royal LePage Red) */}
+                  <linearGradient id="areaRedGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#E31837" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#E31837" stopOpacity="0.0" />
+                  </linearGradient>
+
+                  {/* Area Gradient B (Dark Slate) */}
+                  <linearGradient id="areaDarkGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#0F172A" stopOpacity="0.20" />
+                    <stop offset="100%" stopColor="#0F172A" stopOpacity="0.0" />
+                  </linearGradient>
+                </defs>
+
+                {/* Horizontal Grid lines */}
                 {[0, 25, 50, 75, 100].map(pct => (
                   <line
                     key={pct}
@@ -317,82 +351,102 @@ export const Community: React.FC = () => {
                     y1={`${pct}%`}
                     x2="100%"
                     y2={`${pct}%`}
-                    stroke="rgba(255,255,255,0.03)"
+                    stroke="#E2E8F0"
+                    strokeDasharray="4 4"
                     strokeWidth="1"
                   />
                 ))}
 
-                {/* Plot Line A (Lavender) */}
+                {/* Filled Area Slope A */}
+                <polygon
+                  fill="url(#areaRedGrad)"
+                  points={`0,220 ${historicalA.map((h, i) => {
+                    const x = (i / (historicalA.length - 1)) * 100;
+                    const y = 100 - (Math.min(h.value / 10000000, 1) * 90);
+                    return `${x}%,${y}%`;
+                  }).join(' ')} 100%,220`}
+                />
+
+                {/* Filled Area Slope B */}
+                <polygon
+                  fill="url(#areaDarkGrad)"
+                  points={`0,220 ${historicalB.map((h, i) => {
+                    const x = (i / (historicalB.length - 1)) * 100;
+                    const y = 100 - (Math.min(h.value / 10000000, 1) * 90);
+                    return `${x}%,${y}%`;
+                  }).join(' ')} 100%,220`}
+                />
+
+                {/* Stroke Line A (Royal LePage Red) */}
                 <polyline
                   fill="none"
-                  stroke="var(--color-lavender)"
-                  strokeWidth="3"
+                  stroke="#E31837"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   points={historicalA.map((h, i) => {
-                    const xPct = (i / 10) * 100;
-                    // Max valuation maps to 10M
-                    const yPct = 100 - (Math.min(h.value / 10000000, 1) * 100);
-                    return `${xPct}%,${yPct}%`;
+                    const x = (i / (historicalA.length - 1)) * 100;
+                    const y = 100 - (Math.min(h.value / 10000000, 1) * 90);
+                    return `${x}%,${y}%`;
                   }).join(' ')}
-                  style={{ transition: 'all 0.5s ease' }}
+                  style={{ transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)' }}
                 />
 
-                {/* Plot Line B (Blue) */}
+                {/* Stroke Line B (Dark Slate) */}
                 <polyline
                   fill="none"
-                  stroke="#3b82f6"
-                  strokeWidth="3"
+                  stroke="#0F172A"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="6 3"
                   points={historicalB.map((h, i) => {
-                    const xPct = (i / 10) * 100;
-                    const yPct = 100 - (Math.min(h.value / 10000000, 1) * 100);
-                    return `${xPct}%,${yPct}%`;
+                    const x = (i / (historicalB.length - 1)) * 100;
+                    const y = 100 - (Math.min(h.value / 10000000, 1) * 90);
+                    return `${x}%,${y}%`;
                   }).join(' ')}
-                  style={{ transition: 'all 0.5s ease' }}
+                  style={{ transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)' }}
                 />
 
-                {/* Plot Nodes circles */}
+                {/* Nodes A */}
                 {historicalA.map((h, i) => {
-                  const xPct = `${(i / 10) * 100}%`;
-                  const yPct = `${100 - (Math.min(h.value / 10000000, 1) * 100)}%`;
+                  const x = `${(i / (historicalA.length - 1)) * 100}%`;
+                  const y = `${100 - (Math.min(h.value / 10000000, 1) * 90)}%`;
                   return (
-                    <circle
-                      key={`a-${i}`}
-                      cx={xPct}
-                      cy={yPct}
-                      r="4"
-                      fill="#030712"
-                      stroke="var(--color-lavender)"
-                      strokeWidth="2"
-                    />
+                    <g key={`node-a-${i}`}>
+                      <circle cx={x} cy={y} r="6" fill="#ffffff" stroke="#E31837" strokeWidth="3" />
+                    </g>
                   );
                 })}
 
+                {/* Nodes B */}
                 {historicalB.map((h, i) => {
-                  const xPct = `${(i / 10) * 100}%`;
-                  const yPct = `${100 - (Math.min(h.value / 10000000, 1) * 100)}%`;
+                  const x = `${(i / (historicalB.length - 1)) * 100}%`;
+                  const y = `${100 - (Math.min(h.value / 10000000, 1) * 90)}%`;
                   return (
-                    <circle
-                      key={`b-${i}`}
-                      cx={xPct}
-                      cy={yPct}
-                      r="4"
-                      fill="#030712"
-                      stroke="#3b82f6"
-                      strokeWidth="2"
-                    />
+                    <g key={`node-b-${i}`}>
+                      <circle cx={x} cy={y} r="5" fill="#ffffff" stroke="#0F172A" strokeWidth="2.5" />
+                    </g>
                   );
                 })}
               </svg>
 
-              {/* X Axis Labels */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '0.62rem', color: 'var(--text-muted)' }}>
-                {historicalA.map(h => (
-                  <span key={h.year}>{h.year}</span>
+              {/* X-Axis Timeline Labels */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px', borderTop: '1px solid #CBD5E1', paddingTop: '10px' }}>
+                {historicalA.map((h) => (
+                  <div key={h.year} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0F172A' }}>{h.year}</span>
+                    <span style={{ fontSize: '0.62rem', fontWeight: 600, color: '#E31837' }}>
+                      ${(h.value / 1000000).toFixed(2)}M
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
-            
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.68rem', marginTop: '16px', lineHeight: '1.5' }}>
-              * Values mapped relative to a $10.0M baseline. High compounding slopes reflect outstanding municipal infrastructure development, private educational funding aggregates, and regional land scarcity curves.
+
+            {/* Note & Footprint */}
+            <p style={{ color: '#64748b', fontSize: '0.75rem', marginTop: '16px', lineHeight: '1.5', margin: '16px 0 0 0' }}>
+              * Compounding 10-year growth slopes calibrated from TRREB &amp; PropTx transactional archives. Highlights regional supply compression, infrastructure expansion, and premier asset retention.
             </p>
           </div>
         </section>

@@ -155,37 +155,37 @@ export const ValuationReport: React.FC = () => {
 
         {/* 2. Interactive SVG Valuation Curve & AI Insights */}
         <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '30px' }} className="responsive-split">
-          <div className="glass-panel" style={{ padding: '32px', border: '1px solid rgba(167, 139, 250, 0.2)', borderRadius: '20px' }}>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#ffffff', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <TrendingUp size={18} style={{ color: 'var(--color-lavender)' }} />
-              <span>Historical & Projected Price Trajectory</span>
+          <div className="glass-panel" style={{ padding: '32px', border: '2px solid #E6D2B5', background: 'linear-gradient(135deg, #FFFDF8 0%, #FFF8EE 45%, #FAF2E3 100%)', borderRadius: '20px', boxShadow: '0 12px 32px rgba(212, 175, 55, 0.12), 0 4px 20px rgba(0,0,0,0.04)' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <TrendingUp size={20} style={{ color: '#E31837' }} />
+              <span>Historical &amp; Projected Price Trajectory</span>
             </h3>
-            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>
+            <p style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '24px' }}>
               Comparative market historical pricing vs AI predictive yield over 12 months.
             </p>
 
-            <div style={{ height: '220px', background: 'rgba(3,7,18,0.6)', borderRadius: '14px', padding: '20px', border: '1px solid rgba(255,255,255,0.04)', position: 'relative' }}>
+            <div style={{ height: '220px', background: 'rgba(255,255,255,0.8)', borderRadius: '14px', padding: '20px', border: '1px solid #E2E8F0', position: 'relative' }}>
               <svg width="100%" height="100%" viewBox="0 0 500 180">
                 <defs>
                   <linearGradient id="valGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(167, 139, 250, 0.3)" />
-                    <stop offset="100%" stopColor="rgba(167, 139, 250, 0)" />
+                    <stop offset="0%" stopColor="#E31837" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#E31837" stopOpacity="0" />
                   </linearGradient>
                 </defs>
-                <line x1="0" y1="40" x2="500" y2="40" stroke="rgba(255,255,255,0.04)" />
-                <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.04)" />
-                <line x1="0" y1="140" x2="500" y2="140" stroke="rgba(255,255,255,0.04)" />
+                <line x1="0" y1="40" x2="500" y2="40" stroke="#E2E8F0" strokeDasharray="4 4" />
+                <line x1="0" y1="90" x2="500" y2="90" stroke="#E2E8F0" strokeDasharray="4 4" />
+                <line x1="0" y1="140" x2="500" y2="140" stroke="#E2E8F0" strokeDasharray="4 4" />
 
                 <path d="M 0 150 Q 120 120 250 110 T 500 40 L 500 180 L 0 180 Z" fill="url(#valGrad)" />
-                <path d="M 0 150 Q 120 120 250 110 T 500 40" fill="none" stroke="var(--color-lavender)" strokeWidth="3" />
+                <path d="M 0 150 Q 120 120 250 110 T 500 40" fill="none" stroke="#E31837" strokeWidth="4.5" strokeLinecap="round" />
 
-                <circle cx="500" cy="40" r="5" fill="#ffffff" />
+                <circle cx="500" cy="40" r="6" fill="#ffffff" stroke="#E31837" strokeWidth="3" />
               </svg>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#0F172A', marginTop: '8px', fontWeight: 700 }}>
                 <span>Q1 2025 ($4.42M)</span>
                 <span>Q3 2025 ($4.60M)</span>
                 <span>Q1 2026 ($4.75M)</span>
-                <span style={{ color: 'var(--color-lavender)', fontWeight: 600 }}>Current ($4.85M)</span>
+                <span style={{ color: '#E31837', fontWeight: 800 }}>Current ($4.85M)</span>
               </div>
             </div>
           </div>

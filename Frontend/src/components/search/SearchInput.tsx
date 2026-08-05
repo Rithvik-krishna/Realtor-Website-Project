@@ -164,17 +164,21 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           height: 100%;
           background: transparent;
           border: none;
-          color: #ffffff;
+          color: #111827;
           padding-left: 44px;
           padding-right: 44px;
           font-size: 0.9rem;
-          font-weight: 500;
+          font-weight: 600;
           outline: none;
+        }
+        .search-input-field::placeholder {
+          color: #94a3b8;
+          font-weight: 400;
         }
         .search-input-icon {
           position: absolute;
           left: 16px;
-          color: var(--text-secondary);
+          color: #64748b;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -183,7 +187,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         .search-input-action-btn {
           position: absolute;
           right: 14px;
-          color: var(--text-muted);
+          color: #64748b;
           background: none;
           border: none;
           cursor: pointer;
@@ -195,19 +199,18 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           transition: all 0.2s ease;
         }
         .search-input-action-btn:hover {
-          color: #ffffff;
-          background: rgba(255, 255, 255, 0.1);
+          color: #111827;
+          background: #f1f5f9;
         }
         .search-suggestion-list {
           position: absolute;
           top: 115%;
           left: 0;
           width: 100%;
-          background: rgba(7, 13, 36, 0.98);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(167, 139, 250, 0.25);
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 16px;
-          box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+          box-shadow: 0 15px 35px rgba(0,0,0,0.12);
           padding: 8px;
           list-style: none;
           margin: 0;
@@ -226,7 +229,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           transition: all 0.15s ease;
         }
         .search-suggestion-item:hover, .search-suggestion-item.highlighted {
-          background: rgba(167, 139, 250, 0.15) !important;
+          background: rgba(227, 24, 55, 0.08) !important;
         }
       `}</style>
 
@@ -270,7 +273,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       {isOpen && (suggestions.length > 0 || isLoading) && (
         <ul className="search-suggestion-list" role="listbox">
           {isLoading ? (
-            <li style={{ padding: '12px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
+            <li style={{ padding: '12px', textAlign: 'center', color: '#64748b', fontSize: '0.8rem' }}>
               Searching listings...
             </li>
           ) : (
@@ -285,15 +288,15 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                   className={`search-suggestion-item ${isHighlighted ? 'highlighted' : ''}`}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.15)', color: 'var(--color-lavender)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', background: 'rgba(227, 24, 55, 0.1)', color: '#E31837' }}>
                       {item.type === 'school' ? <School size={12} /> : <MapPin size={12} />}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 600 }}>{item.title}</span>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{item.sub}</span>
+                      <span style={{ fontSize: '0.85rem', color: '#111827', fontWeight: 600 }}>{item.title}</span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>{item.sub}</span>
                     </div>
                   </div>
-                  <span className="badge badge-lavender" style={{ fontSize: '0.62rem', padding: '2px 8px', background: 'rgba(167, 139, 250, 0.08)' }}>
+                  <span className="badge badge-lavender" style={{ fontSize: '0.62rem', padding: '2px 8px', background: 'rgba(227, 24, 55, 0.08)', color: '#E31837' }}>
                     {item.type.toUpperCase()}
                   </span>
                 </li>

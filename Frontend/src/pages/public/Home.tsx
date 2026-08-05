@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight, MapPin, Award, ShieldCheck } from 'lucide-react';
 import { HeroSearch } from '../../components/search/HeroSearch';
-
-const SLIDESHOW_IMAGES = [
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1920&auto=format&fit=crop"
-];
+import { RealtorProfileCard } from '../../components/RealtorProfileCard';
 
 export const Home: React.FC = () => {
   const { 
@@ -18,16 +13,7 @@ export const Home: React.FC = () => {
     setSelectedCommunityName
   } = useApp();
   
-  // Slideshow Control
-  const [activeSlide, setActiveSlide] = useState(0);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
-
-  useEffect(() => {
-    const slideTimer = setInterval(() => {
-      setActiveSlide(prev => (prev + 1) % SLIDESHOW_IMAGES.length);
-    }, 6000);
-    return () => clearInterval(slideTimer);
-  }, []);
 
   const selectProperty = (id: string) => {
     setSelectedPropertyId(id);
@@ -42,152 +28,51 @@ export const Home: React.FC = () => {
   const featuredList = properties.slice(0, 3);
 
   return (
-    <div className="fade-in" style={{ position: 'relative', zIndex: 1 }}>
+    <div className="fade-in" style={{ position: 'relative', zIndex: 1, background: '#ffffff' }}>
       
-      {/* Dynamic Keyframe & Hover Style Injector */}
-      <style>{`
-        @keyframes scale-up {
-          0% { transform: scale(0.95); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes fade-in-slide-down {
-          0% { transform: translateY(-10px); opacity: 0; }
-          100% { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fade-in-slide {
-          0% { transform: translateY(10px); opacity: 0; }
-          100% { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        .hover-purple-bg:hover {
-          background: rgba(167, 139, 250, 0.12) !important;
-        }
-        .dropdown-item-hover:hover {
-          background: rgba(167, 139, 250, 0.1) !important;
-          color: var(--color-lavender) !important;
-        }
-        .suggestion-item-hover:hover {
-          background: rgba(167, 139, 250, 0.12) !important;
-        }
-        .hover-white-bg:hover {
-          background: rgba(255,255,255,0.12) !important;
-          color: #ffffff !important;
-        }
-        .hover-glow-lift:hover {
-          transform: scale(1.08);
-          box-shadow: 0 0 20px rgba(124, 58, 237, 0.6) !important;
-        }
-        .search-bar-container:focus-within {
-          border-color: rgba(167, 139, 250, 0.5) !important;
-          box-shadow: 0 12px 30px rgba(0,0,0,0.6), 0 0 25px rgba(167, 139, 250, 0.25) !important;
-        }
-        @media (max-width: 768px) {
-          .search-bar-container {
-            flex-direction: column !important;
-            border-radius: 24px !important;
-            padding: 16px !important;
-            align-items: stretch !important;
-            gap: 12px !important;
-          }
-          .search-mode-col {
-            width: 100% !important;
-          }
-          .search-bar-container > div {
-            width: 100% !important;
-          }
-          .search-bar-container > div > button {
-            width: 100% !important;
-            justify-content: space-between !important;
-          }
-          .search-bar-container > button {
-            width: 100% !important;
-            border-radius: 12px !important;
-            height: 44px !important;
-          }
-          .search-bar-container > div:nth-child(2) {
-            display: none !important; /* hide vertical divider on mobile */
-          }
-        }
-      `}</style>
-      
-      {/* 1. PROFESSIONAL HERO SECTION */}
+      {/* 1. HERO SECTION - CLEAN CANADIAN REAL ESTATE DESIGN */}
       <header
         style={{
           position: 'relative',
-          minHeight: isFiltersExpanded ? '1020px' : '780px',
+          minHeight: isFiltersExpanded ? '920px' : '640px',
           marginTop: '-80px',
-          paddingTop: '80px',
-          paddingBottom: isFiltersExpanded ? '320px' : '240px',
+          paddingTop: '120px',
+          paddingBottom: '80px',
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          overflow: 'visible',
-          marginBottom: '50px',
-          transition: 'min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+          background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+          borderBottom: '1px solid #e2e8f0',
+          transition: 'min-height 0.3s ease'
         }}
       >
-        {/* Full-bleed background slideshow clipping container */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            overflow: 'hidden',
-            pointerEvents: 'none',
-            zIndex: -5
-          }}
-        >
-          {SLIDESHOW_IMAGES.map((imgUrl, index) => {
-            const isActive = index === activeSlide;
-            return (
-              <div
-                key={imgUrl}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  backgroundImage: `url(${imgUrl})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  opacity: isActive ? 1 : 0,
-                  transform: isActive ? 'scale(1.04)' : 'scale(1.00)',
-                  transition: 'opacity 1.5s ease-in-out, transform 4.5s ease-out',
-                  zIndex: -3
-                }}
-              />
-            );
-          })}
-
-          {/* Clean Gradient Overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(180deg, rgba(3, 7, 18, 0.5) 0%, rgba(3, 7, 18, 0.95) 100%)',
-              zIndex: -2,
-              pointerEvents: 'none'
-            }}
-          />
-        </div>
-
-        <div className="container" style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%' }}>
           
-          <div style={{ maxWidth: '720px' }}>
-            <span className="badge badge-lavender" style={{ marginBottom: '8px' }}>
-              LUXURY REAL ESTATE PLATFORM
-            </span>
-            <h1 style={{ color: '#ffffff', marginBottom: '8px' }}>
-              Find Your Dream Property in Canada
+          <div style={{ maxWidth: '800px', marginBottom: '32px' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(227, 24, 55, 0.08)',
+                color: '#E31837',
+                padding: '6px 16px',
+                borderRadius: '30px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                marginBottom: '16px',
+                border: '1px solid rgba(227, 24, 55, 0.18)'
+              }}
+            >
+              <Award size={14} /> ROYAL LEPAGE PINNACLE REAL ESTATE
+            </div>
+
+            <h1 style={{ color: '#111827', fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', fontWeight: 800, lineHeight: '1.2', marginBottom: '12px' }}>
+              Find Your Dream Home Across Ontario
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', maxWidth: '580px', marginBottom: '24px' }}>
-              Explore luxury estates, urban penthouses, and waterfront homes with real-time analytics.
+
+            <p style={{ color: '#4b5563', fontSize: '1.05rem', fontWeight: 500, maxWidth: '640px', margin: '0 auto 28px auto', lineHeight: '1.6' }}>
+              Expert Real Estate Guidance with <strong style={{ color: '#111827' }}>Karan Kang, REALTOR®</strong>. Discover premium homes, condos, and investment properties in Oakville, Mississauga, Toronto &amp; the GTA.
             </p>
 
             {/* 1.1 UNIFIED HERO SEARCH BAR */}
@@ -195,7 +80,8 @@ export const Home: React.FC = () => {
               className="hero-search-wrapper"
               style={{
                 width: '100%',
-                maxWidth: '720px',
+                maxWidth: '740px',
+                margin: '0 auto',
                 position: 'relative',
                 zIndex: 100
               }}
@@ -208,43 +94,60 @@ export const Home: React.FC = () => {
         </div>
       </header>
 
-      {/* 2. FEATURED PROPERTIES */}
-      <section className="section-standard">
+      {/* 2. REALTOR PROFILE SECTION - KARAN KANG */}
+      <section className="section-standard" style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 32px auto' }}>
+            <span className="badge badge-lavender" style={{ marginBottom: '8px', background: 'rgba(227, 24, 55, 0.08)', color: '#E31837' }}>
+              MEET YOUR REALTOR®
+            </span>
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827' }}>Personalized Canadian Real Estate Service</h2>
+            <p style={{ color: '#64748b', fontSize: '0.95rem', marginTop: '6px' }}>
+              Dedicated guidance with deep local market knowledge and Royal LePage Pinnacle backing.
+            </p>
+          </div>
+
+          <RealtorProfileCard />
+        </div>
+      </section>
+
+      {/* 3. FEATURED PROPERTIES */}
+      <section className="section-standard" style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <div className="container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
             <div>
-              <span className="badge badge-lavender" style={{ marginBottom: '4px' }}>FEATURED</span>
-              <h2>Featured Properties</h2>
+              <span className="badge badge-lavender" style={{ marginBottom: '6px', background: 'rgba(227, 24, 55, 0.08)', color: '#E31837' }}>FEATURED LISTINGS</span>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#111827' }}>Featured Properties</h2>
             </div>
-            <button onClick={() => setCurrentPage('featured')} className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>
-              View All <ArrowRight size={12} />
+            <button onClick={() => setCurrentPage('featured')} className="btn btn-secondary" style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
+              View All Properties <ArrowRight size={14} />
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
             {featuredList.map((property) => (
               <div
                 key={property.id}
                 className="floating-card"
                 onClick={() => selectProperty(property.id)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', background: '#ffffff', borderRadius: '16px', overflow: 'hidden', border: '1px solid #e2e8f0' }}
               >
-                <div style={{ height: '180px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ height: '200px', position: 'relative', overflow: 'hidden' }}>
                   <img src={property.imageUrl} alt={property.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <span className="badge badge-lavender" style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(3,7,18,0.8)' }}>
+                  <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#ffffff', color: '#111827', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                     {property.category}
                   </span>
-                  <div style={{ position: 'absolute', bottom: '10px', left: '10px', background: 'rgba(3,7,18,0.85)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-lavender)' }}>
+                  <div style={{ position: 'absolute', bottom: '12px', left: '12px', background: '#E31837', padding: '6px 12px', borderRadius: '8px', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
                     ${property.price.toLocaleString()}
                   </div>
                 </div>
-                <div style={{ padding: '14px' }}>
-                  <h3 style={{ fontSize: '0.98rem', fontWeight: 600, color: '#ffffff', marginBottom: '4px' }}>{property.title}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)', fontSize: '0.75rem', marginBottom: '10px' }}>
-                    <MapPin size={11} style={{ color: 'var(--color-lavender)' }} />
+                <div style={{ padding: '18px' }}>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>{property.title}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '0.82rem', marginBottom: '14px' }}>
+                    <MapPin size={14} style={{ color: '#E31837' }} />
                     <span>{property.location}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#475569', fontWeight: 600, borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
                     <span>{property.beds} Beds</span>
                     <span>{property.baths} Baths</span>
                     <span>{property.sqft.toLocaleString()} Sq Ft</span>
@@ -256,38 +159,37 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-
       {/* 4. POPULAR COMMUNITIES */}
-      <section className="section-standard" style={{ background: 'rgba(255,255,255,0.01)', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+      <section className="section-standard" style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
         <div className="container">
-          <div style={{ marginBottom: '24px' }}>
-            <span className="badge badge-lavender" style={{ marginBottom: '4px' }}>COMMUNITIES</span>
-            <h2>Popular Communities</h2>
+          <div style={{ marginBottom: '28px' }}>
+            <span className="badge badge-lavender" style={{ marginBottom: '6px', background: 'rgba(227, 24, 55, 0.08)', color: '#E31837' }}>ONTARIO NEIGHBOURHOODS</span>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#111827' }}>Popular Communities</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
             {communities.slice(0, 4).map((community) => (
               <div
                 key={community.name}
                 className="floating-card"
                 onClick={() => selectCommunity(community.name)}
-                style={{ cursor: 'pointer', height: '220px', position: 'relative', overflow: 'hidden' }}
+                style={{ cursor: 'pointer', height: '240px', position: 'relative', overflow: 'hidden', borderRadius: '16px' }}
               >
                 <div
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    backgroundImage: `linear-gradient(180deg, rgba(3, 7, 18, 0.2) 0%, rgba(3, 7, 18, 0.9) 100%), url(${community.imageUrl})`,
+                    backgroundImage: `linear-gradient(180deg, rgba(17, 24, 39, 0.1) 0%, rgba(17, 24, 39, 0.85) 100%), url(${community.imageUrl})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    zIndex: -1
+                    zIndex: 1
                   }}
                 />
-                <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#ffffff' }}>{community.name}</h3>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                <div style={{ position: 'absolute', bottom: '18px', left: '18px', right: '18px', zIndex: 2 }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>{community.name}</h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#e2e8f0', marginTop: '4px', fontWeight: 500 }}>
                     <span>{community.city}</span>
-                    <span style={{ color: 'var(--color-lavender)', fontWeight: 600 }}>Avg: {community.averagePrice}</span>
+                    <span style={{ color: '#ffffff', fontWeight: 700 }}>Avg: {community.averagePrice}</span>
                   </div>
                 </div>
               </div>
@@ -296,101 +198,48 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. WHY CHOOSE NOVAESTATE */}
-      <section className="section-standard">
+      {/* 5. WHY CHOOSE KANG HOMES */}
+      <section className="section-standard" style={{ borderBottom: '1px solid #f1f5f9' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 32px auto' }}>
-            <span className="badge badge-lavender" style={{ marginBottom: '4px' }}>BENEFITS</span>
-            <h2>Why Choose NovaEstate</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>
-              Sovereign discretion, AI-assisted valuation vectors, and managing partner guidance.
+          <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 36px auto' }}>
+            <span className="badge badge-lavender" style={{ marginBottom: '6px', background: 'rgba(227, 24, 55, 0.08)', color: '#E31837' }}>THE KANG HOMES ADVANTAGE</span>
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827' }}>Why Choose Kang Homes</h2>
+            <p style={{ color: '#64748b', fontSize: '0.92rem', marginTop: '6px' }}>
+              Full-service real estate representation tailored to your buying, selling, and investment goals.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
             {[
-              { title: 'Sovereign Discretion', desc: 'Discreet off-market portfolios and encrypted inquiry channels for ultra-high-net-worth clients.' },
-              { title: 'AI Valuation Vectors', desc: 'Predictive analytics algorithms calculating spatial value appreciation and yield forecasts.' },
-              { title: 'Licensed Managing Partners', desc: 'Direct access to senior brokers across Toronto, Vancouver, Montreal, and Calgary.' }
+              { title: 'Royal LePage Pinnacle Backing', desc: 'Industry-leading market intelligence, trusted brokerage infrastructure, and maximum exposure for your property.' },
+              { title: 'Direct Realtor Guidance', desc: 'Work directly with Karan Kang for personalized strategy, skilled negotiation, and seamless transaction management.' },
+              { title: 'Comprehensive GTA Coverage', desc: 'In-depth expertise spanning Oakville, Mississauga, Toronto, Brampton, Burlington, and surrounding Ontario communities.' }
             ].map((pillar, idx) => (
-              <div key={idx} className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#ffffff' }}>{pillar.title}</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: '1.6' }}>{pillar.desc}</p>
+              <div key={idx} className="glass-panel" style={{ padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(227, 24, 55, 0.1)', color: '#E31837', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ShieldCheck size={22} />
+                </div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#111827' }}>{pillar.title}</h3>
+                <p style={{ color: '#475569', fontSize: '0.88rem', lineHeight: '1.6' }}>{pillar.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8. LATEST MARKET INSIGHTS */}
+      {/* 6. CALL TO ACTION CONSULTATION */}
       <section className="section-standard">
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <div>
-              <span className="badge badge-blue" style={{ marginBottom: '4px' }}>INTELLIGENCE</span>
-              <h2>Market Insights</h2>
-            </div>
-            <button onClick={() => setCurrentPage('blog')} className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>
-              Read Magazine <ArrowRight size={12} />
-            </button>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            {[
-              { title: "GTA Luxury Real Estate Market Q3 Trends & Yield Forecast", category: "Market Report", date: "July 2026", readTime: "4 min read" },
-              { title: "Architectural Trends in Luxury Waterfront Modern Estates", category: "Design Insights", date: "June 2026", readTime: "5 min read" },
-              { title: "Mortgage Rates Analysis & Buyers' Strategic Timing Guide", category: "Financial Analysis", date: "June 2026", readTime: "3 min read" }
-            ].map((article, idx) => (
-              <div key={idx} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <span className="badge badge-lavender" style={{ width: 'fit-content' }}>{article.category}</span>
-                <h3 style={{ fontSize: '0.98rem', fontWeight: 600, color: '#ffffff', lineHeight: '1.4' }}>{article.title}</h3>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 'auto' }}>
-                  <span>{article.date}</span>
-                  <span>{article.readTime}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. TESTIMONIALS */}
-      <section className="section-standard" style={{ background: 'rgba(255,255,255,0.01)', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 32px auto' }}>
-            <span className="badge badge-lavender" style={{ marginBottom: '4px' }}>REPUTATION</span>
-            <h2>Client Endorsements</h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            {[
-              { quote: "NovaEstate secured our Yorkville penthouse discreetly off-market within 48 hours. Absolute institutional precision.", author: "Alexander V.", role: "Family Office Director" },
-              { quote: "The AI valuation engine provided an exact comparable analysis that gave us complete confidence during negotiations.", author: "Evelyn C.", role: "Tech Entrepreneur" },
-              { quote: "Their managing partner personally guided our Whistler ski chalet acquisition. The highest standard in Canadian real estate.", author: "Marcus S.", role: "Sovereign Investor" }
-            ].map((test, idx) => (
-              <div key={idx} className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <p style={{ color: 'var(--text-primary)', fontSize: '0.88rem', fontStyle: 'italic', lineHeight: '1.6' }}>"{test.quote}"</p>
-                <div style={{ marginTop: 'auto' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#ffffff', fontWeight: 600 }}>{test.author}</h4>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{test.role}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 10. CONTACT CTA */}
-      <section className="section-standard">
-        <div className="container">
-          <div className="glass-panel" style={{ padding: '40px', borderRadius: '24px', textAlign: 'center', border: '1px solid rgba(167, 139, 250, 0.25)', background: 'linear-gradient(135deg, rgba(7, 13, 36, 0.9) 0%, rgba(10, 18, 42, 0.6) 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-            <span className="badge badge-lavender">BESPOKE CONSULTATION</span>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 600, color: '#ffffff' }}>Ready to Acquire or Divest a Luxury Asset?</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', maxWidth: '580px' }}>
-              Connect directly with Michael Anderson and senior managing partners for a private advisory session.
+          <div style={{ padding: '48px 32px', borderRadius: '20px', textAlign: 'center', border: '1px solid #e2e8f0', background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+            <span style={{ background: '#E31837', color: '#ffffff', padding: '4px 14px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em' }}>
+              EXPERT CONSULTATION
+            </span>
+            <h2 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#ffffff' }}>Ready to Buy or Sell Your Home in Ontario?</h2>
+            <p style={{ color: '#d1d5db', fontSize: '1rem', maxWidth: '600px', lineHeight: '1.6' }}>
+              Contact Karan Kang today for a complimentary property market evaluation or personalized buyer consultation.
             </p>
-            <button onClick={() => setCurrentPage('contact')} className="btn btn-primary" style={{ padding: '10px 24px', fontSize: '0.9rem' }}>
-              Schedule Consultation <ArrowRight size={14} />
+            <button onClick={() => setCurrentPage('contact')} className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '0.95rem' }}>
+              Contact Karan Kang <ArrowRight size={16} />
             </button>
           </div>
         </div>

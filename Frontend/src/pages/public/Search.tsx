@@ -527,15 +527,16 @@ export const Search: React.FC = () => {
   };
 
   return (
-    <div style={{ height: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#030712' }}>
+    <div style={{ height: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#ffffff' }}>
       
       {/* 1. TOP HORIZONTAL FILTERS BAR */}
       <div
         className="glass-panel"
         style={{
           padding: '10px 20px',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          background: 'rgba(7, 13, 36, 0.95)',
+          borderBottom: '1px solid #e2e8f0',
+          background: '#ffffff',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
           zIndex: 30,
           flexShrink: 0
         }}
@@ -551,11 +552,12 @@ export const Search: React.FC = () => {
               onChange={e => setSearchTerm(e.target.value)}
               style={{
                 width: '100%',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.12)',
+                background: '#ffffff',
+                border: '1px solid #cbd5e1',
                 borderRadius: '8px',
                 padding: '6px 12px',
-                color: '#ffffff',
+                color: '#0f172a',
+                fontWeight: 600,
                 fontSize: '0.82rem',
                 outline: 'none'
               }}
@@ -567,17 +569,18 @@ export const Search: React.FC = () => {
             value={selectedCity}
             onChange={e => setSelectedCity(e.target.value)}
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
               borderRadius: '8px',
               padding: '6px 10px',
-              color: '#ffffff',
+              color: '#0f172a',
+              fontWeight: 600,
               fontSize: '0.82rem',
               outline: 'none',
               cursor: 'pointer'
             }}
           >
-            {CITIES.map(c => <option key={c} value={c} style={{ background: '#070d24', color: '#ffffff' }}>City: {c}</option>)}
+            {CITIES.map(c => <option key={c} value={c} style={{ background: '#ffffff', color: '#0f172a' }}>City: {c}</option>)}
           </select>
 
           {/* Property Type */}
@@ -585,18 +588,19 @@ export const Search: React.FC = () => {
             value={selectedType}
             onChange={e => setSelectedType(e.target.value)}
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
               borderRadius: '8px',
               padding: '6px 10px',
-              color: '#ffffff',
+              color: '#0f172a',
+              fontWeight: 600,
               fontSize: '0.82rem',
               outline: 'none',
               cursor: 'pointer'
             }}
           >
             {PROPERTY_TYPES.map(t => (
-              <option key={t.value} value={t.value} style={{ background: '#070d24', color: '#ffffff' }}>
+              <option key={t.value} value={t.value} style={{ background: '#ffffff', color: '#0f172a' }}>
                 Type: {t.label}
               </option>
             ))}
@@ -607,22 +611,23 @@ export const Search: React.FC = () => {
             value={maxPrice}
             onChange={e => setMaxPrice(Number(e.target.value))}
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
               borderRadius: '8px',
               padding: '6px 10px',
-              color: '#ffffff',
+              color: '#0f172a',
+              fontWeight: 600,
               fontSize: '0.82rem',
               outline: 'none',
               cursor: 'pointer'
             }}
           >
-            <option value={50000000} style={{ background: '#070d24' }}>Price: Any</option>
-            <option value={1000000} style={{ background: '#070d24' }}>Under $1.0M</option>
-            <option value={2000000} style={{ background: '#070d24' }}>Under $2.0M</option>
-            <option value={3000000} style={{ background: '#070d24' }}>Under $3.0M</option>
-            <option value={5000000} style={{ background: '#070d24' }}>Under $5.0M</option>
-            <option value={10000000} style={{ background: '#070d24' }}>Under $10.0M</option>
+            <option value={50000000} style={{ background: '#ffffff', color: '#0f172a' }}>Price: Any</option>
+            <option value={1000000} style={{ background: '#ffffff', color: '#0f172a' }}>Under $1.0M</option>
+            <option value={2000000} style={{ background: '#ffffff', color: '#0f172a' }}>Under $2.0M</option>
+            <option value={3000000} style={{ background: '#ffffff', color: '#0f172a' }}>Under $3.0M</option>
+            <option value={5000000} style={{ background: '#ffffff', color: '#0f172a' }}>Under $5.0M</option>
+            <option value={10000000} style={{ background: '#ffffff', color: '#0f172a' }}>Under $10.0M</option>
           </select>
 
           {/* Bedrooms */}
@@ -630,21 +635,22 @@ export const Search: React.FC = () => {
             value={bedsCount}
             onChange={e => setBedsCount(e.target.value)}
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
               borderRadius: '8px',
               padding: '6px 10px',
-              color: '#ffffff',
+              color: '#0f172a',
+              fontWeight: 600,
               fontSize: '0.82rem',
               outline: 'none',
               cursor: 'pointer'
             }}
           >
-            <option value="All" style={{ background: '#070d24' }}>Beds: Any</option>
-            <option value="1" style={{ background: '#070d24' }}>1 Bed</option>
-            <option value="2" style={{ background: '#070d24' }}>2 Beds</option>
-            <option value="3" style={{ background: '#070d24' }}>3 Beds</option>
-            <option value="4+" style={{ background: '#070d24' }}>4+ Beds</option>
+            <option value="All" style={{ background: '#ffffff', color: '#0f172a' }}>Beds: Any</option>
+            <option value="1" style={{ background: '#ffffff', color: '#0f172a' }}>1 Bed</option>
+            <option value="2" style={{ background: '#ffffff', color: '#0f172a' }}>2 Beds</option>
+            <option value="3" style={{ background: '#ffffff', color: '#0f172a' }}>3 Beds</option>
+            <option value="4+" style={{ background: '#ffffff', color: '#0f172a' }}>4+ Beds</option>
           </select>
 
           {/* Advanced Filters Button */}
@@ -658,8 +664,9 @@ export const Search: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              borderColor: isAdvancedOpen ? 'var(--color-lavender)' : 'rgba(255,255,255,0.12)',
-              color: isAdvancedOpen ? 'var(--color-lavender)' : '#ffffff'
+              borderColor: isAdvancedOpen ? '#0f172a' : '#cbd5e1',
+              color: '#0f172a',
+              background: isAdvancedOpen ? '#f1f5f9' : '#ffffff'
             }}
           >
             <SlidersHorizontal size={13} />
@@ -673,8 +680,9 @@ export const Search: React.FC = () => {
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
+              color: '#64748b',
               fontSize: '0.78rem',
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -696,8 +704,9 @@ export const Search: React.FC = () => {
               marginTop: '10px',
               padding: '16px',
               borderRadius: '12px',
-              background: 'rgba(7, 13, 36, 0.98)',
-              border: '1px solid rgba(167, 139, 250, 0.25)',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gap: '14px'
@@ -705,78 +714,78 @@ export const Search: React.FC = () => {
           >
             {/* Bathrooms */}
             <div>
-              <label style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>BATHROOMS</label>
+              <label style={{ fontSize: '0.72rem', color: '#334155', fontWeight: 700, display: 'block', marginBottom: '4px' }}>BATHROOMS</label>
               <select
                 value={bathsCount}
                 onChange={e => setBathsCount(e.target.value)}
-                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
+                style={{ width: '100%', background: '#ffffff', border: '1px solid #cbd5e1', color: '#0f172a', fontWeight: 600, padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
               >
-                <option value="All" style={{ background: '#070d24' }}>Any Bathrooms</option>
-                <option value="1" style={{ background: '#070d24' }}>1 Bath</option>
-                <option value="2" style={{ background: '#070d24' }}>2 Baths</option>
-                <option value="3+" style={{ background: '#070d24' }}>3+ Baths</option>
+                <option value="All" style={{ background: '#ffffff', color: '#0f172a' }}>Any Bathrooms</option>
+                <option value="1" style={{ background: '#ffffff', color: '#0f172a' }}>1 Bath</option>
+                <option value="2" style={{ background: '#ffffff', color: '#0f172a' }}>2 Baths</option>
+                <option value="3+" style={{ background: '#ffffff', color: '#0f172a' }}>3+ Baths</option>
               </select>
             </div>
 
             {/* Garage */}
             <div>
-              <label style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>GARAGE TYPE</label>
+              <label style={{ fontSize: '0.72rem', color: '#334155', fontWeight: 700, display: 'block', marginBottom: '4px' }}>GARAGE TYPE</label>
               <select
                 value={selectedGarage}
                 onChange={e => setSelectedGarage(e.target.value)}
-                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
+                style={{ width: '100%', background: '#ffffff', border: '1px solid #cbd5e1', color: '#0f172a', fontWeight: 600, padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
               >
-                <option value="All" style={{ background: '#070d24' }}>Any Garage</option>
-                <option value="attached" style={{ background: '#070d24' }}>Attached Garage</option>
-                <option value="detached" style={{ background: '#070d24' }}>Detached Garage</option>
+                <option value="All" style={{ background: '#ffffff', color: '#0f172a' }}>Any Garage</option>
+                <option value="attached" style={{ background: '#ffffff', color: '#0f172a' }}>Attached Garage</option>
+                <option value="detached" style={{ background: '#ffffff', color: '#0f172a' }}>Detached Garage</option>
               </select>
             </div>
 
             {/* Square Feet */}
             <div>
-              <label style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>SQUARE FEET</label>
+              <label style={{ fontSize: '0.72rem', color: '#334155', fontWeight: 700, display: 'block', marginBottom: '4px' }}>SQUARE FEET</label>
               <select
                 value={selectedSqft}
                 onChange={e => setSelectedSqft(e.target.value)}
-                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
+                style={{ width: '100%', background: '#ffffff', border: '1px solid #cbd5e1', color: '#0f172a', fontWeight: 600, padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
               >
-                <option value="All" style={{ background: '#070d24' }}>Any Size</option>
-                <option value="< 1500" style={{ background: '#070d24' }}>Under 1,500 SqFt</option>
-                <option value="1500 - 3000" style={{ background: '#070d24' }}>1,500 - 3,000 SqFt</option>
-                <option value="3000+" style={{ background: '#070d24' }}>3,000+ SqFt</option>
+                <option value="All" style={{ background: '#ffffff', color: '#0f172a' }}>Any Size</option>
+                <option value="< 1500" style={{ background: '#ffffff', color: '#0f172a' }}>Under 1,500 SqFt</option>
+                <option value="1500 - 3000" style={{ background: '#ffffff', color: '#0f172a' }}>1,500 - 3,000 SqFt</option>
+                <option value="3000+" style={{ background: '#ffffff', color: '#0f172a' }}>3,000+ SqFt</option>
               </select>
             </div>
 
             {/* Status */}
             <div>
-              <label style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>LISTING STATUS</label>
+              <label style={{ fontSize: '0.72rem', color: '#334155', fontWeight: 700, display: 'block', marginBottom: '4px' }}>LISTING STATUS</label>
               <select
                 value={selectedStatus}
                 onChange={e => setSelectedStatus(e.target.value)}
-                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
+                style={{ width: '100%', background: '#ffffff', border: '1px solid #cbd5e1', color: '#0f172a', fontWeight: 600, padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
               >
-                {STATUS_OPTIONS.map(s => <option key={s} value={s} style={{ background: '#070d24' }}>{s}</option>)}
+                {STATUS_OPTIONS.map(s => <option key={s} value={s} style={{ background: '#ffffff', color: '#0f172a' }}>{s}</option>)}
               </select>
             </div>
 
             {/* Toggles Cluster */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
-              <label style={{ fontSize: '0.75rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <label style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                 <input type="checkbox" checked={openHouseOnly} onChange={e => setOpenHouseOnly(e.target.checked)} />
                 <span>Open House Only</span>
               </label>
-              <label style={{ fontSize: '0.75rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <label style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                 <input type="checkbox" checked={luxuryOnly} onChange={e => setLuxuryOnly(e.target.checked)} />
                 <span>Luxury Collection ($3M+)</span>
               </label>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
-              <label style={{ fontSize: '0.75rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <label style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                 <input type="checkbox" checked={schoolZoneFilter} onChange={e => setSchoolZoneFilter(e.target.checked)} />
                 <span>Top School Zone (8+)</span>
               </label>
-              <label style={{ fontSize: '0.75rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <label style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                 <input type="checkbox" checked={transitFilter} onChange={e => setTransitFilter(e.target.checked)} />
                 <span>Near Transit / Subway</span>
               </label>
@@ -796,7 +805,7 @@ export const Search: React.FC = () => {
             width: '42%',
             height: '100%',
             position: 'relative',
-            borderRight: '1px solid rgba(255,255,255,0.08)',
+            borderRight: '1px solid #e2e8f0',
             display: mobileActiveTab === 'map' ? 'block' : undefined
           }}
         >
@@ -820,35 +829,36 @@ export const Search: React.FC = () => {
             height: '100%',
             overflowY: 'auto',
             padding: '16px 20px',
+            background: '#ffffff',
             display: mobileActiveTab === 'list' ? 'flex' : undefined,
             flexDirection: 'column',
             gap: '16px'
           }}
         >
           {/* Header Summary & Sort Bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
-                {displayedProperties.length} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--color-lavender)', marginLeft: '8px' }}>in map view</span> : ' Found'}
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                {displayedProperties.length} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
               </h2>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
-                Search Area: <span style={{ color: 'var(--color-lavender)', fontWeight: 600 }}>{selectedCity}, Ontario</span>
+              <p style={{ fontSize: '0.78rem', color: '#475569', margin: '2px 0 0 0' }}>
+                Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{selectedCity}, Ontario</span>
                 {visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length && (
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px' }}>· Zoom out to see all {filteredProperties.length}</span>
+                  <span style={{ color: '#64748b', marginLeft: '6px' }}>· Zoom out to see all {filteredProperties.length}</span>
                 )}
               </p>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               {/* Grid / List View Toggle */}
-              <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: '8px', padding: '2px', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ display: 'flex', background: '#f8fafc', borderRadius: '8px', padding: '2px', border: '1px solid #cbd5e1' }}>
                 <button
                   onClick={() => setViewMode('grid')}
                   style={{
                     padding: '6px 10px',
                     borderRadius: '6px',
-                    background: viewMode === 'grid' ? 'var(--color-lavender)' : 'none',
-                    color: viewMode === 'grid' ? '#030712' : 'var(--text-secondary)',
+                    background: viewMode === 'grid' ? '#0f172a' : 'none',
+                    color: viewMode === 'grid' ? '#ffffff' : '#475569',
                     border: 'none',
                     cursor: 'pointer',
                     display: 'flex',
@@ -863,8 +873,8 @@ export const Search: React.FC = () => {
                   style={{
                     padding: '6px 10px',
                     borderRadius: '6px',
-                    background: viewMode === 'list' ? 'var(--color-lavender)' : 'none',
-                    color: viewMode === 'list' ? '#030712' : 'var(--text-secondary)',
+                    background: viewMode === 'list' ? '#0f172a' : 'none',
+                    color: viewMode === 'list' ? '#ffffff' : '#475569',
                     border: 'none',
                     cursor: 'pointer',
                     display: 'flex',
@@ -881,34 +891,35 @@ export const Search: React.FC = () => {
                 value={sortOrder}
                 onChange={e => setSortOrder(e.target.value as any)}
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
                   borderRadius: '8px',
                   padding: '6px 10px',
-                  color: '#ffffff',
+                  color: '#0f172a',
+                  fontWeight: 600,
                   fontSize: '0.78rem',
                   outline: 'none',
                   cursor: 'pointer'
                 }}
               >
-                <option value="desc" style={{ background: '#070d24' }}>Price: High to Low</option>
-                <option value="asc" style={{ background: '#070d24' }}>Price: Low to High</option>
-                <option value="newest" style={{ background: '#070d24' }}>Newest Listed</option>
-                <option value="size" style={{ background: '#070d24' }}>Largest Square Feet</option>
+                <option value="desc" style={{ background: '#ffffff', color: '#0f172a' }}>Price: High to Low</option>
+                <option value="asc" style={{ background: '#ffffff', color: '#0f172a' }}>Price: Low to High</option>
+                <option value="newest" style={{ background: '#ffffff', color: '#0f172a' }}>Newest Listed</option>
+                <option value="size" style={{ background: '#ffffff', color: '#0f172a' }}>Largest Square Feet</option>
               </select>
             </div>
           </div>
 
           {/* PROPERTY CARDS GRID */}
           {displayedProperties.length === 0 ? (
-            <div className="glass-panel" style={{ padding: '50px 24px', textAlign: 'center', borderRadius: '20px', background: 'rgba(7, 13, 36, 0.95)', border: '1px solid rgba(167, 139, 250, 0.25)', margin: '20px 0' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(167, 139, 250, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto', border: '1px solid rgba(167, 139, 250, 0.25)' }}>
-                <MapPin size={28} style={{ color: 'var(--color-lavender)' }} />
+            <div className="glass-panel" style={{ padding: '50px 24px', textAlign: 'center', borderRadius: '20px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 8px 30px rgba(0,0,0,0.06)', margin: '20px 0' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto', border: '1px solid #cbd5e1' }}>
+                <MapPin size={28} style={{ color: '#0f172a' }} />
               </div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
                 No matching properties found
               </h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: '480px', margin: '0 auto 20px auto', lineHeight: '1.6' }}>
+              <p style={{ fontSize: '0.88rem', color: '#475569', maxWidth: '480px', margin: '0 auto 20px auto', lineHeight: '1.6' }}>
                 We currently don't have active listings matching all your selected parameters. Try resetting your advanced filters to explore the entire premium inventory.
               </p>
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -932,9 +943,9 @@ export const Search: React.FC = () => {
                     showToast('All filters have been fully reset.', 'success');
                   }}
                   className="btn btn-primary hover-lift"
-                  style={{ padding: '9px 22px', fontSize: '0.85rem', fontWeight: 600 }}
+                  style={{ padding: '10px 24px', fontSize: '0.88rem', fontWeight: 700, background: '#0f172a', color: '#ffffff', borderRadius: '10px' }}
                 >
-                  Clear & Reset Filters
+                  Clear &amp; Reset Filters
                 </button>
               </div>
             </div>
@@ -964,8 +975,9 @@ export const Search: React.FC = () => {
                       borderRadius: '16px',
                       overflow: 'hidden',
                       cursor: 'pointer',
-                      border: `1px solid ${isSelected ? 'var(--color-lavender)' : 'rgba(255, 255, 255, 0.08)'}`,
-                      background: isSelected ? 'rgba(167, 139, 250, 0.12)' : 'rgba(7, 13, 36, 0.7)',
+                      border: `1px solid ${isSelected ? '#0f172a' : '#e2e8f0'}`,
+                      background: isSelected ? '#f1f5f9' : '#ffffff',
+                      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)',
                       display: 'flex',
                       flexDirection: viewMode === 'list' ? 'row' : 'column',
                       transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -985,8 +997,8 @@ export const Search: React.FC = () => {
                       
                       {/* Status Badge */}
                       <span
-                        className="badge badge-lavender"
-                        style={{ position: 'absolute', top: '10px', left: '10px', background: 'rgba(3,7,18,0.85)', fontSize: '0.65rem' }}
+                        className="badge"
+                        style={{ position: 'absolute', top: '10px', left: '10px', background: '#0f172a', color: '#ffffff', fontSize: '0.65rem', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}
                       >
                         {prop.propertyStatus || 'Active'}
                       </span>
@@ -999,9 +1011,9 @@ export const Search: React.FC = () => {
                             width: '28px',
                             height: '28px',
                             borderRadius: '50%',
-                            background: 'rgba(3,7,18,0.85)',
-                            border: '1px solid rgba(255,255,255,0.18)',
-                            color: '#ffffff',
+                            background: 'rgba(255,255,255,0.9)',
+                            border: '1px solid #cbd5e1',
+                            color: '#0f172a',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
@@ -1020,9 +1032,9 @@ export const Search: React.FC = () => {
                             width: '28px',
                             height: '28px',
                             borderRadius: '50%',
-                            background: 'rgba(3,7,18,0.85)',
-                            border: '1px solid rgba(255,255,255,0.18)',
-                            color: '#ffffff',
+                            background: 'rgba(255,255,255,0.9)',
+                            border: '1px solid #cbd5e1',
+                            color: '#0f172a',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
@@ -1041,9 +1053,9 @@ export const Search: React.FC = () => {
                             width: '28px',
                             height: '28px',
                             borderRadius: '50%',
-                            background: 'rgba(3,7,18,0.85)',
-                            border: '1px solid rgba(255,255,255,0.18)',
-                            color: isSaved ? '#ef4444' : '#ffffff',
+                            background: 'rgba(255,255,255,0.9)',
+                            border: '1px solid #cbd5e1',
+                            color: isSaved ? '#E31837' : '#0f172a',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
@@ -1053,7 +1065,7 @@ export const Search: React.FC = () => {
                           className="hover-lift"
                           title="Save Property"
                         >
-                          <Heart size={12} fill={isSaved ? '#ef4444' : 'none'} />
+                          <Heart size={12} fill={isSaved ? '#E31837' : 'none'} />
                         </button>
                       </div>
 
@@ -1063,11 +1075,11 @@ export const Search: React.FC = () => {
                           position: 'absolute',
                           bottom: '10px',
                           left: '10px',
-                          background: 'rgba(3, 7, 18, 0.9)',
-                          padding: '3px 8px',
+                          background: '#0f172a',
+                          padding: '3px 10px',
                           borderRadius: '6px',
                           color: '#ffffff',
-                          fontWeight: 700,
+                          fontWeight: 800,
                           fontSize: '0.92rem'
                         }}
                       >
@@ -1078,23 +1090,23 @@ export const Search: React.FC = () => {
                     {/* Content Details */}
                     <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, justifyContent: 'space-between' }}>
                       <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', color: 'var(--text-muted)', marginBottom: '2px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', color: '#64748b', marginBottom: '2px', fontWeight: 600 }}>
                           <span>MLS# {prop.mlsNumber || prop.id}</span>
                           <span>{prop.daysOnMarket || 3} days on market</span>
                         </div>
-                        <h3 style={{ fontSize: '0.92rem', fontWeight: 600, color: '#ffffff', margin: '0 0 2px 0', lineHeight: '1.3' }}>
+                        <h3 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0f172a', margin: '0 0 2px 0', lineHeight: '1.3' }}>
                           {prop.title}
                         </h3>
-                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <MapPin size={11} style={{ color: 'var(--color-lavender)' }} />
+                        <p style={{ fontSize: '0.75rem', color: '#475569', margin: 0, display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 500 }}>
+                          <MapPin size={11} style={{ color: '#E31837' }} />
                           <span>
                             {prop.address.toLowerCase().includes(prop.city.toLowerCase())
                               ? prop.address
                               : `${prop.address}, ${prop.city}`}
                           </span>
                         </p>
-                        <p style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', margin: '4px 0 0 0', display: 'flex', alignItems: 'center', gap: '4px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                          <span style={{ color: 'var(--color-lavender)', fontWeight: 600, flexShrink: 0 }}>Brokerage:</span>
+                        <p style={{ fontSize: '0.74rem', color: '#64748b', margin: '4px 0 0 0', display: 'flex', alignItems: 'center', gap: '4px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                          <span style={{ color: '#0f172a', fontWeight: 700, flexShrink: 0 }}>Brokerage:</span>
                           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {prop.listOfficeName || 'TRREB Member Brokerage'}
                           </span>
@@ -1103,12 +1115,12 @@ export const Search: React.FC = () => {
 
                       {/* Smart Specs Matrix: Commercial/Land vs Residential */}
                       {prop.beds === 0 || /land|commercial|industrial|farm|office|retail/i.test(`${prop.propertyType || ''} ${(prop as any).propertySubType || ''}`) ? (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.74rem', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '6px' }}>
-                          <span style={{ color: 'var(--color-lavender)', fontWeight: 600 }}>{(prop as any).propertySubType || prop.propertyType || 'Commercial / Land'}</span>
-                          {prop.sqft && prop.sqft > 100 ? <span>{prop.sqft.toLocaleString()} SqFt</span> : <span style={{ color: 'var(--text-muted)' }}>Prime Parcel</span>}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.74rem', color: '#334155', borderTop: '1px solid #e2e8f0', paddingTop: '6px', fontWeight: 600 }}>
+                          <span style={{ color: '#0f172a', fontWeight: 700 }}>{(prop as any).propertySubType || prop.propertyType || 'Commercial / Land'}</span>
+                          {prop.sqft && prop.sqft > 100 ? <span>{prop.sqft.toLocaleString()} SqFt</span> : <span style={{ color: '#64748b' }}>Prime Parcel</span>}
                         </div>
                       ) : (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '6px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#334155', borderTop: '1px solid #e2e8f0', paddingTop: '6px', fontWeight: 600 }}>
                           <span>{prop.beds} Beds</span>
                           <span>•</span>
                           <span>{prop.baths} Baths</span>
@@ -1118,7 +1130,7 @@ export const Search: React.FC = () => {
                       )}
 
                       {/* Bottom Action Row (Side-by-side equal width buttons) */}
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', paddingTop: '6px', borderTop: '1px solid #e2e8f0' }}>
                         <button
                           onClick={(e) => { e.stopPropagation(); handleSelectPropertyFromMap(prop); }}
                           className="btn hover-lift"
@@ -1127,17 +1139,17 @@ export const Search: React.FC = () => {
                             padding: '7px 10px',
                             fontSize: '0.74rem',
                             borderRadius: '8px',
-                            background: isSelected ? 'rgba(167,139,250,0.2)' : 'rgba(255,255,255,0.05)',
-                            color: isSelected ? 'var(--color-lavender)' : 'var(--text-secondary)',
-                            border: isSelected ? '1px solid var(--color-lavender)' : '1px solid rgba(255,255,255,0.1)',
-                            fontWeight: 600,
+                            background: isSelected ? '#0f172a' : '#f8fafc',
+                            color: isSelected ? '#ffffff' : '#0f172a',
+                            border: '1px solid #cbd5e1',
+                            fontWeight: 700,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '5px'
                           }}
                         >
-                          <Check size={12} style={{ opacity: isSelected ? 1 : 0.4 }} />
+                          <Check size={12} style={{ opacity: isSelected ? 1 : 0.6 }} />
                           <span>{isSelected ? 'Selected' : 'Select'}</span>
                         </button>
 
@@ -1149,7 +1161,9 @@ export const Search: React.FC = () => {
                             padding: '7px 10px',
                             fontSize: '0.74rem',
                             borderRadius: '8px',
-                            fontWeight: 600,
+                            background: '#0f172a',
+                            color: '#ffffff',
+                            fontWeight: 700,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',

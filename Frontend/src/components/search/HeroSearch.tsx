@@ -166,31 +166,30 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({ onToggleExpand }) => {
         .hero-search-bar-wrap {
           display: flex;
           align-items: center;
-          background: rgba(10, 8, 30, 0.65);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(167, 139, 250, 0.25);
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
           border-radius: 50px;
           width: 100%;
           max-width: 720px;
           padding: 6px 8px 6px 16px;
           gap: 12px;
-          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(124, 58, 237, 0.1);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
           transition: all 0.3s ease;
         }
         .hero-search-bar-wrap:focus-within {
-          border-color: rgba(167, 139, 250, 0.6);
-          box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 30px rgba(124, 58, 237, 0.25);
+          border-color: #E31837;
+          box-shadow: 0 12px 35px rgba(227, 24, 55, 0.15);
         }
         .search-by-selector-btn {
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px solid rgba(167, 139, 250, 0.1);
+          background: #f8fafc;
+          border: 1px solid #cbd5e1;
           border-radius: 30px;
           height: 38px;
           padding: 0 16px;
           display: flex;
           align-items: center;
           gap: 8px;
-          color: #ffffff;
+          color: #111827;
           font-size: 0.82rem;
           font-weight: 600;
           cursor: pointer;
@@ -200,20 +199,20 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({ onToggleExpand }) => {
           flex-shrink: 0;
         }
         .search-by-selector-btn:hover {
-          background: rgba(167, 139, 250, 0.08);
-          border-color: rgba(167, 139, 250, 0.3);
+          background: #f1f5f9;
+          border-color: #94a3b8;
         }
         .search-vertical-divider {
           width: 1px;
           height: 26px;
-          background: rgba(255, 255, 255, 0.1);
+          background: #e2e8f0;
           flex-shrink: 0;
         }
         .more-options-toggle-btn {
           background: none;
           border: none;
-          color: rgba(167, 139, 250, 0.95);
-          font-size: 0.82rem;
+          color: #E31837;
+          font-size: 0.85rem;
           font-weight: 700;
           cursor: pointer;
           margin-top: 14px;
@@ -222,11 +221,10 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({ onToggleExpand }) => {
           gap: 6px;
           transition: all 0.2s ease;
           outline: none;
-          text-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
         }
         .more-options-toggle-btn:hover {
-          color: #ffffff;
-          text-shadow: 0 0 12px rgba(167, 139, 250, 0.6);
+          color: #c8132e;
+          text-decoration: underline;
         }
         @media (max-width: 640px) {
           .hero-search-bar-wrap {

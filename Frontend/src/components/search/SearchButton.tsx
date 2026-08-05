@@ -16,29 +16,29 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
     <>
       <style>{`
         .search-action-submit-btn {
-          height: 48px;
-          background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+          height: 44px;
+          background: #0f172a;
           border: none;
           border-radius: 40px;
           color: #ffffff;
           padding: 0 28px;
-          font-weight: 600;
+          font-weight: 700;
           font-size: 0.9rem;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
           outline: none;
           user-select: none;
           flex-shrink: 0;
         }
         .search-action-submit-btn:hover:not(:disabled), .search-action-submit-btn:focus-visible {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(124, 58, 237, 0.5);
-          background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(15, 23, 42, 0.35);
+          background: #1e293b;
         }
         .search-action-submit-btn:active:not(:disabled) {
           transform: translateY(0);

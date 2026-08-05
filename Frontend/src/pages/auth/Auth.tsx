@@ -135,7 +135,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <Logo size={42} />
           <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
-            {isAdminFlow ? 'NovaEstate Enterprise Admin Gateway' : 'NovaEstate Sovereign Portal'}
+            {isAdminFlow ? 'Kang Homes Enterprise Admin Gateway' : 'Kang Homes Portal'}
           </span>
         </div>
 
@@ -153,8 +153,8 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
             }}
           >
             <Sparkles size={18} style={{ color: 'var(--color-lavender)', flexShrink: 0 }} />
-            <div style={{ fontSize: '0.78rem', color: '#ffffff' }}>
-              <span style={{ fontWeight: 600, color: 'var(--color-lavender)' }}>Valuation Captured!</span> Sign in or create an account to view your AI Valuation Report for <strong style={{ color: '#ffffff' }}>{pendingValuationData.address}</strong>.
+            <div style={{ fontSize: '0.78rem', color: '#0f172a' }}>
+              <span style={{ fontWeight: 600, color: '#0f172a' }}>Valuation Captured!</span> Sign in or create an account to view your AI Valuation Report for <strong style={{ color: '#0f172a' }}>{pendingValuationData.address}</strong>.
             </div>
           </div>
         )}
@@ -173,8 +173,8 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
             }}
           >
             <Search size={18} style={{ color: 'var(--color-lavender)', flexShrink: 0 }} />
-            <div style={{ fontSize: '0.78rem', color: '#ffffff' }}>
-              <span style={{ fontWeight: 600, color: 'var(--color-lavender)' }}>Search Saved!</span> Sign in or create an account to automatically restore your search results.
+            <div style={{ fontSize: '0.78rem', color: '#0f172a' }}>
+              <span style={{ fontWeight: 600, color: '#0f172a' }}>Search Saved!</span> Sign in or create an account to automatically restore your search results.
             </div>
           </div>
         )}
@@ -189,7 +189,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
                 <ShieldCheck size={14} />
                 <span>ADMINISTRATOR ACCESS</span>
               </div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#ffffff' }}>Admin Portal Login</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a' }}>Admin Portal Login</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '4px' }}>
                 Enterprise CRM, user management, and property registry controls
               </p>
@@ -280,7 +280,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
                 <Briefcase size={14} />
                 <span>ENTERPRISE ONBOARDING</span>
               </div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#ffffff' }}>Admin Registration</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a' }}>Admin Registration</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '4px' }}>
                 Create an authorized Administrator account
               </p>
@@ -423,7 +423,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
         {mode === 'login' && (
           <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div style={{ textAlign: 'center', marginBottom: '4px' }}>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#ffffff' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#0f172a' }}>
                 {selectedRole === 'admin' ? 'Sign In to Admin CRM Suite' : selectedRole === 'seller' ? 'Sign In to Seller Console' : 'Sign In to Buyer Portal'}
               </h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '4px' }}>
@@ -451,12 +451,13 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
                       }
                     }}
                     style={{
-                      background: selectedRole === role.id ? 'rgba(167,139,250,0.12)' : 'rgba(255,255,255,0.02)',
-                      border: `1px solid ${selectedRole === role.id ? 'var(--color-lavender)' : 'rgba(255,255,255,0.06)'}`,
+                      background: selectedRole === role.id ? 'rgba(15, 23, 42, 0.08)' : '#f8fafc',
+                      border: `1px solid ${selectedRole === role.id ? '#0f172a' : '#cbd5e1'}`,
                       borderRadius: '8px',
                       padding: '8px',
-                      color: selectedRole === role.id ? '#ffffff' : 'var(--text-secondary)',
+                      color: '#0f172a',
                       fontSize: '0.75rem',
+                      fontWeight: selectedRole === role.id ? 700 : 500,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -551,7 +552,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
         {mode === 'register' && (
           <form onSubmit={handleRegisterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ textAlign: 'center', marginBottom: '4px' }}>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#ffffff' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#0f172a' }}>
                 {selectedRole === 'seller' ? 'Create Seller Account' : 'Create Your Buyer Account'}
               </h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '4px' }}>Unlock full search results, saved homes, and tour booking</p>
@@ -699,7 +700,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
         {mode === 'forgot' && (
           <form onSubmit={handleForgotSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ textAlign: 'center', marginBottom: '8px' }}>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#ffffff' }}>Retrieve Password</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#0f172a' }}>Retrieve Password</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '4px' }}>Enter your email address to receive password reset instructions</p>
             </div>
 

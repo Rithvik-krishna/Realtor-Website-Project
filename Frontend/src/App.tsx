@@ -144,7 +144,7 @@ function App() {
           // Select status styling
           const isSuccess = toast.type === 'success';
           const isWarning = toast.type === 'warning';
-          const iconColor = isSuccess ? '#10b981' : isWarning ? '#f59e0b' : 'var(--color-lavender)';
+          const iconColor = isSuccess ? '#059669' : isWarning ? '#d97706' : '#0f172a';
 
           return (
             <div
@@ -153,8 +153,9 @@ function App() {
               style={{
                 padding: '12px 16px',
                 borderRadius: '12px',
-                border: `1px solid ${isSuccess ? 'rgba(16, 185, 129, 0.3)' : 'rgba(167, 139, 250, 0.3)'}`,
-                boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                background: '#ffffff',
+                border: `1.5px solid ${isSuccess ? '#059669' : isWarning ? '#f59e0b' : '#cbd5e1'}`,
+                boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
@@ -163,11 +164,11 @@ function App() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
-                {isSuccess && <CheckCircle2 size={16} style={{ color: iconColor }} />}
-                {isWarning && <AlertCircle size={16} style={{ color: iconColor }} />}
-                {toast.type === 'info' && <Info size={16} style={{ color: iconColor }} />}
+                {isSuccess && <CheckCircle2 size={18} style={{ color: iconColor, flexShrink: 0 }} />}
+                {isWarning && <AlertCircle size={18} style={{ color: iconColor, flexShrink: 0 }} />}
+                {toast.type === 'info' && <Info size={18} style={{ color: iconColor, flexShrink: 0 }} />}
 
-                <span style={{ fontSize: '0.8rem', color: '#ffffff', fontWeight: 500, lineHeight: '1.4' }}>
+                <span style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: 700, lineHeight: '1.4' }}>
                   {toast.message}
                 </span>
               </div>
@@ -177,15 +178,16 @@ function App() {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'var(--text-muted)',
+                  color: '#475569',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '2px'
+                  padding: '2px',
+                  flexShrink: 0
                 }}
                 className="hover-lift"
               >
-                <X size={14} />
+                <X size={16} />
               </button>
             </div>
           );

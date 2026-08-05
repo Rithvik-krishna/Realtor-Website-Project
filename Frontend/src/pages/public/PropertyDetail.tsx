@@ -975,28 +975,29 @@ export const PropertyDetail: React.FC = () => {
               </div>
 
               <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.4' }}>
-                🔒 Encrypted transmission directly to NovaEstate Senior Partners. No public disclosure without approval.
+                🔒 Direct transmission to Kang Homes &amp; Karan Kang, REALTOR®. Royal LePage Pinnacle Real Estate.
               </span>
             </div>
 
             {/* Managing Partner Agent Card */}
             <div className="glass-panel" style={{ padding: '24px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Managing Listing Partner</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Managing Listing Realtor</span>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <img
-                  src={activeProperty.agent ? activeProperty.agent.avatar : 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=150&q=80'}
-                  alt={activeProperty.agent ? activeProperty.agent.name : 'Sébastien LeClerc'}
-                  style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-lavender)' }}
+                  src="/karan-kang.jpg"
+                  alt="Karan Kang REALTOR®"
+                  style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '2px solid #E31837', flexShrink: 0 }}
                 />
                 <div>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#ffffff' }}>{activeProperty.agent ? activeProperty.agent.name : 'Sébastien LeClerc'}</h4>
-                  <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{activeProperty.agent ? activeProperty.agent.role : 'Acquisitions Director'}</p>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#ffffff' }}>Karan Kang, REALTOR®</h4>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Royal LePage Pinnacle Real Estate</p>
                 </div>
               </div>
               <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)' }} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                <span>Tel: {activeProperty.agent ? activeProperty.agent.phone : '+1 (604) 555-0199'}</span>
-                <span>Mail: {activeProperty.agent ? activeProperty.agent.email : 'sebastien@novaestate.ca'}</span>
+                <span>Cell: 437-998-5873</span>
+                <span>Office: 905-464-3035</span>
+                <span>Mail: realtorkarankang@gmail.com</span>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Logo } from '../design-system/BrandAssets';
-import { Send, Globe, Award, Shield, Heart } from 'lucide-react';
+import { Send, Phone, Mail, MapPin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { setCurrentPage, showToast } = useApp();
@@ -10,87 +10,59 @@ export const Footer: React.FC = () => {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    showToast('Subscription requested. Welcome to NovaEstate Curated Circular.', 'success');
+    showToast('Subscription requested. Welcome to Kang Homes Real Estate Insights.', 'success');
     setEmail('');
   };
 
   return (
     <footer
-      className="glass-panel"
       style={{
-        marginTop: '16px',
-        borderTop: '1px solid rgba(167, 139, 250, 0.1)',
-        borderLeft: 'none',
-        borderRight: 'none',
-        borderBottom: 'none',
+        borderTop: '1px solid #e2e8f0',
         borderRadius: '24px 24px 0 0',
-        padding: '40px 0 24px 0',
-        background: 'linear-gradient(180deg, rgba(8, 14, 36, 0.6) 0%, rgba(3, 7, 18, 0.95) 100%)',
+        padding: '48px 0 28px 0',
+        background: '#f8fafc',
         position: 'relative',
         zIndex: 5,
-        overflow: 'hidden'
+        color: '#334155'
       }}
     >
-      {/* Decorative vertical divider stripes */}
-      <div style={{ position: 'absolute', top: 0, left: '20%', width: '1px', height: '100%', background: 'rgba(255,255,255,0.01)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', top: 0, left: '50%', width: '1px', height: '100%', background: 'rgba(255,255,255,0.01)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', top: 0, left: '80%', width: '1px', height: '100%', background: 'rgba(255,255,255,0.01)', pointerEvents: 'none' }} />
-
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '32px', marginBottom: '32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '36px', marginBottom: '40px' }}>
           {/* Brand Presentation */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <Logo size={40} />
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.7', maxWidth: '300px' }}>
-              Redefining luxury real estate across Canada. Immersive drone tours, AI-curated portfolios, and modern architectural masterpieces.
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <Logo size={42} />
+            <p style={{ color: '#64748b', fontSize: '0.88rem', lineHeight: '1.6', maxWidth: '320px' }}>
+              Kang Homes - Trusted Canadian Real Estate guidance with Karan Kang, REALTOR® at Royal LePage Pinnacle Real Estate. Serving Oakville, Mississauga, Toronto, and Ontario.
             </p>
             
-            {/* Certifications badges */}
-            <div style={{ display: 'flex', gap: '16px', marginTop: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
-                <Award size={14} className="text-gradient" />
-                <span>CHBA Luxury Associate</span>
+            {/* Brokerage Badge */}
+            <div style={{ padding: '12px', background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#111827' }}>
+                Royal LePage Pinnacle Real Estate
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
-                <Shield size={14} style={{ color: 'var(--color-lavender)' }} />
-                <span>Secure Gateway</span>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>
+                Independently Owned and Operated Brokerage
               </div>
             </div>
           </div>
 
-          {/* Curated Portfolios links */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ffffff' }}>Collections</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
-              {['West Vancouver Coastal', 'Yorkville Penthouse Duplexes', 'Whistler Ski-In Chalets', 'Montreal Heritage Glass', 'Calgary Monolithic Concrete'].map(item => (
-                <li key={item}>
-                  <button
-                    onClick={() => setCurrentPage('search')}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', textAlign: 'left', transition: 'var(--transition-fast)' }}
-                    className="hover-lift"
-                  >
-                    {item}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Quick site navigation */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ffffff' }}>Navigation</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
+          {/* Quick Navigation */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#111827' }}>Navigation</h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.88rem' }}>
               {[
-                { id: 'home', name: 'Cinematic Front' },
-                { id: 'search', name: 'Curated Search' },
-                { id: 'about', name: 'Our Visionaries' },
-                { id: 'blog', name: 'Design Magazine' },
-                { id: 'contact', name: 'Bespoke Consultation' }
+                { id: 'home', name: 'Home' },
+                { id: 'search', name: 'Buy Homes' },
+                { id: 'seller', name: 'Sell Your Property' },
+                { id: 'community', name: 'Communities' },
+                { id: 'featured', name: 'Featured Listings' },
+                { id: 'about', name: 'About Karan Kang' },
+                { id: 'contact', name: 'Contact Us' }
               ].map(page => (
                 <li key={page.id}>
                   <button
                     onClick={() => setCurrentPage(page.id)}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', textAlign: 'left', transition: 'var(--transition-fast)' }}
+                    style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', textAlign: 'left', transition: 'var(--transition-fast)', fontWeight: 500 }}
                     className="hover-lift"
                   >
                     {page.name}
@@ -100,32 +72,53 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Circular Subscription */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ffffff' }}>The Circular</h4>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: '1.6' }}>
-              Subscribe to receive private, off-market real estate catalogs and architectural whitepapers quarterly.
+          {/* Contact Realtor Direct */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#111827' }}>Direct Contact</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem', color: '#475569' }}>
+              <div style={{ fontWeight: 700, color: '#111827' }}>Karan Kang, REALTOR®</div>
+              <a href="tel:4379985873" style={{ color: '#475569', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Phone size={14} style={{ color: '#E31837' }} /> Cell: 437-998-5873
+              </a>
+              <a href="tel:9054643035" style={{ color: '#475569', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Phone size={14} style={{ color: '#1e293b' }} /> Office: 905-464-3035
+              </a>
+              <a href="mailto:realtorkarankang@gmail.com" style={{ color: '#475569', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Mail size={14} style={{ color: '#E31837' }} /> realtorkarankang@gmail.com
+              </a>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', lineHeight: '1.4' }}>
+                <MapPin size={14} style={{ color: '#E31837', flexShrink: 0, marginTop: '2px' }} />
+                <span>17 - 1075 North Service Road W., Oakville, ON L6M 2G2</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Market Insights Newsletter */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#111827' }}>Market Insights</h4>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: '1.5' }}>
+              Subscribe to receive GTA market reports, property valuations, and off-market listings.
             </p>
             <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '8px', position: 'relative' }}>
               <input
                 type="email"
-                placeholder="Private Email..."
+                placeholder="Your email address..."
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
                   padding: '12px 48px 12px 16px',
                   borderRadius: '10px',
-                  color: '#ffffff',
+                  color: '#111827',
                   fontSize: '0.85rem',
                   width: '100%',
                   outline: 'none',
                   fontFamily: 'var(--font-sans)',
                   transition: 'var(--transition-fast)'
                 }}
-                onFocus={e => e.target.style.borderColor = 'var(--color-lavender)'}
-                onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                onFocus={e => e.target.style.borderColor = '#E31837'}
+                onBlur={e => e.target.style.borderColor = '#cbd5e1'}
                 required
               />
               <button
@@ -135,7 +128,7 @@ export const Footer: React.FC = () => {
                   right: '6px',
                   top: '6px',
                   bottom: '6px',
-                  background: 'linear-gradient(135deg, var(--color-blue-primary), var(--color-lavender-dark))',
+                  background: '#E31837',
                   border: 'none',
                   borderRadius: '6px',
                   width: '32px',
@@ -147,27 +140,23 @@ export const Footer: React.FC = () => {
                   transition: 'var(--transition-fast)'
                 }}
               >
-                <Send size={12} />
+                <Send size={14} />
               </button>
             </form>
           </div>
         </div>
 
-        <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.05)', marginBottom: '40px' }} />
+        <div style={{ height: '1px', background: '#e2e8f0', marginBottom: '24px' }} />
 
         {/* Lower footer copyright */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', fontSize: '0.82rem', color: '#64748b' }}>
           <div>
-            &copy; 2026 NovaEstate Platform. All rights reserved. Designed for Canadian Architectural Supremacy.
+            &copy; 2026 Kang Homes | Royal LePage Pinnacle Real Estate. All rights reserved.
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              Made with <Heart size={10} style={{ color: 'var(--color-lavender)' }} /> in Canada
-            </span>
-            <span style={{ height: '12px', width: '1px', background: 'rgba(255,255,255,0.1)' }} />
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Globe size={12} /> Global Private Ledger
-            </span>
+            <span>Karan Kang, REALTOR®</span>
+            <span style={{ height: '12px', width: '1px', background: '#cbd5e1' }} />
+            <span>Oakville &amp; GTA Real Estate</span>
           </div>
         </div>
       </div>

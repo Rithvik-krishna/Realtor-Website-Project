@@ -110,12 +110,11 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     >
       <style>{`
         .adv-filters-container {
-          background: rgba(7, 13, 36, 0.95);
-          backdrop-filter: blur(24px);
-          border: 1px solid rgba(167, 139, 250, 0.22);
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 20px;
           padding: 24px;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(167, 139, 250, 0.04);
+          box-shadow: 0 12px 36px rgba(0,0,0,0.08);
           display: flex;
           flex-direction: column;
           gap: 20px;
@@ -127,8 +126,8 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         }
         .show-only-header {
           font-size: 0.72rem;
-          color: var(--text-secondary);
-          font-weight: 600;
+          color: #334155;
+          font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           margin-bottom: 8px;
@@ -139,12 +138,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           gap: 8px;
         }
         .show-only-pill {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(167, 139, 250, 0.15);
-          color: var(--text-secondary);
+          background: #f8fafc;
+          border: 1px solid #cbd5e1;
+          color: #334155;
           padding: 8px 16px;
-          font-size: 0.78rem;
-          font-weight: 500;
+          font-size: 0.8rem;
+          font-weight: 600;
           border-radius: 50px;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -152,51 +151,51 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           user-select: none;
         }
         .show-only-pill:hover, .show-only-pill:focus-visible {
-          background: rgba(167, 139, 250, 0.08);
-          border-color: rgba(167, 139, 250, 0.4);
-          color: #ffffff;
+          background: #f1f5f9;
+          border-color: #0f172a;
+          color: #0f172a;
         }
         .show-only-pill.active {
-          background: linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(79, 70, 229, 0.25) 100%);
-          border-color: rgba(167, 139, 250, 0.65);
+          background: #0f172a;
+          border-color: #0f172a;
           color: #ffffff;
-          box-shadow: 0 0 10px rgba(124, 58, 237, 0.15);
+          box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
         }
         .adv-keyword-input {
           width: 100%;
-          height: 46px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(167, 139, 250, 0.15);
+          height: 44px;
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
           border-radius: 12px;
-          color: #ffffff;
+          color: #0f172a;
           padding: 0 16px;
-          font-size: 0.85rem;
-          font-weight: 500;
+          font-size: 0.88rem;
+          font-weight: 600;
           transition: all 0.2s ease;
           outline: none;
         }
         .adv-keyword-input:hover, .adv-keyword-input:focus {
-          background: rgba(167, 139, 250, 0.05);
-          border-color: rgba(167, 139, 250, 0.4);
-          box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
+          background: #ffffff;
+          border-color: #0f172a;
+          box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
         }
         .adv-reset-btn {
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: var(--text-secondary);
+          background: #f8fafc;
+          border: 1px solid #cbd5e1;
+          color: #334155;
           border-radius: 12px;
           padding: 0 18px;
-          font-weight: 600;
-          font-size: 0.8rem;
+          font-weight: 700;
+          font-size: 0.82rem;
           cursor: pointer;
           transition: all 0.2s ease;
           outline: none;
-          height: 46px;
+          height: 44px;
         }
         .adv-reset-btn:hover {
-          background: rgba(255, 255, 255, 0.06);
-          border-color: rgba(255, 255, 255, 0.2);
-          color: #ffffff;
+          background: #f1f5f9;
+          border-color: #0f172a;
+          color: #0f172a;
         }
         @media (max-width: 768px) {
           .adv-row-grid {

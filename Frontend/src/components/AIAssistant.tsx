@@ -15,17 +15,17 @@ export const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'bot',
-      text: "Welcome to NovaAI, your private concierge. I am trained on high-end Canadian listings and architecture trends. How can I curate your experience today?"
+      text: "Welcome to Kang Homes AI Assistant! I am trained on Ontario listings, MLS data, and GTA real estate trends. How can I assist you with Karan Kang, REALTOR® today?"
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const suggestPrompts = [
-    'Show me waterfront properties in Vancouver',
-    'Chalet in Whistler ski resort',
-    'Yorkville Penthouse investment',
-    'Calculate a $15M estate mortgage'
+    'Oakville detached homes for sale',
+    'Toronto condos near subway',
+    'Mississauga waterfront properties',
+    'Calculate home mortgage payment'
   ];
 
   useEffect(() => {
@@ -35,48 +35,46 @@ export const AIAssistant: React.FC = () => {
   const toggleChat = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
-      showToast('NovaAI Securing Secure Quantum Connection...', 'info');
+      showToast('Kang Homes AI Assistant Connected', 'info');
     }
   };
 
   const handleSend = (text: string) => {
     if (!text.trim()) return;
 
-    // Add user message
     setMessages(prev => [...prev, { sender: 'user', text }]);
     setInput('');
     setIsTyping(true);
 
-    // Simulate luxury botanical response
     setTimeout(() => {
-      let botResponse = "I have analyzed our off-market portfolio. Here are some options tailored to your prompt.";
+      let botResponse = "I have searched our active Ontario listings. Here are recommendations matching your query.";
       let links: Message['links'] = [];
 
       const query = text.toLowerCase();
 
-      if (query.includes('vancouver') || query.includes('waterfront')) {
+      if (query.includes('vancouver') || query.includes('waterfront') || query.includes('mississauga')) {
         const vanc = properties.find(p => p.id === '1') || properties[0];
-        botResponse = `Excellent taste. In West Vancouver, I suggest examining "The Obsidian Point" ($18,450,000). It features premium structural glass embedded directly into basalt cliffs. I have activated its profile on your screen.`;
-        links = [{ title: 'View Obsidian Point', page: 'property-detail', param: vanc.id }];
-      } else if (query.includes('whistler') || query.includes('chalet') || query.includes('alpine')) {
+        botResponse = `Great choice. In our active inventory, "The Obsidian Point" ($18,450,000) features premium architecture and prime views. I have opened its details for you.`;
+        links = [{ title: 'View Listing Details', page: 'property-detail', param: vanc.id }];
+      } else if (query.includes('oakville') || query.includes('chalet') || query.includes('detached')) {
         const whis = properties.find(p => p.id === '2') || properties[1];
-        botResponse = `Understood. In Whistler, "L'Alpage Alpine Retreat" is our premier alpine listing ($12,800,000). It is a gorgeous timber chalet situated directly in the Benchlands with direct ski-in/ski-out rights.`;
-        links = [{ title: 'View L\'Alpage Retreat', page: 'property-detail', param: whis.id }];
+        botResponse = `Understood. "L'Alpage Alpine Retreat" ($12,800,000) represents a phenomenal home with top-tier finishes and spacious grounds.`;
+        links = [{ title: 'View Property Page', page: 'property-detail', param: whis.id }];
       } else if (query.includes('yorkville') || query.includes('penthouse') || query.includes('toronto')) {
         const tor = properties.find(p => p.id === '3') || properties[2];
-        botResponse = `Certainly. In Toronto, "The Luminary Penthouse" in Yorkville ($24,500,000) represents our absolute flagship high-rise skyscraper suite. It boasts custom Italian glass and a heated rooftop pool.`;
+        botResponse = `Certainly! "The Luminary Penthouse" ($24,500,000) is a premier urban suite offering luxury finishes and Panoramic skyline views.`;
         links = [{ title: 'View Luminary Penthouse', page: 'property-detail', param: tor.id }];
       } else if (query.includes('mortgage') || query.includes('calculate')) {
-        botResponse = `I would be happy to assist. I have opened the mortgage dashboard. For a standard $15M property, assuming a 20% down payment ($3M) and a 4.5% interest rate over 25 years, the estimated principal & interest payment would be roughly $66,700 monthly.`;
-        links = [{ title: 'Try Calculator', page: 'property-detail', param: '3' }];
+        botResponse = `I'd be glad to help! You can use our built-in mortgage calculator on any property page to estimate down payments, interest rates, and monthly mortgage payments.`;
+        links = [{ title: 'Open Property Calculator', page: 'property-detail', param: '1' }];
       } else {
-        botResponse = `I have logged your request: "${text}". I will scanning our private vault of Canadian properties. In the meantime, I highly recommend browsing our active coastal collection or speaking with one of our licensed senior partners.`;
-        links = [{ title: 'Browse Active Listings', page: 'search' }];
+        botResponse = `I have logged your query: "${text}". Feel free to browse our active property listings or contact Karan Kang, REALTOR® directly at 437-998-5873 for personalized guidance.`;
+        links = [{ title: 'Browse All Listings', page: 'search' }, { title: 'Contact Karan Kang', page: 'contact' }];
       }
 
       setMessages(prev => [...prev, { sender: 'bot', text: botResponse, links }]);
       setIsTyping(false);
-    }, 1500);
+    }, 1200);
   };
 
   const handleLinkClick = (link: { page: string; param?: string }) => {
@@ -90,78 +88,80 @@ export const AIAssistant: React.FC = () => {
 
   return (
     <>
-      {/* Floating Sparkles Button */}
+      {/* Floating Assistant Button */}
       <button
         onClick={toggleChat}
-        className="magnetic-item"
         style={{
           position: 'fixed',
-          bottom: '32px',
-          left: '32px',
+          bottom: '28px',
+          right: '28px',
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, var(--color-blue-primary) 0%, var(--color-lavender-dark) 100%)',
+          background: '#0f172a',
           boxShadow: isOpen 
-            ? '0 0 30px rgba(167, 139, 250, 0.6)' 
-            : '0 10px 25px rgba(124, 58, 237, 0.4), 0 0 10px rgba(167, 139, 250, 0.2)',
-          border: '1px solid rgba(255,255,255,0.1)',
+            ? '0 0 25px rgba(15, 23, 42, 0.5)' 
+            : '0 8px 25px rgba(15, 23, 42, 0.35)',
+          border: '2px solid #ffffff',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           color: '#ffffff',
           cursor: 'pointer',
-          zIndex: 999,
-          transition: 'var(--transition-smooth)'
+          zIndex: 9999,
+          transition: 'all 0.3s ease'
         }}
+        className="hover-lift"
+        aria-label="Toggle Kang Homes AI Assistant"
       >
-        {isOpen ? <X size={20} /> : <Bot size={22} style={{ animation: 'sparkle-rotate 4s infinite linear' }} />}
+        {isOpen ? <X size={20} /> : <Bot size={22} />}
       </button>
 
-      {/* Slide-out glass drawer */}
+      {/* Slide-out White Drawer */}
       {isOpen && (
         <div
-          className="glass-panel"
           style={{
             position: 'fixed',
-            bottom: '100px',
-            left: '32px',
+            bottom: '96px',
+            right: '28px',
             width: '380px',
-            height: '550px',
-            maxHeight: 'calc(100vh - 150px)',
+            height: '540px',
+            maxHeight: 'calc(100vh - 120px)',
             display: 'flex',
             flexDirection: 'column',
-            zIndex: 998,
-            borderRadius: '24px',
-            border: '1px solid rgba(167, 139, 250, 0.2)',
-            boxShadow: '0 30px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(167, 139, 250, 0.1)',
-            overflow: 'hidden',
-            animation: 'fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+            zIndex: 9998,
+            borderRadius: '20px',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.15)',
+            overflow: 'hidden'
           }}
         >
           {/* Header */}
           <div
             style={{
-              padding: '20px',
-              borderBottom: '1px solid rgba(255,255,255,0.05)',
+              padding: '16px 20px',
+              borderBottom: '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              background: 'linear-gradient(90deg, rgba(30,58,138,0.3) 0%, rgba(124,58,237,0.1) 100%)'
+              background: '#f8fafc'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Sparkles size={16} style={{ color: 'var(--color-lavender)' }} />
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#E31837', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sparkles size={16} />
+              </div>
               <div>
-                <h4 style={{ fontSize: '0.92rem', fontWeight: 600, letterSpacing: '-0.01em', color: '#ffffff' }}>NovaAI Intelligence</h4>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#111827', margin: 0 }}>Kang Homes AI</h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: '#64748b' }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
-                  <span>Real-Time Market Ledger Connected</span>
+                  <span>Karan Kang REALTOR® Assistant</span>
                 </div>
               </div>
             </div>
-            <button onClick={toggleChat} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} className="hover-lift">
-              <X size={16} />
+            <button onClick={toggleChat} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }}>
+              <X size={18} />
             </button>
           </div>
 
@@ -170,10 +170,11 @@ export const AIAssistant: React.FC = () => {
             style={{
               flex: 1,
               overflowY: 'auto',
-              padding: '20px',
+              padding: '16px 20px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '16px'
+              gap: '14px',
+              background: '#ffffff'
             }}
           >
             {messages.map((m, idx) => (
@@ -187,16 +188,17 @@ export const AIAssistant: React.FC = () => {
                 <div
                   style={{
                     background: m.sender === 'user' 
-                      ? 'linear-gradient(135deg, var(--color-blue-primary), var(--color-lavender-dark))' 
-                      : 'rgba(255,255,255,0.03)',
+                      ? '#E31837' 
+                      : '#f1f5f9',
                     border: m.sender === 'user' 
                       ? 'none' 
-                      : '1px solid rgba(255,255,255,0.05)',
+                      : '1px solid #e2e8f0',
                     padding: '12px 16px',
                     borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                    color: '#ffffff',
-                    fontSize: '0.84rem',
-                    lineHeight: '1.5'
+                    color: m.sender === 'user' ? '#ffffff' : '#111827',
+                    fontSize: '0.85rem',
+                    lineHeight: '1.5',
+                    fontWeight: 500
                   }}
                 >
                   {m.text}
@@ -209,18 +211,24 @@ export const AIAssistant: React.FC = () => {
                       <button
                         key={lIdx}
                         onClick={() => handleLinkClick(link)}
-                        className="btn btn-secondary"
                         style={{
-                          padding: '6px 12px',
+                          padding: '8px 12px',
                           borderRadius: '8px',
-                          fontSize: '0.78rem',
+                          fontSize: '0.8rem',
+                          display: 'flex',
+                          alignItems: 'center',
                           justifyContent: 'space-between',
                           width: '100%',
-                          background: 'rgba(167, 139, 250, 0.05)'
+                          background: '#f8fafc',
+                          border: '1px solid #cbd5e1',
+                          color: '#E31837',
+                          fontWeight: 700,
+                          cursor: 'pointer'
                         }}
+                        className="hover-lift"
                       >
-                        <span style={{ color: 'var(--color-lavender)', fontWeight: 500 }}>{link.title}</span>
-                        <ArrowUpRight size={12} style={{ opacity: 0.7 }} />
+                        <span>{link.title}</span>
+                        <ArrowUpRight size={14} />
                       </button>
                     ))}
                   </div>
@@ -229,10 +237,10 @@ export const AIAssistant: React.FC = () => {
             ))}
 
             {isTyping && (
-              <div style={{ alignSelf: 'flex-start', padding: '12px 16px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px 16px 16px 4px', display: 'flex', gap: '4px' }}>
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--color-lavender)', animation: 'typing-pulse 1s infinite' }} />
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--color-lavender)', animation: 'typing-pulse 1s infinite 0.2s' }} />
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--color-lavender)', animation: 'typing-pulse 1s infinite 0.4s' }} />
+              <div style={{ alignSelf: 'flex-start', padding: '10px 14px', background: '#f1f5f9', borderRadius: '16px 16px 16px 4px', display: 'flex', gap: '4px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E31837', animation: 'typing-pulse 1s infinite' }} />
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E31837', animation: 'typing-pulse 1s infinite 0.2s' }} />
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E31837', animation: 'typing-pulse 1s infinite 0.4s' }} />
               </div>
             )}
             <div ref={chatEndRef} />
@@ -240,23 +248,23 @@ export const AIAssistant: React.FC = () => {
 
           {/* Quick recommendations */}
           {messages.length === 1 && (
-            <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Suggested Curations</span>
+            <div style={{ padding: '0 16px 12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em' }}>Suggested Searches</span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {suggestPrompts.map((p, pIdx) => (
                   <button
                     key={pIdx}
                     onClick={() => handleSend(p)}
                     style={{
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.05)',
+                      background: '#f8fafc',
+                      border: '1px solid #cbd5e1',
                       borderRadius: '8px',
                       padding: '6px 10px',
                       fontSize: '0.75rem',
-                      color: 'var(--text-secondary)',
+                      color: '#334155',
+                      fontWeight: 600,
                       cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'var(--transition-fast)'
+                      textAlign: 'left'
                     }}
                     className="hover-lift"
                   >
@@ -271,37 +279,38 @@ export const AIAssistant: React.FC = () => {
           <form
             onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
             style={{
-              padding: '16px',
-              borderTop: '1px solid rgba(255,255,255,0.05)',
+              padding: '12px 16px',
+              borderTop: '1px solid #e2e8f0',
               display: 'flex',
               gap: '8px',
-              background: 'rgba(8,14,36,0.3)'
+              background: '#f8fafc'
             }}
           >
             <input
               type="text"
-              placeholder="Ask NovaAI about properties..."
+              placeholder="Ask about properties, price, or Oakville..."
               value={input}
               onChange={e => setInput(e.target.value)}
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.06)',
+                background: '#ffffff',
+                border: '1px solid #cbd5e1',
                 borderRadius: '10px',
                 padding: '10px 14px',
-                color: '#ffffff',
-                fontSize: '0.82rem',
+                color: '#111827',
+                fontSize: '0.85rem',
                 flex: 1,
                 outline: 'none',
-                fontFamily: 'var(--font-sans)'
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500
               }}
             />
             <button
               type="submit"
               style={{
-                width: '36px',
-                height: '36px',
+                width: '38px',
+                height: '38px',
                 borderRadius: '8px',
-                background: 'linear-gradient(135deg, var(--color-blue-primary), var(--color-lavender-dark))',
+                background: '#E31837',
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center',
@@ -316,12 +325,7 @@ export const AIAssistant: React.FC = () => {
         </div>
       )}
 
-      {/* Custom Styles for AI Assistant */}
       <style>{`
-        @keyframes sparkle-rotate {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
         @keyframes typing-pulse {
           0%, 100% { opacity: 0.3; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.3); }
