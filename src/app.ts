@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from 'express';
+import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/index.js';
@@ -9,6 +10,7 @@ import { ResponseUtil } from './utils/response.util.js';
 const app: Application = express();
 
 // Middlewares
+app.use(compression());
 app.use(helmet());
 app.use(cors({ origin: config.corsOrigin }));
 app.use(express.json());

@@ -223,15 +223,37 @@ export class TRREBService {
       const client = this.getClient();
       const city = options?.city;
 
-      const queryParams: string[] = [`$count=true`, `$top=${top}`, `$skip=${skip}`];
+      const queryParams: string[] = [`$count=true`, `$top=${top}`, `$skip=${skip}`, `$expand=Media`];
       const filters: string[] = [];
 
       if (city && city.toUpperCase() !== 'ALL' && city.toUpperCase() !== 'ANY') {
         const cityClean = city.trim();
-        if (cityClean.toLowerCase() === 'toronto') {
+        const lower = cityClean.toLowerCase();
+
+        if (lower === 'toronto') {
           filters.push(`contains(City, 'Toronto')`);
+        } else if (lower.includes('etobicoke')) {
+          filters.push(`(contains(City, 'Etobicoke') or contains(City, 'Toronto W') or contains(UnparsedAddress, 'Etobicoke'))`);
+        } else if (lower.includes('scarborough')) {
+          filters.push(`(contains(City, 'Scarborough') or contains(City, 'Toronto E') or contains(UnparsedAddress, 'Scarborough'))`);
+        } else if (lower.includes('waterfront')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Waterfront') or contains(UnparsedAddress, 'Queens Quay') or contains(UnparsedAddress, 'Harbour') or contains(City, 'C01'))`);
+        } else if (lower.includes('high park')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'High Park') or contains(City, 'W01') or contains(City, 'W02'))`);
+        } else if (lower.includes('lawrence')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Lawrence') or contains(City, 'C04'))`);
+        } else if (lower.includes('annex')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Annex') or contains(City, 'C02'))`);
+        } else if (lower.includes('yorkville')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Yorkville') or contains(City, 'C02'))`);
+        } else if (lower.includes('forest hill')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Forest Hill') or contains(City, 'C03') or contains(City, 'C10'))`);
+        } else if (lower.includes('bridle path')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Bridle') or contains(City, 'C12'))`);
+        } else if (lower.includes('rosedale')) {
+          filters.push(`contains(City, 'Toronto') and (contains(UnparsedAddress, 'Rosedale') or contains(City, 'C09'))`);
         } else {
-          filters.push(`(City eq '${cityClean}' or contains(City, '${cityClean}'))`);
+          filters.push(`(City eq '${cityClean}' or contains(City, '${cityClean}') or contains(UnparsedAddress, '${cityClean}'))`);
         }
       }
 
@@ -255,43 +277,10 @@ export class TRREBService {
       const items = data.value || [];
       const totalCount = data['@odata.count'] || items.length;
 
-      // Map raw OData items into frontend format
+      // Map raw OData items into frontend format (Media array is expanded in 1 single call)
       const mapped = items
         .map((item: any) => this.mapProperty(item))
         .filter((p: TRREBPropertyMapped | null): p is TRREBPropertyMapped => p !== null);
-
-      // Concurrently fetch real TRREB Media images for each property
-      await Promise.all(
-        mapped.map(async (prop: TRREBPropertyMapped) => {
-          if (!prop.images || prop.images.length === 0) {
-            try {
-              const filterUrl = `/Media?%24filter=${encodeURIComponent(`ResourceRecordKey eq '${prop.listingKey}'`)}`;
-              const mediaRes = await client.get(filterUrl);
-              const mediaItems = mediaRes.data?.value || [];
-              if (Array.isArray(mediaItems) && mediaItems.length > 0) {
-                const photos = mediaItems
-                  .filter((m: any) => m && (!m.MediaCategory || m.MediaCategory === 'Photo' || (m.MediaType && m.MediaType.toLowerCase().includes('image'))))
-                  .sort((a: any, b: any) => {
-                    if (a.PreferredPhotoYN && !b.PreferredPhotoYN) return -1;
-                    if (!a.PreferredPhotoYN && b.PreferredPhotoYN) return 1;
-                    return (a.Order ?? 0) - (b.Order ?? 0);
-                  });
-
-                const urls = photos
-                  .map((m: any) => m.MediaURL || m.LargeURL || m.HugeURL || m.MediaURLHighRes || m.MediaURLFull)
-                  .filter(Boolean);
-
-                if (urls.length > 0) {
-                  prop.images = urls;
-                  prop.imageUrl = urls[0];
-                }
-              }
-            } catch (mErr) {
-              // Silently ignore individual media fetch error
-            }
-          }
-        })
-      );
 
       const result = {
         properties: mapped,

@@ -1116,14 +1116,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     currentPageRef.current = 1;
 
     apiService.getProperties({ page: 1, limit: 100, city: cityParam }).then(res => {
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-        console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1, Total ${res.meta?.total || res.data.length})!`);
+      if (res && res.success && Array.isArray(res.data)) {
+        console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1, Total ${res.meta?.total ?? res.data.length})!`);
         setPropertiesList(res.data);
         if (res.meta) {
           currentPageRef.current = res.meta.page;
           totalPagesRef.current = res.meta.totalPages;
           setHasNextPage(res.meta.page < res.meta.totalPages);
-          if (res.meta.total) setTotalPropertiesCount(res.meta.total);
+          setTotalPropertiesCount(res.meta.total ?? res.data.length);
+        } else {
+          setTotalPropertiesCount(res.data.length);
         }
         savePropertiesCache(res.data);
       }

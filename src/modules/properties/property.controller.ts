@@ -11,6 +11,7 @@ export class PropertyController {
 
   getProperties = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600');
       const { properties, meta } = await this.propertyService.getProperties(req.query);
       return ResponseUtil.success(res, properties, 'Properties retrieved successfully', 200, meta);
     } catch (error) {

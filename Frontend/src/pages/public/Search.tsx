@@ -405,9 +405,6 @@ export const Search: React.FC = () => {
         matchesSearch = (prop.postalCode || '').toLowerCase().replace(/\s+/g, '').includes(searchVal.replace(/\s+/g, ''));
       }
     } else {
-      if (activeFilters.city && activeFilters.city !== 'All') {
-        matchesSearch = matchesSearch && matchCity(prop, activeFilters.city);
-      }
       if (activeFilters.postalCode) {
         matchesSearch = matchesSearch && (prop.postalCode || '').toLowerCase().replace(/\s+/g, '').includes(activeFilters.postalCode.toLowerCase().replace(/\s+/g, ''));
       }
@@ -422,7 +419,7 @@ export const Search: React.FC = () => {
       }
     }
 
-    const matchesCity = activeFilters.city && activeFilters.city !== 'All' && currentSearchType !== 'city' ? matchCity(prop, selectedCity) : true;
+    const matchesCity = true; // Backend API handles city filtering directly via live TRREB OData query
     const matchesSchoolFilter = !schoolZoneFilter || !!(prop.schoolScore && prop.schoolScore >= 8);
 
     return (
@@ -473,11 +470,8 @@ export const Search: React.FC = () => {
     }
   }, [properties.length, selectedCity, selectedType, bedsCount, minPrice, maxPrice, searchTerm, filteredProperties.length]);
 
-  // Only filter by visible map viewport IDs if visiblePropertyIds is non-empty.
-  // If visiblePropertyIds is empty (e.g. map initializing or centered away from listings), show all filteredProperties so results are never wiped out to 0.
-  const displayedProperties = (visiblePropertyIds !== null && visiblePropertyIds.length > 0)
-    ? filteredProperties.filter(p => visiblePropertyIds.includes(p.id))
-    : filteredProperties;
+  // Grid and Map display the exact same filtered properties list
+  const displayedProperties = filteredProperties;
 
   const resetFilters = () => {
     setActiveFilters({
@@ -913,50 +907,59 @@ export const Search: React.FC = () => {
                 <option value="desc" style={{ background: '#ffffff', color: '#0f172a' }}>Price: High to Low</option>
                 <option value="asc" style={{ background: '#ffffff', color: '#0f172a' }}>Price: Low to High</option>
                 <option value="newest" style={{ background: '#ffffff', color: '#0f172a' }}>Newest Listed</option>
-                <option value="size" style={{ background: '#ffffff', color: '#0f172a' }}>Largest Square Feet</option>
               </select>
             </div>
           </div>
 
           {/* PROPERTY CARDS GRID */}
           {displayedProperties.length === 0 ? (
-            <div className="glass-panel" style={{ padding: '50px 24px', textAlign: 'center', borderRadius: '20px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 8px 30px rgba(0,0,0,0.06)', margin: '20px 0' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto', border: '1px solid #cbd5e1' }}>
-                <MapPin size={28} style={{ color: '#0f172a' }} />
+            isFetchingNextPage ? (
+              <div className="glass-panel" style={{ padding: '60px 24px', textAlign: 'center', borderRadius: '20px', background: '#ffffff', border: '1px solid #e2e8f0', margin: '20px 0' }}>
+                <RefreshCw size={32} className="spin" style={{ color: '#E31837', margin: '0 auto 12px auto', display: 'block' }} />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+                  Loading Live TRREB MLS Listings for {selectedCity}...
+                </h3>
+                <p style={{ fontSize: '0.84rem', color: '#64748b', margin: 0 }}>Connecting to OData feed...</p>
               </div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                No matching properties found
-              </h3>
-              <p style={{ fontSize: '0.88rem', color: '#475569', maxWidth: '480px', margin: '0 auto 20px auto', lineHeight: '1.6' }}>
-                We currently don't have active listings matching all your selected parameters. Try resetting your advanced filters to explore the entire premium inventory.
-              </p>
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => {
-                    setSelectedCity('All');
-                    setSelectedType('All');
-                    setBedsCount('All');
-                    setBathsCount('All');
-                    setSearchTerm('');
-                    setSearchQuery('');
-                    setActiveFilters({
-                      city: 'All',
-                      beds: 'All',
-                      baths: 'All',
-                      category: 'All',
-                      propertyType: 'All',
-                      priceRange: [0, 50000000]
-                    });
-                    setVisiblePropertyIds(null);
-                    showToast('All filters have been fully reset.', 'success');
-                  }}
-                  className="btn btn-primary hover-lift"
-                  style={{ padding: '10px 24px', fontSize: '0.88rem', fontWeight: 700, background: '#0f172a', color: '#ffffff', borderRadius: '10px' }}
-                >
-                  Clear &amp; Reset Filters
-                </button>
+            ) : (
+              <div className="glass-panel" style={{ padding: '50px 24px', textAlign: 'center', borderRadius: '20px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 8px 30px rgba(0,0,0,0.06)', margin: '20px 0' }}>
+                <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto', border: '1px solid #cbd5e1' }}>
+                  <MapPin size={28} style={{ color: '#0f172a' }} />
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                  No matching properties found
+                </h3>
+                <p style={{ fontSize: '0.88rem', color: '#475569', maxWidth: '480px', margin: '0 auto 20px auto', lineHeight: '1.6' }}>
+                  We currently don't have active listings matching all your selected parameters. Try resetting your advanced filters to explore the entire premium inventory.
+                </p>
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => {
+                      setSelectedCity('All');
+                      setSelectedType('All');
+                      setBedsCount('All');
+                      setBathsCount('All');
+                      setSearchTerm('');
+                      setSearchQuery('');
+                      setActiveFilters({
+                        city: 'All',
+                        beds: 'All',
+                        baths: 'All',
+                        category: 'All',
+                        propertyType: 'All',
+                        priceRange: [0, 50000000]
+                      });
+                      setVisiblePropertyIds(null);
+                      showToast('All filters have been fully reset.', 'success');
+                    }}
+                    className="btn btn-primary hover-lift"
+                    style={{ padding: '10px 24px', fontSize: '0.88rem', fontWeight: 700, background: '#0f172a', color: '#ffffff', borderRadius: '10px' }}
+                  >
+                    Clear &amp; Reset Filters
+                  </button>
+                </div>
               </div>
-            </div>
+            )
           ) : (
             <div
               style={{
@@ -996,6 +999,8 @@ export const Search: React.FC = () => {
                       <img
                         src={prop.imageUrl}
                         alt={prop.title}
+                        loading="lazy"
+                        decoding="async"
                         referrerPolicy="no-referrer"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80';
