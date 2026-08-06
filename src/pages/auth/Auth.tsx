@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Logo } from '../../design-system/BrandAssets';
+import { GoogleSignInButton } from '../../components/GoogleSignInButton';
 import { KeyRound, Mail, ArrowRight, ArrowLeft, Sparkles, Building, Briefcase, Phone, User, CheckSquare, Square, Search, ShieldCheck } from 'lucide-react';
 
 interface AuthProps {
@@ -9,7 +10,7 @@ interface AuthProps {
 }
 
 export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole = 'buyer' }) => {
-  const { login, register, showToast, pendingSearchFilters, pendingValuationData } = useApp();
+  const { login, register, loginWithGoogle, showToast, pendingSearchFilters, pendingValuationData } = useApp();
 
   // Auth states: 'login' | 'register' | 'forgot' | 'admin-login' | 'admin-register'
   const [mode, setMode] = useState<'login' | 'register' | 'forgot' | 'admin-login' | 'admin-register'>(initialMode);
@@ -254,6 +255,19 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
               <ArrowRight size={16} />
             </button>
 
+            {/* Divider */}
+            <div style={{ display: 'flex', alignItems: 'center', margin: '4px 0', gap: '12px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>or</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+            </div>
+
+            {/* Google Sign-In */}
+            <GoogleSignInButton
+              onPress={() => loginWithGoogle('admin')}
+              label="Continue with Google"
+            />
+
             {/* Register Link */}
             <div style={{ textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px', marginTop: '8px' }}>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
@@ -401,6 +415,19 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
               <ArrowRight size={16} />
             </button>
 
+            {/* Divider */}
+            <div style={{ display: 'flex', alignItems: 'center', margin: '4px 0', gap: '12px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>or</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+            </div>
+
+            {/* Google Sign-In */}
+            <GoogleSignInButton
+              onPress={() => loginWithGoogle('admin')}
+              label="Continue with Google"
+            />
+
             {/* Back to Admin Login Link */}
             <div style={{ textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '14px', marginTop: '4px' }}>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
@@ -531,6 +558,19 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
               <span>Sign In to Continue</span>
               <ArrowRight size={14} />
             </button>
+
+            {/* Divider */}
+            <div style={{ display: 'flex', alignItems: 'center', margin: '4px 0', gap: '12px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>or</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+            </div>
+
+            {/* Google Sign-In */}
+            <GoogleSignInButton
+              onPress={() => loginWithGoogle(selectedRole)}
+              label="Continue with Google"
+            />
 
             {/* Bottom Register Redirect Link */}
             <p style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
@@ -669,6 +709,19 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
               <span>Create Account</span>
               <ArrowRight size={14} />
             </button>
+
+            {/* Divider */}
+            <div style={{ display: 'flex', alignItems: 'center', margin: '4px 0', gap: '12px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>or</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+            </div>
+
+            {/* Google Sign-In */}
+            <GoogleSignInButton
+              onPress={() => loginWithGoogle(selectedRole)}
+              label="Continue with Google"
+            />
 
             {/* Back to Login Link */}
             <button

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { apiService } from '../services/api';
+import { GoogleAuthService, type GoogleUserProfile } from '../services/googleAuth';
+import { RoleSelectionModal } from '../components/RoleSelectionModal';
 
 // Interfaces for NovaEstate Luxury Data Structure
 export interface Property {
@@ -294,10 +296,21 @@ interface AppContextType {
   selectedBlogId: string | null;
   setSelectedBlogId: (id: string | null) => void;
   
-  // Authentication Sim
-  user: { name: string; email: string; role: 'buyer' | 'seller' | 'admin' } | null;
+  // Authentication & Google OAuth
+  user: {
+    uid?: string;
+    name: string;
+    email: string;
+    photoURL?: string;
+    role: 'buyer' | 'seller' | 'admin';
+    provider?: string;
+  } | null;
   login: (role: 'buyer' | 'seller' | 'admin', targetPage?: string) => void;
   register: (data: { name: string; email: string; phone?: string; role?: 'buyer' | 'seller' | 'admin' }) => void;
+  loginWithGoogle: (overrideRole?: 'buyer' | 'seller' | 'admin') => Promise<void>;
+  setUserRole: (role: 'buyer' | 'seller') => void;
+  roleSelectionModalOpen: boolean;
+  pendingGoogleUser: GoogleUserProfile | null;
   logout: () => void;
 
   // Pending Actions & Role Switching
@@ -1414,18 +1427,106 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  const [roleSelectionModalOpen, setRoleSelectionModalOpen] = useState(false);
+  const [pendingGoogleUser, setPendingGoogleUser] = useState<GoogleUserProfile | null>(null);
+
+  const loginWithGoogle = async (overrideRole?: 'buyer' | 'seller' | 'admin') => {
+    try {
+      showToast('Opening Google Sign-In authentication popup...', 'info');
+      const googleUser = await GoogleAuthService.triggerGoogleSignIn();
+
+      // Check if user already exists in storage with a role
+      let existingRole: 'buyer' | 'seller' | 'admin' | null = overrideRole || null;
+      if (!existingRole && typeof window !== 'undefined') {
+        const savedUser = localStorage.getItem('nova_user');
+        if (savedUser) {
+          try {
+            const parsed = JSON.parse(savedUser);
+            if (parsed && parsed.role) existingRole = parsed.role;
+          } catch {}
+        }
+      }
+
+      if (!existingRole && googleUser.email.toLowerCase().includes('admin')) {
+        existingRole = 'admin';
+      }
+
+      if (!existingRole) {
+        // First-time Google user: open Role Selection Modal
+        setPendingGoogleUser(googleUser);
+        setRoleSelectionModalOpen(true);
+        showToast('Google authentication successful! Please select your account role.', 'success');
+        return;
+      }
+
+      await completeGoogleLogin(googleUser, existingRole);
+    } catch (err: any) {
+      console.error('Google Sign-In Error:', err);
+      showToast(err.message || 'Google authentication failed. Please try again.', 'warning');
+    }
+  };
+
+  const completeGoogleLogin = async (
+    googleUser: GoogleUserProfile,
+    role: 'buyer' | 'seller' | 'admin'
+  ) => {
+    // Authenticate with backend API endpoint
+    await apiService.googleAuth({
+      idToken: googleUser.idToken,
+      uid: googleUser.uid,
+      email: googleUser.email,
+      name: googleUser.name,
+      photoURL: googleUser.photoURL,
+      role
+    });
+
+    const authenticatedUser = {
+      uid: googleUser.uid,
+      name: googleUser.name,
+      email: googleUser.email,
+      photoURL: googleUser.photoURL,
+      role,
+      provider: 'google'
+    };
+
+    setUser(authenticatedUser);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nova_user', JSON.stringify(authenticatedUser));
+      localStorage.setItem('auth_token', googleUser.idToken);
+      localStorage.setItem('nova_auth_token', googleUser.idToken);
+    }
+
+    setPendingGoogleUser(null);
+    setRoleSelectionModalOpen(false);
+
+    // Redirect to role-specific dashboard
+    const dashboardPage = role === 'buyer' ? 'dashboard-buyer' : role === 'seller' ? 'dashboard-seller' : 'dashboard-admin';
+    setCurrentPage(dashboardPage);
+    showToast(`Welcome, ${googleUser.name}! Signed in with Google as ${role.toUpperCase()}.`, 'success');
+  };
+
+  const setUserRole = async (role: 'buyer' | 'seller') => {
+    if (pendingGoogleUser) {
+      await completeGoogleLogin(pendingGoogleUser, role);
+    }
+  };
+
   const logout = () => {
     const wasAdmin = user?.role === 'admin' || currentPage.includes('admin');
     setUser(null);
+    setPendingGoogleUser(null);
+    setRoleSelectionModalOpen(false);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('nova_user');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('nova_auth_token');
     }
     if (wasAdmin) {
       setCurrentPage('admin-login');
       showToast('Admin session terminated. Signed out of Enterprise Portal.', 'info');
     } else {
       setCurrentPage('home');
-      showToast('Signed out of NovaEstate Secure Gateway', 'info');
+      showToast('Signed out of Kang Homes Gateway', 'info');
     }
   };
 
@@ -1617,6 +1718,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       user,
       login,
       register,
+      loginWithGoogle,
+      setUserRole,
+      roleSelectionModalOpen,
+      pendingGoogleUser,
       logout,
       pendingPropertyAction,
       setPendingPropertyAction,
@@ -1699,6 +1804,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       backendHealthMessage
     }}>
       {children}
+      <RoleSelectionModal
+        isOpen={roleSelectionModalOpen}
+        userName={pendingGoogleUser?.name}
+        userEmail={pendingGoogleUser?.email}
+        userPhoto={pendingGoogleUser?.photoURL}
+        onSelectRole={setUserRole}
+        onClose={() => setRoleSelectionModalOpen(false)}
+      />
     </AppContext.Provider>
   );
 };
