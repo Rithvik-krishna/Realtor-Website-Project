@@ -42,8 +42,8 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
     if (email.toLowerCase().includes('admin')) roleToLog = 'admin';
     else if (email.toLowerCase().includes('seller')) roleToLog = 'seller';
 
-    let derivedName = '';
-    if (email.includes('@')) {
+    let derivedName = fullName.trim();
+    if (!derivedName && email.includes('@')) {
       const username = email.split('@')[0];
       derivedName = username.split(/[\._]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
     }
@@ -481,6 +481,22 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
                     <span>{role.label}</span>
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Account Name Field */}
+            <div className="form-input-container">
+              <label className="form-label" style={{ fontSize: '0.65rem' }}>Your Full Name (Account Name)</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  placeholder="e.g. Rithvik Krishna"
+                  value={fullName}
+                  onChange={e => setFullName(e.target.value)}
+                  className="form-input"
+                  style={{ paddingLeft: '40px', fontSize: '0.85rem' }}
+                />
+                <User size={14} style={{ position: 'absolute', left: '14px', top: '15px', color: 'var(--text-secondary)' }} />
               </div>
             </div>
 
