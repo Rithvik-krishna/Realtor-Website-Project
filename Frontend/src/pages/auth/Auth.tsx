@@ -490,7 +490,7 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
               <div style={{ position: 'relative' }}>
                 <input
                   type="text"
-                  placeholder="e.g. Rithvik Krishna"
+                  placeholder="e.g. John Doe"
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
                   className="form-input"
