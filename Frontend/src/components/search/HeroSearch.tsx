@@ -99,11 +99,13 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({ onToggleExpand }) => {
     }
   };
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
+  const handleSearchSubmit = (e?: React.FormEvent, overrideQuery?: string) => {
     if (e) e.preventDefault();
 
+    const currentQuery = overrideQuery !== undefined ? overrideQuery : queryValue;
+
     // Check validation warnings
-    const hasQuery = queryValue.trim().length > 0;
+    const hasQuery = currentQuery.trim().length > 0;
     const hasKeywords = (localFilters.keywords || '').trim().length > 0;
     const isFiltered = 
       localFilters.propertyClass !== 'All' ||
@@ -141,18 +143,18 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({ onToggleExpand }) => {
     };
 
     if (searchType === 'city') {
-      updatedFilters.city = queryValue;
+      updatedFilters.city = currentQuery;
     } else if (searchType === 'postalCode') {
-      updatedFilters.postalCode = queryValue;
+      updatedFilters.postalCode = currentQuery;
     } else if (searchType === 'mls') {
-      updatedFilters.mlsNumber = queryValue;
+      updatedFilters.mlsNumber = currentQuery;
     } else if (searchType === 'neighbourhood') {
-      updatedFilters.community = queryValue;
+      updatedFilters.community = currentQuery;
     } else if (searchType === 'address') {
-      updatedFilters.address = queryValue;
+      updatedFilters.address = currentQuery;
     }
 
-    setSearchQuery(queryValue);
+    setSearchQuery(currentQuery);
     setActiveFilters(updatedFilters);
     setCurrentPage('search');
     showToast('Search query applied successfully.', 'success');
@@ -266,7 +268,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({ onToggleExpand }) => {
             onSearch={(val) => {
               setQueryValue(val);
               // Submit on selection to offer instantaneous response
-              setTimeout(() => handleSearchSubmit(), 50);
+              handleSearchSubmit(undefined, val);
             }}
           />
 

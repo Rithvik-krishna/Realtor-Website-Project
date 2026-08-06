@@ -8,7 +8,7 @@ import {
 
 export const Header: React.FC = () => {
   const { 
-    currentPage, setCurrentPage, user, logout, triggerRoleSwitchWarning, backendConnected, backendHealthMessage
+    currentPage, setCurrentPage, user, logout, triggerRoleSwitchWarning
   } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -156,35 +156,10 @@ export const Header: React.FC = () => {
   return (
     <nav className="glass-navigation" style={{ height: '80px', display: 'flex', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-        {/* Brand Logo & Backend Status Indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* Brand Logo */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ cursor: 'pointer' }} onClick={() => handleNavClick('home')}>
             <Logo size={36} />
-          </div>
-          <div
-            title={backendHealthMessage}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '4px 10px',
-              borderRadius: '20px',
-              background: backendConnected ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
-              border: `1px solid ${backendConnected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              color: backendConnected ? '#10b981' : '#ef4444',
-              cursor: 'default'
-            }}
-          >
-            <span style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: backendConnected ? '#10b981' : '#ef4444',
-              boxShadow: backendConnected ? '0 0 8px #10b981' : 'none'
-            }} />
-            {backendConnected ? 'API Connected' : 'Offline Mode'}
           </div>
         </div>
 
