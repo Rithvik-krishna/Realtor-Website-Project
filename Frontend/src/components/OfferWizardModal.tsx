@@ -35,7 +35,7 @@ export const OfferWizardModal: React.FC<OfferWizardModalProps> = ({ isOpen = tru
     appraisal: false
   });
 
-  const [signature, setSignature] = useState(user ? user.name : 'Laurent de Bourgeois');
+  const [signature, setSignature] = useState(user ? user.name : '');
 
   const handleToggleCondition = (key: keyof typeof conditions) => {
     setConditions(prev => ({ ...prev, [key]: !prev[key] }));

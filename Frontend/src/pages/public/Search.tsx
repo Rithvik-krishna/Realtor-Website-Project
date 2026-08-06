@@ -78,13 +78,75 @@ export const Search: React.FC = () => {
   const maxPrice = activeFilters.priceRange ? activeFilters.priceRange[1] : 50000000;
   const setMaxPrice = (max: number) => setActiveFilters(prev => ({ ...prev, priceRange: [prev.priceRange ? prev.priceRange[0] : 0, max] }));
 
-  const [selectedGarage, setSelectedGarage] = useState('All');
-  const [selectedSqft, setSelectedSqft] = useState('All');
-  const [selectedStatus, setSelectedStatus] = useState('All');
-  const [openHouseOnly, setOpenHouseOnly] = useState(false);
-  const [luxuryOnly, setLuxuryOnly] = useState(false);
-  const [schoolZoneFilter, setSchoolZoneFilter] = useState(false);
-  const [transitFilter, setTransitFilter] = useState(false);
+  // Derive status from activeFilters directly
+  const selectedStatus = activeFilters.status || 'All';
+  const setSelectedStatus = (status: string) => setActiveFilters(prev => ({ ...prev, status }));
+
+  // Derive garage from activeFilters directly
+  const selectedGarage = (activeFilters.showOnly || []).map(s => s.toLowerCase()).includes('garage') ? 'attached' : 'All';
+  const setSelectedGarage = (val: string) => {
+    setActiveFilters(prev => {
+      const otherShowOnly = (prev.showOnly || []).filter(s => s.toLowerCase() !== 'garage');
+      const showOnly = val !== 'All' ? [...otherShowOnly, 'garage'] : otherShowOnly;
+      return { ...prev, showOnly };
+    });
+  };
+
+  // Derive square footage from activeFilters directly
+  const selectedSqft = 
+    activeFilters.sqftMin === 0 && activeFilters.sqftMax === 1500 ? '< 1500' :
+    activeFilters.sqftMin === 1500 && activeFilters.sqftMax === 3000 ? '1500 - 3000' :
+    activeFilters.sqftMin === 3000 ? '3000+' : 'All';
+
+  const setSelectedSqft = (val: string) => {
+    setActiveFilters(prev => {
+      let sqftMin: number | undefined = undefined;
+      let sqftMax: number | undefined = undefined;
+      if (val === '< 1500') {
+        sqftMin = 0;
+        sqftMax = 1500;
+      } else if (val === '1500 - 3000') {
+        sqftMin = 1500;
+        sqftMax = 3000;
+      } else if (val === '3000+') {
+        sqftMin = 3000;
+        sqftMax = 99999;
+      }
+      return { ...prev, sqftMin, sqftMax };
+    });
+  };
+
+  // Derive boolean filters directly from activeFilters showOnly and schoolZone
+  const openHouseOnly = (activeFilters.showOnly || []).map(s => s.toLowerCase()).includes('open house');
+  const setOpenHouseOnly = (checked: boolean) => {
+    setActiveFilters(prev => {
+      const otherShowOnly = (prev.showOnly || []).filter(s => s.toLowerCase() !== 'open house');
+      const showOnly = checked ? [...otherShowOnly, 'Open House'] : otherShowOnly;
+      return { ...prev, showOnly };
+    });
+  };
+
+  const luxuryOnly = (activeFilters.showOnly || []).map(s => s.toLowerCase()).includes('luxury');
+  const setLuxuryOnly = (checked: boolean) => {
+    setActiveFilters(prev => {
+      const otherShowOnly = (prev.showOnly || []).filter(s => s.toLowerCase() !== 'luxury');
+      const showOnly = checked ? [...otherShowOnly, 'Luxury'] : otherShowOnly;
+      return { ...prev, showOnly };
+    });
+  };
+
+  const schoolZoneFilter = !!activeFilters.schoolZone;
+  const setSchoolZoneFilter = (checked: boolean) => setActiveFilters(prev => ({ ...prev, schoolZone: checked || undefined }));
+
+  const transitFilter = (activeFilters.showOnly || []).map(s => s.toLowerCase()).includes('transit');
+  const setTransitFilter = (checked: boolean) => {
+    setActiveFilters(prev => {
+      const otherShowOnly = (prev.showOnly || []).filter(s => s.toLowerCase() !== 'transit');
+      const showOnly = checked ? [...otherShowOnly, 'transit'] : otherShowOnly;
+      return { ...prev, showOnly };
+    });
+  };
+
   const [searchTerm, setSearchTerm] = useState(searchQuery || '');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc' | 'size' | 'newest'>('desc');
 
@@ -136,8 +198,9 @@ export const Search: React.FC = () => {
       setSearchTerm(activeFilters.postalCode);
     } else if (activeFilters.mlsNumber) {
       setSearchTerm(activeFilters.mlsNumber);
+    } else {
+      setSearchTerm('');
     }
-
     if (activeFilters.schoolZone) {
       setSchoolZoneFilter(true);
     }
@@ -485,15 +548,12 @@ export const Search: React.FC = () => {
       searchType: undefined,
       schoolZone: undefined,
       postalCode: undefined,
-      mlsNumber: undefined
+      mlsNumber: undefined,
+      showOnly: [],
+      status: 'All',
+      sqftMin: undefined,
+      sqftMax: undefined
     });
-    setSelectedGarage('All');
-    setSelectedSqft('All');
-    setSelectedStatus('All');
-    setOpenHouseOnly(false);
-    setLuxuryOnly(false);
-    setSchoolZoneFilter(false);
-    setTransitFilter(false);
     setSearchTerm('');
     setSearchQuery('');
 
@@ -648,9 +708,9 @@ export const Search: React.FC = () => {
             }}
           >
             <option value="All" style={{ background: '#ffffff', color: '#0f172a' }}>Beds: Any</option>
-            <option value="1" style={{ background: '#ffffff', color: '#0f172a' }}>1 Bed</option>
-            <option value="2" style={{ background: '#ffffff', color: '#0f172a' }}>2 Beds</option>
-            <option value="3" style={{ background: '#ffffff', color: '#0f172a' }}>3 Beds</option>
+            <option value="1+" style={{ background: '#ffffff', color: '#0f172a' }}>1+ Beds</option>
+            <option value="2+" style={{ background: '#ffffff', color: '#0f172a' }}>2+ Beds</option>
+            <option value="3+" style={{ background: '#ffffff', color: '#0f172a' }}>3+ Beds</option>
             <option value="4+" style={{ background: '#ffffff', color: '#0f172a' }}>4+ Beds</option>
           </select>
 
@@ -722,8 +782,8 @@ export const Search: React.FC = () => {
                 style={{ width: '100%', background: '#ffffff', border: '1px solid #cbd5e1', color: '#0f172a', fontWeight: 600, padding: '6px', borderRadius: '6px', fontSize: '0.8rem' }}
               >
                 <option value="All" style={{ background: '#ffffff', color: '#0f172a' }}>Any Bathrooms</option>
-                <option value="1" style={{ background: '#ffffff', color: '#0f172a' }}>1 Bath</option>
-                <option value="2" style={{ background: '#ffffff', color: '#0f172a' }}>2 Baths</option>
+                <option value="1+" style={{ background: '#ffffff', color: '#0f172a' }}>1+ Baths</option>
+                <option value="2+" style={{ background: '#ffffff', color: '#0f172a' }}>2+ Baths</option>
                 <option value="3+" style={{ background: '#ffffff', color: '#0f172a' }}>3+ Baths</option>
               </select>
             </div>

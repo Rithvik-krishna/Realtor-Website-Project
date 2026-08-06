@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { LayoutDashboard, TrendingUp, Calendar, FileText, MessageSquare, Bell, Settings, Phone, Mail, Video, DollarSign, Award, Layers, X, Send, Sparkles, Building2, Download } from 'lucide-react';
+import { LayoutDashboard, TrendingUp, Calendar, FileText, MessageSquare, Bell, Settings, Phone, Mail, Video, DollarSign, Award, Layers, X, Send, Sparkles, Building2, Download, Copy, ExternalLink } from 'lucide-react';
 
 export const SellerDashboard: React.FC = () => {
   const { 
@@ -40,6 +40,18 @@ export const SellerDashboard: React.FC = () => {
   const [rescheduleId, setRescheduleId] = useState<string | null>(null);
   const [newDate, setNewDate] = useState('');
   const [newTime, setNewTime] = useState('10:00 AM');
+
+  // Agent Contact Modals State
+  const [activeAgentModal, setActiveAgentModal] = useState<'call' | 'email' | 'video' | null>(null);
+  const [callbackPhone, setCallbackPhone] = useState('+1 (416) 555-0199');
+  const [callbackSlot, setCallbackTimeSlot] = useState('ASAP (Within 15 Mins)');
+
+  const [emailSubject, setEmailSubject] = useState('Inquiry regarding 102 Radcliffe Ridge Evaluation');
+  const [emailBody, setEmailBody] = useState('Hi Elena,\n\nI would like to discuss our property valuation strategy and next steps for listing 102 Radcliffe Ridge on MLS.\n\nBest regards,');
+  const [emailPriority, setEmailPriority] = useState('High');
+
+  // Vault Document Preview State
+  const [previewDoc, setPreviewDoc] = useState<any | null>(null);
 
   // Chat message state
   const [chatInput, setChatInput] = useState('');
@@ -201,6 +213,31 @@ export const SellerDashboard: React.FC = () => {
                 <button onClick={() => setActiveTab('messages')} className="btn btn-primary hover-lift" style={{ padding: '12px', fontSize: '0.8rem', textAlign: 'center' }}>
                   Message Agent Elena
                 </button>
+              </div>
+
+              {/* Quick Agent Contact Card */}
+              <div className="glass-panel" style={{ padding: '28px', borderRadius: '20px', display: 'flex', flexDirection: 'column', gap: '20px', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#ffffff' }}>Contact Your Assigned Agent</h3>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Senior Partner Elena Rostova • Direct Line +1 (416) 555-0199</p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '14px' }}>
+                  <button onClick={() => setActiveAgentModal('call')} className="btn btn-secondary hover-lift" style={{ padding: '14px', textAlign: 'center', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <Phone size={18} style={{ color: 'var(--color-lavender)' }} />
+                    <span>Call Agent</span>
+                  </button>
+
+                  <button onClick={() => setActiveAgentModal('email')} className="btn btn-secondary hover-lift" style={{ padding: '14px', textAlign: 'center', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <Mail size={18} style={{ color: 'var(--color-lavender)' }} />
+                    <span>Send Email</span>
+                  </button>
+
+                  <button onClick={() => setActiveAgentModal('video')} className="btn btn-secondary hover-lift" style={{ padding: '14px', textAlign: 'center', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <Video size={18} style={{ color: 'var(--color-lavender)' }} />
+                    <span>Video Call</span>
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -413,9 +450,9 @@ export const SellerDashboard: React.FC = () => {
                       <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Uploaded {doc.date} • {doc.size}</span>
                     </div>
                   </div>
-                  <button onClick={() => showToast(`Downloading ${doc.name}`, 'info')} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.75rem', display: 'flex', gap: '6px', alignItems: 'center' }}>
+                  <button onClick={() => setPreviewDoc(doc)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.75rem', display: 'flex', gap: '6px', alignItems: 'center' }}>
                     <Download size={14} />
-                    <span>Download</span>
+                    <span>View / Download</span>
                   </button>
                 </div>
               ))}
@@ -504,20 +541,23 @@ export const SellerDashboard: React.FC = () => {
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Senior Partner Elena Rostova</p>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
-                <a href="tel:+14165550199" className="btn btn-secondary" style={{ padding: '16px', textAlign: 'center', textDecoration: 'none', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <Phone size={20} style={{ color: 'var(--color-lavender)' }} />
-                  <span>Call Agent</span>
-                </a>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px' }}>
+                <button onClick={() => setActiveAgentModal('call')} className="btn btn-secondary hover-lift" style={{ padding: '20px', textAlign: 'center', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                  <Phone size={22} style={{ color: 'var(--color-lavender)' }} />
+                  <span style={{ fontWeight: 600 }}>Call Agent</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>+1 (416) 555-0199</span>
+                </button>
 
-                <a href="mailto:elena@novaestate.ca" className="btn btn-secondary" style={{ padding: '16px', textAlign: 'center', textDecoration: 'none', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <Mail size={20} style={{ color: 'var(--color-lavender)' }} />
-                  <span>Send Email</span>
-                </a>
+                <button onClick={() => setActiveAgentModal('email')} className="btn btn-secondary hover-lift" style={{ padding: '20px', textAlign: 'center', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                  <Mail size={22} style={{ color: 'var(--color-lavender)' }} />
+                  <span style={{ fontWeight: 600 }}>Send Email</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>elena@novaestate.ca</span>
+                </button>
 
-                <button onClick={() => showToast('Video consultation link dispatched to your email.', 'success')} className="btn btn-secondary" style={{ padding: '16px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <Video size={20} style={{ color: 'var(--color-lavender)' }} />
-                  <span>Video Call</span>
+                <button onClick={() => setActiveAgentModal('video')} className="btn btn-secondary hover-lift" style={{ padding: '20px', textAlign: 'center', color: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                  <Video size={22} style={{ color: 'var(--color-lavender)' }} />
+                  <span style={{ fontWeight: 600 }}>Video Call</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Virtual Room Active</span>
                 </button>
               </div>
             </div>
@@ -582,6 +622,236 @@ export const SellerDashboard: React.FC = () => {
                 <p style={{ color: '#ffffff', fontWeight: 700, marginTop: '4px' }}>${selectedCompForModal.price.toLocaleString()}</p>
                 <p style={{ color: 'var(--text-muted)', marginTop: '4px' }}>{selectedCompForModal.sqft.toLocaleString()} Sq Ft</p>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CALL AGENT MODAL */}
+      {activeAgentModal === 'call' && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '28px', borderRadius: '20px', border: '1px solid var(--color-lavender)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Phone size={22} style={{ color: 'var(--color-lavender)' }} />
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#ffffff' }}>Call Senior Partner</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Elena Rostova • Direct Line</p>
+                </div>
+              </div>
+              <button onClick={() => setActiveAgentModal(null)} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}><X size={18} /></button>
+            </div>
+
+            <div style={{ padding: '16px', background: 'rgba(167, 139, 250, 0.1)', borderRadius: '12px', border: '1px solid rgba(167, 139, 250, 0.2)', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <span style={{ fontSize: '0.65rem', color: 'var(--color-lavender)', fontWeight: 600 }}>DIRECT REALTOR PHONE</span>
+                <h4 style={{ fontSize: '1.2rem', color: '#ffffff', fontWeight: 700, marginTop: '2px' }}>+1 (416) 555-0199</h4>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText('+1 (416) 555-0199');
+                  showToast('Phone number +1 (416) 555-0199 copied to clipboard!', 'success');
+                }}
+                className="btn btn-secondary"
+                style={{ padding: '8px 12px', fontSize: '0.75rem', display: 'flex', gap: '6px', alignItems: 'center' }}
+              >
+                <Copy size={14} />
+                <span>Copy</span>
+              </button>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              showToast(`Callback requested! Elena Rostova will call ${callbackPhone} at ${callbackSlot}`, 'success');
+              setActiveAgentModal(null);
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#ffffff' }}>Request Immediate Agent Callback</span>
+              
+              <div className="form-input-container">
+                <label className="form-label" style={{ fontSize: '0.65rem' }}>Your Phone Number</label>
+                <input type="text" value={callbackPhone} onChange={e => setCallbackPhone(e.target.value)} className="form-input" style={{ background: '#070d24' }} required />
+              </div>
+
+              <div className="form-input-container">
+                <label className="form-label" style={{ fontSize: '0.65rem' }}>Preferred Time Slot</label>
+                <select value={callbackSlot} onChange={e => setCallbackTimeSlot(e.target.value)} className="form-input" style={{ background: '#070d24' }}>
+                  <option value="ASAP (Within 15 Mins)">ASAP (Within 15 Mins)</option>
+                  <option value="Today 02:00 PM">Today 02:00 PM</option>
+                  <option value="Today 05:00 PM">Today 05:00 PM</option>
+                  <option value="Tomorrow Morning">Tomorrow Morning (10:00 AM)</option>
+                </select>
+              </div>
+
+              <button type="submit" className="btn btn-primary" style={{ padding: '12px', fontSize: '0.85rem', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <Phone size={16} />
+                <span>Request Callback Now</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* SEND EMAIL MODAL */}
+      {activeAgentModal === 'email' && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', padding: '28px', borderRadius: '20px', border: '1px solid var(--color-lavender)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Mail size={22} style={{ color: 'var(--color-lavender)' }} />
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#ffffff' }}>Send Email to Elena Rostova</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>elena@novaestate.ca</p>
+                </div>
+              </div>
+              <button onClick={() => setActiveAgentModal(null)} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}><X size={18} /></button>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (!emailSubject || !emailBody) return;
+              
+              // Push to chat messages
+              const userMsg = { sender: 'user', text: `[EMAIL SENT] ${emailSubject}\n${emailBody}`, time: 'Just now' };
+              setChatMessages(prev => [...prev, userMsg]);
+
+              setTimeout(() => {
+                setChatMessages(prev => [...prev, {
+                  sender: 'agent',
+                  text: `Thank you for your email regarding "${emailSubject}". I have received it and will follow up shortly.`,
+                  time: 'Just now'
+                }]);
+              }, 1200);
+
+              showToast('Email transmitted to Elena Rostova! A confirmation copy was sent to your inbox.', 'success');
+              setActiveAgentModal(null);
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              
+              <div className="form-input-container">
+                <label className="form-label" style={{ fontSize: '0.65rem' }}>Subject Line</label>
+                <input type="text" value={emailSubject} onChange={e => setEmailSubject(e.target.value)} className="form-input" style={{ background: '#070d24' }} required />
+              </div>
+
+              <div className="form-input-container">
+                <label className="form-label" style={{ fontSize: '0.65rem' }}>Priority Level</label>
+                <select value={emailPriority} onChange={e => setEmailPriority(e.target.value)} className="form-input" style={{ background: '#070d24' }}>
+                  <option value="Normal">Normal Inquiry</option>
+                  <option value="High">High Priority - Offer / Pricing Strategy</option>
+                  <option value="Urgent">Urgent - Listing Appraisal</option>
+                </select>
+              </div>
+
+              <div className="form-input-container">
+                <label className="form-label" style={{ fontSize: '0.65rem' }}>Email Message Body</label>
+                <textarea value={emailBody} onChange={e => setEmailBody(e.target.value)} rows={5} className="form-input" style={{ background: '#070d24', resize: 'vertical' }} required />
+              </div>
+
+              <button type="submit" className="btn btn-primary" style={{ padding: '12px', fontSize: '0.85rem', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <Send size={16} />
+                <span>Transmit Email</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* VIDEO CALL MODAL */}
+      {activeAgentModal === 'video' && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '480px', padding: '28px', borderRadius: '20px', border: '1px solid var(--color-lavender)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Video size={22} style={{ color: 'var(--color-lavender)' }} />
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#ffffff' }}>Live HD Video Consultation</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Virtual Room ID: MEET-ELENA-9921</p>
+                </div>
+              </div>
+              <button onClick={() => setActiveAgentModal(null)} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}><X size={18} /></button>
+            </div>
+
+            <div style={{ height: '140px', background: '#030712', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(167,139,250,0.15)', color: 'var(--color-lavender)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Video size={24} />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: '#ffffff', fontWeight: 600, display: 'block' }}>Senior Partner Elena Rostova</span>
+                <span style={{ fontSize: '0.7rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'center', marginTop: '2px' }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />
+                  <span>Room Active • Host Available</span>
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button
+                onClick={() => {
+                  showToast('Connecting to Elena Rostova virtual video conference room...', 'success');
+                  setTimeout(() => window.open('https://meet.google.com', '_blank'), 800);
+                  setActiveAgentModal(null);
+                }}
+                className="btn btn-primary"
+                style={{ padding: '12px', fontSize: '0.88rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              >
+                <ExternalLink size={16} />
+                <span>Join Video Room Now</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText('https://meet.google.com/xyz-kang-homes-elena');
+                  showToast('Video consultation link copied to clipboard!', 'info');
+                }}
+                className="btn btn-secondary"
+                style={{ padding: '10px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              >
+                <Copy size={14} />
+                <span>Copy Room Invitation Link</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VAULT DOCUMENT PREVIEW MODAL */}
+      {previewDoc && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', padding: '28px', borderRadius: '20px', border: '1px solid var(--color-lavender)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FileText size={22} style={{ color: 'var(--color-lavender)' }} />
+                <div>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#ffffff' }}>Vault Document Inspection</h3>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Encrypted 256-bit Security Verified</p>
+                </div>
+              </div>
+              <button onClick={() => setPreviewDoc(null)} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}><X size={18} /></button>
+            </div>
+
+            <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)', marginBottom: '20px' }}>
+              <h4 style={{ fontSize: '0.95rem', color: '#ffffff', fontWeight: 600 }}>{previewDoc.name}</h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>Uploaded {previewDoc.date} • Size {previewDoc.size}</p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                onClick={() => {
+                  showToast(`Downloading encrypted vault document: ${previewDoc.name}`, 'success');
+                  setPreviewDoc(null);
+                }}
+                className="btn btn-primary"
+                style={{ flex: 1, padding: '12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              >
+                <Download size={16} />
+                <span>Download Document</span>
+              </button>
+
+              <button
+                onClick={() => setPreviewDoc(null)}
+                className="btn btn-secondary"
+                style={{ padding: '12px 20px', fontSize: '0.85rem' }}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

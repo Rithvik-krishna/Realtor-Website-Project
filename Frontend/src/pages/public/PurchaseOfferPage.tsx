@@ -37,7 +37,7 @@ export const PurchaseOfferPage: React.FC = () => {
   const [statusCertCondition, setStatusCertCondition] = useState(true);
   
   // Legal Signature
-  const [signatureName, setSignatureName] = useState(user?.name || 'Laurent de Bourgeois');
+  const [signatureName, setSignatureName] = useState(user?.name || user?.email?.split('@')[0] || '');
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [submittedOfferId, setSubmittedOfferId] = useState('');
 

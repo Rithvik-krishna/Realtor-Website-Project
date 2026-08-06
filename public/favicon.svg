@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="20" fill="#E31837"/>
+  <!-- Elegant K & House Roofline Emblem -->
+  <path d="M25 22V78H35V54L55 78H68L46 51L66 22H53L35 44V22H25Z" fill="#FFFFFF"/>
+  <!-- Royal LePage Accent Roof Peak -->
+  <path d="M48 18L78 38H68L48 24L28 38H18L48 18Z" fill="#FFFFFF"/>
+</svg>

@@ -29,8 +29,8 @@ export const ScheduleViewingPage: React.FC = () => {
   const [tourType, setTourType] = useState<'in-person' | 'virtual'>('in-person');
   const [selectedDate, setSelectedDate] = useState('2026-08-05');
   const [selectedSlot, setSelectedSlot] = useState('11:00 AM');
-  const [fullName, setFullName] = useState(user?.name || 'Laurent de Bourgeois');
-  const [email, setEmail] = useState(user?.email || 'buyer@novaestate.ca');
+  const [fullName, setFullName] = useState(user?.name || user?.email?.split('@')[0] || '');
+  const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState('+1 (416) 555-0199');
   const [specialNotes, setSpecialNotes] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
