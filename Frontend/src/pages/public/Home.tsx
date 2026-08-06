@@ -234,7 +234,7 @@ export const Home: React.FC = () => {
             <span style={{ background: '#E31837', color: '#ffffff', padding: '4px 14px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em' }}>
               EXPERT CONSULTATION
             </span>
-            <h2 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#ffffff' }}>Ready to Buy or Sell Your Home in Ontario?</h2>
+            <h2 className="cta-title" style={{ fontSize: '2.1rem', fontWeight: 800, color: '#ffffff' }}>Ready to Buy or Sell Your Home in Ontario?</h2>
             <p style={{ color: '#d1d5db', fontSize: '1rem', maxWidth: '600px', lineHeight: '1.6' }}>
               Contact Karan Kang today for a complimentary property market evaluation or personalized buyer consultation.
             </p>

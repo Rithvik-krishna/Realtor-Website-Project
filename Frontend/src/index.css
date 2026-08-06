@@ -397,3 +397,8 @@ p, span, label, div {
     opacity: 1;
   }
 }
+
+/* CTA Title Color Override */
+.cta-title {
+  color: #ffffff !important;
+}
