@@ -42,14 +42,25 @@ export const Auth: React.FC<AuthProps> = ({ initialMode = 'login', initialRole =
     if (email.toLowerCase().includes('admin')) roleToLog = 'admin';
     else if (email.toLowerCase().includes('seller')) roleToLog = 'seller';
 
-    login(roleToLog);
+    let derivedName = '';
+    if (email.includes('@')) {
+      const username = email.split('@')[0];
+      derivedName = username.split(/[\._]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+
+    login(roleToLog, undefined, { name: derivedName, email });
   };
 
   // Dedicated Admin Login Submit
   const handleAdminLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    login('admin', 'dashboard-admin');
+    let derivedName = fullName;
+    if (!derivedName && email.includes('@')) {
+      const username = email.split('@')[0];
+      derivedName = username.split(/[\._]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+    login('admin', 'dashboard-admin', { name: derivedName, email });
   };
 
   // Standard Register Submit

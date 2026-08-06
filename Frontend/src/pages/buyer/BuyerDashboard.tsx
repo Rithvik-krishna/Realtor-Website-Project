@@ -163,7 +163,7 @@ export const BuyerDashboard: React.FC = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className="badge badge-lavender">BUYER WORKSPACE</span>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Welcome back, {user?.name || 'Laurent de Bourgeois'}</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Welcome back, {user?.name || user?.email?.split('@')[0] || 'Valued Client'}</span>
             </div>
             <h1 style={{ fontSize: '1.8rem', fontWeight: 600, color: '#ffffff', marginTop: '2px' }}>Client Command Center</h1>
           </div>
@@ -1082,12 +1082,12 @@ export const BuyerDashboard: React.FC = () => {
             <div className="glass-panel" style={{ padding: '32px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div className="form-input-container">
                 <label className="form-label" style={{ fontSize: '0.7rem' }}>Full Name</label>
-                <input type="text" defaultValue={user?.name || 'Laurent de Bourgeois'} className="form-input" style={{ padding: '10px' }} />
+                <input type="text" key={user?.name} defaultValue={user?.name || user?.email?.split('@')[0] || ''} className="form-input" style={{ padding: '10px' }} />
               </div>
 
               <div className="form-input-container">
                 <label className="form-label" style={{ fontSize: '0.7rem' }}>Email Address</label>
-                <input type="email" defaultValue={user?.email || 'laurent@novaestate.ca'} className="form-input" style={{ padding: '10px' }} />
+                <input type="email" key={user?.email} defaultValue={user?.email || ''} className="form-input" style={{ padding: '10px' }} />
               </div>
 
               <div className="form-input-container">

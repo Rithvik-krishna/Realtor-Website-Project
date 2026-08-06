@@ -242,10 +242,10 @@ export const AdminDashboard: React.FC = () => {
             {/* Admin Profile Badge */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-lavender), var(--color-blue-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 700, fontSize: '0.8rem' }}>
-                {user?.name.charAt(0) || 'A'}
+                {user?.name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'A'}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#ffffff' }}>{user?.name || 'Marcus Aurelius'}</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#ffffff' }}>{user?.name || user?.email?.split('@')[0] || 'Administrator'}</span>
                 <span style={{ fontSize: '0.65rem', color: 'var(--color-lavender)' }}>Managing Director</span>
               </div>
             </div>
@@ -1097,10 +1097,10 @@ export const AdminDashboard: React.FC = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
                 <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-lavender), var(--color-blue-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 700, fontSize: '1.8rem' }}>
-                  {user?.name.charAt(0) || 'M'}
+                  {user?.name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'A'}
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.2rem', color: '#ffffff', fontWeight: 600 }}>{user?.name || 'Marcus Aurelius'}</h3>
+                  <h3 style={{ fontSize: '1.2rem', color: '#ffffff', fontWeight: 600 }}>{user?.name || user?.email?.split('@')[0] || 'Administrator'}</h3>
                   <p style={{ fontSize: '0.85rem', color: 'var(--color-lavender)' }}>{user?.email || 'admin@novaestate.ca'}</p>
                   <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Role: Enterprise Platform Administrator</span>
                 </div>

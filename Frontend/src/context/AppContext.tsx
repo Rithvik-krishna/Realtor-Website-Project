@@ -296,7 +296,7 @@ interface AppContextType {
   
   // Authentication Sim
   user: { name: string; email: string; role: 'buyer' | 'seller' | 'admin' } | null;
-  login: (role: 'buyer' | 'seller' | 'admin', targetPage?: string) => void;
+  login: (role: 'buyer' | 'seller' | 'admin', targetPage?: string, customUser?: { name?: string; email?: string }) => void;
   register: (data: { name: string; email: string; phone?: string; role?: 'buyer' | 'seller' | 'admin' }) => void;
   logout: () => void;
 
@@ -1299,17 +1299,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Evaluation appointment rescheduled.', 'success');
   };
 
-  const login = (role: 'buyer' | 'seller' | 'admin', targetPage?: string) => {
-    const names = {
-      buyer: 'Laurent de Bourgeois',
-      seller: 'Elena Rostova',
-      admin: 'Marcus Aurelius (Director)'
-    };
-    setUser({
-      name: names[role],
-      email: `${role}@novaestate.ca`,
+  const login = (role: 'buyer' | 'seller' | 'admin', targetPage?: string, customUser?: { name?: string; email?: string }) => {
+    let email = customUser?.email;
+    let name = customUser?.name;
+
+    if (!email) {
+      email = `${role}@novaestate.ca`;
+    }
+
+    if (!name || !name.trim()) {
+      if (email.includes('@')) {
+        const username = email.split('@')[0];
+        name = username.split(/[\._]/).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+      } else {
+        name = `${role.charAt(0).toUpperCase() + role.slice(1)} User`;
+      }
+    }
+
+    const userObj = {
+      name,
+      email,
       role
-    });
+    };
+
+    setUser(userObj);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nova_user', JSON.stringify(userObj));
+    }
+
+    const userName = name;
 
     if (pendingPropertyAction && role === 'buyer') {
       const act = pendingPropertyAction;
@@ -1319,7 +1337,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (act.type === 'save') {
         setCurrentPage('property-detail');
         toggleSaveProperty(act.propertyId);
-        showToast(`Welcome back, ${names[role]}! Property "${act.propertyTitle || 'Luxury Home'}" saved to your collection.`, 'success');
+        showToast(`Welcome back, ${userName}! Property "${act.propertyTitle || 'Luxury Home'}" saved to your collection.`, 'success');
       } else if (act.type === 'book') {
         setCurrentPage('schedule-viewing');
         showToast(`Welcome back! Resuming your tour booking for "${act.propertyTitle || 'Luxury Home'}".`, 'success');
@@ -1343,7 +1361,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const addr = pendingValuationData.address;
       setPendingValuationData(null);
       setCurrentPage(pageToOpen);
-      showToast(`Welcome back, ${names[role]}! Your property valuation details for ${addr} have been restored and processed.`, 'success');
+      showToast(`Welcome back, ${userName}! Your property valuation details for ${addr} have been restored and processed.`, 'success');
     } else if (pendingSearchFilters) {
       if (pendingSearchFilters.filters) {
         setActiveFilters(prev => ({ ...prev, ...pendingSearchFilters.filters }));
@@ -1354,21 +1372,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const pageToOpen = pendingRedirectPage || 'search';
       setPendingSearchFilters(null);
       setCurrentPage(pageToOpen);
-      showToast(`Welcome back, ${names[role]}! Your previous search results have been automatically restored.`, 'success');
+      showToast(`Welcome back, ${userName}! Your previous search results have been automatically restored.`, 'success');
     } else {
       const pageToOpen = targetPage || (role === 'buyer' ? 'search' : `dashboard-${role}`);
       setCurrentPage(pageToOpen);
-      showToast(`Successfully authenticated as ${names[role]}`, 'success');
+      showToast(`Successfully authenticated as ${userName}`, 'success');
     }
   };
 
   const register = (data: { name: string; email: string; phone?: string; role?: 'buyer' | 'seller' | 'admin' }) => {
     const role = data.role || 'buyer';
-    setUser({
-      name: data.name || 'Valued Client',
+    let name = data.name;
+    if (!name && data.email) {
+      const username = data.email.split('@')[0];
+      name = username.split(/[\._]/).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+    }
+    const userObj = {
+      name: name || 'Valued Client',
       email: data.email,
       role
-    });
+    };
+
+    setUser(userObj);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nova_user', JSON.stringify(userObj));
+    }
 
     if (pendingValuationData) {
       setCurrentValuationData(pendingValuationData);
