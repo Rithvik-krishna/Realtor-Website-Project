@@ -451,6 +451,7 @@ interface AppContextType {
   fetchNextPropertiesPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  totalPropertiesCount: number;
 
   // Backend Connectivity Status
   backendConnected: boolean;
@@ -847,7 +848,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // URL & Session Storage Synchronization
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('trreb_active_filters_cache', JSON.stringify(activeFilters));
+      try {
+        sessionStorage.setItem('trreb_active_filters_cache', JSON.stringify(activeFilters));
+      } catch {}
 
       if (currentPage === 'search') {
         const params = new URLSearchParams();
@@ -1046,10 +1049,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const currentPageRef = useRef(1);
   const totalPagesRef = useRef(1);
   const isFetchingRef = useRef(false);
-  const initialFetchRef = useRef(false);
 
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
+  const [totalPropertiesCount, setTotalPropertiesCount] = useState<number>(0);
+
+  const savePropertiesCache = (data: Property[]) => {
+    if (typeof window === 'undefined') return;
+    try {
+      // Store at most 40 items in storage to stay well under browser 5MB quota
+      const cacheSlice = data.slice(0, 40);
+      const str = JSON.stringify(cacheSlice);
+      sessionStorage.setItem('trreb_properties_cache', str);
+      localStorage.setItem('trreb_properties_cache', str);
+    } catch {
+      // Safely ignore storage quota limits
+    }
+  };
 
   // Fetch Next Page (Page 2, 3...)
   const fetchNextPropertiesPage = useCallback(async () => {
@@ -1060,7 +1076,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const nextPageToFetch = currentPageRef.current + 1;
 
     try {
-      const res = await apiService.getProperties({ page: nextPageToFetch, limit: 60 });
+      const cityParam = activeFilters.city && activeFilters.city !== 'All' ? activeFilters.city : undefined;
+      const res = await apiService.getProperties({ page: nextPageToFetch, limit: 100, city: cityParam });
       if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
         console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties (Page ${nextPageToFetch}/${res.meta?.totalPages || 1})!`);
 
@@ -1074,10 +1091,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             return true;
           });
 
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem('trreb_properties_cache', JSON.stringify(unique));
-            localStorage.setItem('trreb_properties_cache', JSON.stringify(unique));
-          }
+          savePropertiesCache(unique);
           return unique;
         });
 
@@ -1085,6 +1099,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           currentPageRef.current = res.meta.page;
           totalPagesRef.current = res.meta.totalPages;
           setHasNextPage(res.meta.page < res.meta.totalPages);
+          if (res.meta.total) setTotalPropertiesCount(res.meta.total);
         }
       }
     } catch (err) {
@@ -1093,31 +1108,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       isFetchingRef.current = false;
       setIsFetchingNextPage(false);
     }
-  }, []);
+  }, [activeFilters.city]);
 
-  // Initial fetch for Page 1 (GET /api/v1/properties?page=1&limit=60) with React StrictMode duplicate prevention
+  // Fetch Page 1 whenever activeFilters.city changes (or on initial mount)
   useEffect(() => {
-    if (initialFetchRef.current) return;
-    initialFetchRef.current = true;
+    const cityParam = activeFilters.city && activeFilters.city !== 'All' ? activeFilters.city : undefined;
+    currentPageRef.current = 1;
 
-    apiService.getProperties({ page: 1, limit: 60 }).then(res => {
+    apiService.getProperties({ page: 1, limit: 100, city: cityParam }).then(res => {
       if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-        console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend (Page 1)!`);
+        console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1, Total ${res.meta?.total || res.data.length})!`);
         setPropertiesList(res.data);
         if (res.meta) {
           currentPageRef.current = res.meta.page;
           totalPagesRef.current = res.meta.totalPages;
           setHasNextPage(res.meta.page < res.meta.totalPages);
+          if (res.meta.total) setTotalPropertiesCount(res.meta.total);
         }
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('trreb_properties_cache', JSON.stringify(res.data));
-          localStorage.setItem('trreb_properties_cache', JSON.stringify(res.data));
-        }
+        savePropertiesCache(res.data);
       }
     }).catch(err => {
       console.warn('⚠️ Could not fetch live TRREB properties from backend:', err);
     });
-  }, []);
+  }, [activeFilters.city]);
 
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([
     { id: 'usr-1', name: 'Baron Von Roth', email: 'baron@swissholding.ch', phone: '+1 (416) 555-0188', role: 'buyer', status: 'Active', registrationDate: '2026-05-12', lastLogin: '10 mins ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
@@ -1660,6 +1673,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       fetchNextPropertiesPage,
       hasNextPage,
       isFetchingNextPage,
+      totalPropertiesCount,
       adminUsers,
       adminAgents,
       adminAppointments,

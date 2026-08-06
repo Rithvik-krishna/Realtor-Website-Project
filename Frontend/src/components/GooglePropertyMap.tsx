@@ -11,6 +11,7 @@ interface GooglePropertyMapProps {
   onHoverProperty: (id: string | null) => void;
   searchCity?: string;
   onVisiblePropertiesChange?: (visibleIds: string[]) => void;
+  totalPropertiesCount?: number;
 }
 
 // City Center Coordinates Mapping for Search behavior
@@ -51,7 +52,8 @@ export const GooglePropertyMap: React.FC<GooglePropertyMapProps> = ({
   onSelectProperty,
   onHoverProperty,
   searchCity = 'Toronto',
-  onVisiblePropertiesChange
+  onVisiblePropertiesChange,
+  totalPropertiesCount
 }) => {
   const apiKey = (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyC6D_AoRBq3Fpg3BOdgs2wuDNuJRf27k-8';
 
@@ -194,7 +196,7 @@ export const GooglePropertyMap: React.FC<GooglePropertyMapProps> = ({
             }}
           >
             <Sparkles size={13} style={{ color: 'var(--color-lavender)' }} />
-            <span>{searchCity} ({properties.length} Listings)</span>
+            <span>{searchCity} ({(totalPropertiesCount && totalPropertiesCount > 0 ? totalPropertiesCount : properties.length).toLocaleString()} Listings)</span>
           </div>
 
           {/* Controls Cluster */}

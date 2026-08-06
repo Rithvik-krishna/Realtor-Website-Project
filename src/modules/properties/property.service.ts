@@ -12,7 +12,7 @@ export class PropertyService {
 
   async getProperties(query: any) {
     const page = parseInt(query.page as string, 10) || 1;
-    const limit = parseInt(query.limit as string, 10) || 60;
+    const limit = parseInt(query.limit as string, 10) || 100;
     const skip = (page - 1) * limit;
 
     // Fetch ONLY live authenticated listings from TRREB OData API (Zero mock/db seed mixing)

@@ -10,7 +10,7 @@ app.listen(PORT, () => {
   Logger.info(`📡 API Base URL: http://localhost:${PORT}/api/v1`);
 
   // Pre-warm live TRREB properties cache in background for 0ms load times
-  trrebService.getProperties({ top: 60 }).then(res => {
+  trrebService.getProperties({ top: 100 }).then(res => {
     Logger.info(`⚡ [TRREB Service] Pre-warmed cache with ${res.properties.length} live MLS listings`);
   }).catch(err => {
     Logger.warn(`⚠️ [TRREB Service] Cache pre-warm warning: ${err.message}`);

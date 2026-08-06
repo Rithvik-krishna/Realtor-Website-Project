@@ -46,7 +46,8 @@ export const Search: React.FC = () => {
     triggerRoleSwitchWarning,
     fetchNextPropertiesPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    totalPropertiesCount
   } = useApp();
 
   // Screen Layout & View States
@@ -116,6 +117,15 @@ export const Search: React.FC = () => {
     return () => container.removeEventListener('scroll', handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPropertiesPage]);
 
+  const handleSearchTermChange = (term: string) => {
+    setSearchTerm(term);
+    const clean = term.trim().toLowerCase();
+    const matchedCity = CITIES.find(c => c !== 'All' && c.toLowerCase() === clean);
+    if (matchedCity && matchedCity !== selectedCity) {
+      setSelectedCity(matchedCity);
+    }
+  };
+
   // Synchronize search query and custom parameters from global state
   useEffect(() => {
     if (searchQuery) {
@@ -128,13 +138,10 @@ export const Search: React.FC = () => {
       setSearchTerm(activeFilters.mlsNumber);
     }
 
-    if (activeFilters.city && activeFilters.city !== 'All') {
-      setSelectedCity(activeFilters.city);
-    }
     if (activeFilters.schoolZone) {
       setSchoolZoneFilter(true);
     }
-  }, [searchQuery, activeFilters]);
+  }, [searchQuery, activeFilters.address, activeFilters.postalCode, activeFilters.mlsNumber, activeFilters.schoolZone]);
 
   // Sync selection from map
   const handleSelectPropertyFromMap = (prop: Property) => {
@@ -549,7 +556,7 @@ export const Search: React.FC = () => {
               type="text"
               placeholder="City, Neighborhood, Address, MLS#..."
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={e => handleSearchTermChange(e.target.value)}
               style={{
                 width: '100%',
                 background: '#ffffff',
@@ -817,6 +824,7 @@ export const Search: React.FC = () => {
             onHoverProperty={setMapHoveredId}
             searchCity={selectedCity}
             onVisiblePropertiesChange={handleVisiblePropertiesChange}
+            totalPropertiesCount={totalPropertiesCount}
           />
         </div>
 
@@ -839,7 +847,7 @@ export const Search: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             <div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                {displayedProperties.length} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
+                {((totalPropertiesCount && totalPropertiesCount > 0) ? totalPropertiesCount : displayedProperties.length).toLocaleString()} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
               </h2>
               <p style={{ fontSize: '0.78rem', color: '#475569', margin: '2px 0 0 0' }}>
                 Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{selectedCity}, Ontario</span>
@@ -1178,6 +1186,44 @@ export const Search: React.FC = () => {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* INFINITE SCROLL & PAGINATION LOADER */}
+          {displayedProperties.length > 0 && (
+            <div style={{ padding: '24px 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+              {isFetchingNextPage ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#f1f5f9', border: '1px solid #cbd5e1', padding: '10px 20px', borderRadius: '30px', color: '#0f172a', fontWeight: 700, fontSize: '0.84rem' }}>
+                  <RefreshCw size={16} className="spin" style={{ color: '#E31837' }} />
+                  <span>Loading additional live TRREB MLS properties...</span>
+                </div>
+              ) : hasNextPage ? (
+                <button
+                  onClick={() => fetchNextPropertiesPage()}
+                  className="btn btn-secondary hover-lift"
+                  style={{
+                    padding: '12px 28px',
+                    borderRadius: '30px',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    background: '#0f172a',
+                    color: '#ffffff',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(15, 23, 42, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <RefreshCw size={14} />
+                  <span>Load More TRREB Listings ({properties.length} loaded so far)</span>
+                </button>
+              ) : (
+                <div style={{ color: '#64748b', fontSize: '0.82rem', fontWeight: 600 }}>
+                  ✓ All available TRREB listings loaded ({properties.length} total)
+                </div>
+              )}
             </div>
           )}
 

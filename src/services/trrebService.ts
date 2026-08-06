@@ -208,7 +208,7 @@ export class TRREBService {
    */
   async getProperties(options?: { top?: number; skip?: number; city?: string; orderby?: string; filter?: string }): Promise<{ properties: TRREBPropertyMapped[]; nextLink?: string; count?: number }> {
     // TRREB IDX Rule 2: Limit search response to maximum of 100 listings
-    const top = Math.min(100, Math.max(1, options?.top || 60));
+    const top = Math.min(100, Math.max(1, options?.top || 100));
     const skip = options?.skip || 0;
     const cacheKey = `props_${options?.city || 'all'}_${top}_${skip}_${options?.orderby || 'default'}`;
 
@@ -221,28 +221,48 @@ export class TRREBService {
 
     try {
       const client = this.getClient();
-      const url = '/Property';
+      const city = options?.city;
+
+      const queryParams: string[] = [`$count=true`, `$top=${top}`, `$skip=${skip}`];
+      const filters: string[] = [];
+
+      if (city && city.toUpperCase() !== 'ALL' && city.toUpperCase() !== 'ANY') {
+        const cityClean = city.trim();
+        if (cityClean.toLowerCase() === 'toronto') {
+          filters.push(`contains(City, 'Toronto')`);
+        } else {
+          filters.push(`(City eq '${cityClean}' or contains(City, '${cityClean}'))`);
+        }
+      }
+
+      if (options?.filter) {
+        filters.push(options.filter);
+      }
+
+      if (filters.length > 0) {
+        queryParams.push(`$filter=${encodeURIComponent(filters.join(' and '))}`);
+      }
+
+      if (options?.orderby) {
+        queryParams.push(`$orderby=${encodeURIComponent(options.orderby)}`);
+      }
+
+      const url = `/Property?${queryParams.join('&')}`;
       console.log(`📡 [TRREB Service] Requesting Live TRREB API: ${url}`);
 
       const response = await client.get(url);
       const data = response.data;
       const items = data.value || [];
+      const totalCount = data['@odata.count'] || items.length;
 
       // Map raw OData items into frontend format
-      let mapped = items
+      const mapped = items
         .map((item: any) => this.mapProperty(item))
         .filter((p: TRREBPropertyMapped | null): p is TRREBPropertyMapped => p !== null);
 
-      if (options?.city && options.city !== 'ALL' && options.city !== 'All') {
-        mapped = mapped.filter((p: TRREBPropertyMapped) => p.city.toLowerCase() === options.city!.toLowerCase());
-      }
-
-      const paginated = mapped.slice(skip, skip + top);
-      const targetProps = paginated.length > 0 ? paginated : mapped.slice(0, top);
-
       // Concurrently fetch real TRREB Media images for each property
       await Promise.all(
-        targetProps.map(async (prop: TRREBPropertyMapped) => {
+        mapped.map(async (prop: TRREBPropertyMapped) => {
           if (!prop.images || prop.images.length === 0) {
             try {
               const filterUrl = `/Media?%24filter=${encodeURIComponent(`ResourceRecordKey eq '${prop.listingKey}'`)}`;
@@ -274,11 +294,11 @@ export class TRREBService {
       );
 
       const result = {
-        properties: targetProps,
-        count: mapped.length
+        properties: mapped,
+        count: totalCount
       };
 
-      if (targetProps.length > 0) {
+      if (mapped.length > 0) {
         this.cache.set(cacheKey, { data: result, timestamp: Date.now() });
       }
 
@@ -286,7 +306,7 @@ export class TRREBService {
     } catch (error: any) {
       this.handleError(error, 'getProperties');
       if (cached) return cached.data;
-      return { properties: [] };
+      return { properties: [], count: 0 };
     }
   }
 
