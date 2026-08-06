@@ -881,87 +881,82 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [activeFilters, searchQuery, currentPage]);
 
-  const [savedProperties, setSavedProperties] = useState<string[]>(['1', '3', '5']);
-  const [compareList, setCompareList] = useState<string[]>(['1', '2']);
-  const [recentlyViewed, setRecentlyViewed] = useState<string[]>(['1', '2', '3', '4']);
-  const [favoriteCommunities, setFavoriteCommunities] = useState<string[]>(['Yorkville', 'West Vancouver']);
-
-  const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([
-    {
-      id: 'search-1',
-      name: 'Toronto Luxury Penthouses',
-      city: 'Toronto',
-      filters: { city: 'Toronto', beds: 'All', priceRange: [3000000, 25000000], category: 'Penthouse' },
-      dateCreated: '2026-07-15',
-      matchCount: 14
-    },
-    {
-      id: 'search-2',
-      name: 'Oakville Waterfront Estates',
-      city: 'Oakville',
-      filters: { city: 'Oakville', beds: '4', priceRange: [4000000, 30000000], category: 'Waterfront' },
-      dateCreated: '2026-07-20',
-      matchCount: 8
+  // Helper to retrieve user-scoped storage key
+  const getUserStorageKey = (keyName: string) => {
+    let email = 'guest';
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('nova_user');
+      if (savedUser) {
+        try {
+          const parsed = JSON.parse(savedUser);
+          if (parsed && parsed.email) email = parsed.email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        } catch {}
+      }
     }
-  ]);
+    return `kang_${email}_${keyName}`;
+  };
 
-  const [viewingSchedule, setViewingSchedule] = useState<ViewingSchedule[]>([
-    {
-      id: 'view-1',
-      propertyId: '1',
-      date: '2026-08-02',
-      time: '11:00 AM',
-      tourType: 'in-person',
-      agentName: 'Sébastien LeClerc',
-      agentPhone: '+1 (604) 555-0199',
-      status: 'Upcoming',
-      notes: 'Private helicopter landing on roof pad.',
-      meetingLocation: '102 Radcliffe Ridge, Toronto, ON'
-    },
-    {
-      id: 'view-2',
-      propertyId: '2',
-      date: '2026-08-14',
-      time: '05:30 PM',
-      tourType: 'virtual',
-      agentName: 'Michael Anderson',
-      agentPhone: '+1 (416) 555-0144',
-      status: 'Upcoming',
-      notes: 'Interactive 4K streaming tour requested.',
-      meetingLocation: 'Private Stream Room'
+  const [savedProperties, setSavedProperties] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('saved_properties'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
     }
-  ]);
+    return [];
+  });
 
-  const [priceAlerts, setPriceAlerts] = useState<PriceAlert[]>([
-    {
-      id: 'alert-1',
-      name: 'Price drop below $900,000 in Toronto',
-      conditionType: 'Price Drop',
-      targetPrice: 900000,
-      city: 'Toronto',
-      status: 'Active',
-      dateCreated: '2026-07-10'
-    },
-    {
-      id: 'alert-2',
-      name: 'New Listing: Luxury Condo in Mississauga',
-      conditionType: 'New Listing',
-      city: 'Mississauga',
-      propertyType: 'Condo',
-      status: 'Active',
-      dateCreated: '2026-07-18'
-    },
-    {
-      id: 'alert-3',
-      name: 'Detached House in Brampton under $2.5M',
-      conditionType: 'Price Drop',
-      targetPrice: 2500000,
-      city: 'Brampton',
-      propertyType: 'Detached',
-      status: 'Paused',
-      dateCreated: '2026-07-22'
+  const [compareList, setCompareList] = useState<string[]>([]);
+
+  const [recentlyViewed, setRecentlyViewed] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('recently_viewed'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
     }
-  ]);
+    return [];
+  });
+
+  const [favoriteCommunities, setFavoriteCommunities] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('favorite_communities'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
+    }
+    return [];
+  });
+
+  const [savedSearches, setSavedSearches] = useState<SavedSearch[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('saved_searches'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
+    }
+    return [];
+  });
+
+  const [viewingSchedule, setViewingSchedule] = useState<ViewingSchedule[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('viewing_schedule'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
+    }
+    return [];
+  });
+
+  const [priceAlerts, setPriceAlerts] = useState<PriceAlert[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('price_alerts'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
+    }
+    return [];
+  });
 
   const [mortgageProgress] = useState({
     stage: 'Loan Review' as const,
@@ -976,39 +971,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     percentComplete: 75
   });
 
-  const [documents] = useState<DocumentItem[]>([
-    { id: 'doc-1', name: 'Agreement of Purchase and Sale - Draft.pdf', category: 'Purchase Agreement', size: '2.4 MB', date: '2026-07-24', url: '#' },
-    { id: 'doc-2', name: 'Bank Pre-Approval Letter & Asset Proof.pdf', category: 'Mortgage Documents', size: '1.8 MB', date: '2026-07-20', url: '#' },
-    { id: 'doc-3', name: 'Property Disclosure & Title Search Report.pdf', category: 'Property Reports', size: '4.1 MB', date: '2026-07-18', url: '#' },
-    { id: 'doc-4', name: 'Thermal & Structural Inspection Report.pdf', category: 'Inspection Reports', size: '8.5 MB', date: '2026-07-15', url: '#' },
-    { id: 'doc-5', name: 'Escrow Deposit Wire Confirmation.pdf', category: 'Receipts', size: '620 KB', date: '2026-07-25', url: '#' }
-  ]);
+  const [documents] = useState<DocumentItem[]>([]);
 
-  const [appointmentHistory, setAppointmentHistory] = useState<AppointmentItem[]>([
-    { id: 'app-1', propertyTitle: 'The Obsidian Point Villa', agentName: 'Sébastien LeClerc', date: '2026-07-12', time: '02:00 PM', status: 'Completed', feedback: 'Stunning sunset mountain vistas.' },
-    { id: 'app-2', propertyTitle: 'Aurelia Crown Penthouse', agentName: 'Michael Anderson', date: '2026-07-19', time: '11:00 AM', status: 'Completed', feedback: 'Needs custom wine cellar modification.' },
-    { id: 'app-3', propertyTitle: 'Elysian Canopy Estate', agentName: 'Sébastien LeClerc', date: '2026-07-22', time: '04:00 PM', status: 'Cancelled', feedback: 'Rescheduled due to flight delay.' }
-  ]);
+  const [appointmentHistory, setAppointmentHistory] = useState<AppointmentItem[]>([]);
 
-  const [activeOffers, setActiveOffers] = useState<OfferItem[]>([
-    {
-      id: 'offer-101',
-      propertyId: '1',
-      offerAmount: 4850000,
-      deposit: 250000,
-      closingDate: '2026-09-30',
-      irrevocableDate: '2026-08-10',
-      conditions: ['Subject to Financing (5 Days)', 'Subject to Inspection (3 Days)'],
-      status: 'Under Review',
-      dateSubmitted: '2026-07-25',
-      notes: 'Initial formal purchase agreement submitted.'
+  const [activeOffers, setActiveOffers] = useState<OfferItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('active_offers'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
     }
-  ]);
+    return [];
+  });
 
   const [purchaseTimeline] = useState<TimelineStep[]>([
     { stepId: '1', title: 'Property Selected', desc: 'Identified target luxury asset', status: 'completed', dateCompleted: '2026-07-10' },
     { stepId: '2', title: 'Viewing Completed', desc: 'VIP in-person tour verified', status: 'completed', dateCompleted: '2026-07-18' },
-    { stepId: '3', title: 'Offer Submitted', desc: 'Agreement transmitted to seller', status: 'active' },
+    { stepId: '3', title: 'Offer Submitted', desc: 'Agreement transmitted to seller', status: 'pending' },
     { stepId: '4', title: 'Offer Accepted', desc: 'Formal binding signature executed', status: 'pending' },
     { stepId: '5', title: 'Mortgage Approved', desc: 'Underwriting loan release', status: 'pending' },
     { stepId: '6', title: 'Legal Review', desc: 'Title search & escrow clearance', status: 'pending' },
@@ -1016,12 +996,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     { stepId: '8', title: 'Move In', desc: 'Key handoff & concierge welcome', status: 'pending' }
   ]);
 
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    { id: 'notif-1', type: 'price_drop', title: 'Price Drop Alert', message: 'The Obsidian Point Villa reduced price by $150,000!', date: '2 hours ago', read: false },
-    { id: 'notif-2', type: 'viewing_reminder', title: 'Upcoming Tour Reminder', message: 'VIP Viewing scheduled for tomorrow at 11:00 AM.', date: '1 day ago', read: false },
-    { id: 'notif-3', type: 'offer_update', title: 'Offer Status Updated', message: 'Seller agent received offer #101 and marked Under Review.', date: '2 days ago', read: true },
-    { id: 'notif-4', type: 'mortgage_update', title: 'Mortgage Review Milestone', message: 'Underwriting review stage 3 completed successfully.', date: '3 days ago', read: true }
-  ]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(getUserStorageKey('notifications'));
+      if (stored) {
+        try { return JSON.parse(stored); } catch {}
+      }
+    }
+    return [];
+  });
+
+  // Sync workspace states to localStorage on state changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(getUserStorageKey('saved_properties'), JSON.stringify(savedProperties));
+      localStorage.setItem(getUserStorageKey('recently_viewed'), JSON.stringify(recentlyViewed));
+      localStorage.setItem(getUserStorageKey('favorite_communities'), JSON.stringify(favoriteCommunities));
+      localStorage.setItem(getUserStorageKey('saved_searches'), JSON.stringify(savedSearches));
+      localStorage.setItem(getUserStorageKey('viewing_schedule'), JSON.stringify(viewingSchedule));
+      localStorage.setItem(getUserStorageKey('price_alerts'), JSON.stringify(priceAlerts));
+      localStorage.setItem(getUserStorageKey('active_offers'), JSON.stringify(activeOffers));
+      localStorage.setItem(getUserStorageKey('notifications'), JSON.stringify(notifications));
+    }
+  }, [user, savedProperties, recentlyViewed, favoriteCommunities, savedSearches, viewingSchedule, priceAlerts, activeOffers, notifications]);
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 

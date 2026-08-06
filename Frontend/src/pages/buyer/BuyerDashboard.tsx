@@ -229,7 +229,9 @@ export const BuyerDashboard: React.FC = () => {
                   <DollarSign size={18} style={{ color: '#10b981' }} />
                 </div>
                 <h3 style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-display)' }}>{activeOffers.length}</h3>
-                <span style={{ fontSize: '0.72rem', color: '#10b981' }}>Offer #101 Under Review</span>
+                <span style={{ fontSize: '0.72rem', color: '#10b981' }}>
+                  {activeOffers.length > 0 ? `${activeOffers.length} Live Offer${activeOffers.length > 1 ? 's' : ''}` : 'No Active Offers'}
+                </span>
               </div>
 
               <div className="glass-panel hover-glow" style={{ padding: '24px', border: '1px solid rgba(167, 139, 250, 0.15)' }}>
@@ -238,7 +240,9 @@ export const BuyerDashboard: React.FC = () => {
                   <Calendar size={18} style={{ color: '#3b82f6' }} />
                 </div>
                 <h3 style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-display)' }}>{viewingSchedule.length}</h3>
-                <span style={{ fontSize: '0.72rem', color: '#3b82f6' }}>Next: Aug 02, 11:00 AM</span>
+                <span style={{ fontSize: '0.72rem', color: '#3b82f6' }}>
+                  {viewingSchedule.length > 0 ? `Next: ${viewingSchedule[0].date}` : 'No Tours Scheduled'}
+                </span>
               </div>
 
               <div className="glass-panel hover-glow" style={{ padding: '24px', border: '1px solid rgba(167, 139, 250, 0.15)' }}>
@@ -247,7 +251,9 @@ export const BuyerDashboard: React.FC = () => {
                   <Bell size={18} style={{ color: '#f59e0b' }} />
                 </div>
                 <h3 style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-display)' }}>{priceAlerts.filter(a => a.status === 'Active').length}</h3>
-                <span style={{ fontSize: '0.72rem', color: '#f59e0b' }}>Real-time telemetry active</span>
+                <span style={{ fontSize: '0.72rem', color: '#f59e0b' }}>
+                  {priceAlerts.length > 0 ? 'Real-time telemetry active' : 'No Alerts Set'}
+                </span>
               </div>
             </div>
 
@@ -270,7 +276,7 @@ export const BuyerDashboard: React.FC = () => {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {notifications.length === 0 ? (
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>No unread notifications at this time.</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>No notifications at this time.</p>
                   ) : (
                     notifications.map(n => (
                       <div
@@ -310,35 +316,44 @@ export const BuyerDashboard: React.FC = () => {
                   </button>
                 </div>
 
-                {activeOffers.map(o => {
-                  const targetProp = properties.find(p => p.id === o.propertyId) || properties[0];
-                  return (
-                    <div key={o.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                          <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: '#ffffff' }}>{targetProp.title}</h4>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{targetProp.location}</span>
+                {activeOffers.length === 0 ? (
+                  <div style={{ padding: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No active purchase offers. Submit an offer on any listing to track status in real-time.</p>
+                    <button onClick={() => setCurrentPage('search')} className="btn btn-primary hover-lift" style={{ padding: '8px 16px', fontSize: '0.78rem' }}>
+                      Browse MLS Listings
+                    </button>
+                  </div>
+                ) : (
+                  activeOffers.map(o => {
+                    const targetProp = properties.find(p => p.id === o.propertyId) || properties[0];
+                    return (
+                      <div key={o.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: '#ffffff' }}>{targetProp.title}</h4>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{targetProp.location}</span>
+                          </div>
+                          <span className="badge badge-lavender">{o.status}</span>
                         </div>
-                        <span className="badge badge-lavender">{o.status}</span>
-                      </div>
 
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', background: 'rgba(3,7,18,0.5)', padding: '10px', borderRadius: '8px' }}>
-                        <div>
-                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Offer Amount:</span>
-                          <p style={{ fontWeight: 700, color: '#ffffff' }}>${o.offerAmount.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Deposit:</span>
-                          <p style={{ fontWeight: 700, color: '#ffffff' }}>${o.deposit.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Closing Date:</span>
-                          <p style={{ fontWeight: 700, color: '#ffffff' }}>{o.closingDate}</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', background: 'rgba(3,7,18,0.5)', padding: '10px', borderRadius: '8px' }}>
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Offer Amount:</span>
+                            <p style={{ fontWeight: 700, color: '#ffffff' }}>${o.offerAmount.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Deposit:</span>
+                            <p style={{ fontWeight: 700, color: '#ffffff' }}>${o.deposit.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Closing Date:</span>
+                            <p style={{ fontWeight: 700, color: '#ffffff' }}>{o.closingDate}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
 
             </div>
