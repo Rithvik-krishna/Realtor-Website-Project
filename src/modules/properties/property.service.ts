@@ -3,6 +3,94 @@ import { CreatePropertyDto } from './property.validator.js';
 import { NotFoundError } from '../../utils/errors.js';
 import { trrebService } from '../../services/trrebService.js';
 
+const generateBuiltInProperties = (): any[] => {
+  const cities = [
+    { name: 'Toronto', lat: 43.6532, lng: -79.3832, pCode: 'M5H 2N2' },
+    { name: 'Mississauga', lat: 43.5890, lng: -79.6441, pCode: 'L5B 3C1' },
+    { name: 'Brampton', lat: 43.7315, lng: -79.7624, pCode: 'L6Y 0G2' },
+    { name: 'Oakville', lat: 43.4675, lng: -79.6877, pCode: 'L6J 2W4' },
+    { name: 'Vaughan', lat: 43.8563, lng: -79.5085, pCode: 'L4L 1T8' },
+    { name: 'Markham', lat: 43.8561, lng: -79.3370, pCode: 'L3P 1A8' },
+    { name: 'Richmond Hill', lat: 43.8828, lng: -79.4403, pCode: 'L4C 3C2' },
+    { name: 'Milton', lat: 43.5183, lng: -79.8774, pCode: 'L9T 2X5' },
+    { name: 'Hamilton', lat: 43.2557, lng: -79.8711, pCode: 'L8P 1A1' },
+    { name: 'Burlington', lat: 43.3255, lng: -79.7990, pCode: 'L7R 1A1' }
+  ];
+
+  const types = [
+    { type: 'Detached', subType: 'Single Family Residence', basePrice: 1850000 },
+    { type: 'Semi-Detached', subType: 'Semi-Detached Pair', basePrice: 1250000 },
+    { type: 'Townhouse', subType: 'Row / Townhouse', basePrice: 980000 },
+    { type: 'Condo', subType: 'Condo Apartment', basePrice: 680000 },
+    { type: 'Bungalow', subType: 'Bungalow / Raised', basePrice: 1450000 },
+    { type: 'Commercial', subType: 'Commercial Retail / Office', basePrice: 2400000 },
+    { type: 'Land', subType: 'Vacant Land / Development', basePrice: 3200000 }
+  ];
+
+  const images = [
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80'
+  ];
+
+  const list: any[] = [];
+  let idCounter = 1;
+
+  cities.forEach(city => {
+    types.forEach(t => {
+      for (let i = 1; i <= 2; i++) {
+        const id = String(idCounter++);
+        const price = Math.round((t.basePrice + (idCounter * 45000)) / 10000) * 10000;
+        const beds = t.type === 'Condo' ? 2 : t.type === 'Townhouse' ? 3 : 4;
+        const baths = t.type === 'Condo' ? 2 : 3;
+        const sqft = t.type === 'Condo' ? 1100 : t.type === 'Townhouse' ? 2100 : 3400;
+
+        list.push({
+          id,
+          listingKey: `TRREB-${1000 + idCounter}`,
+          title: `${t.type} Property in ${city.name} Corridor`,
+          address: `${100 + idCounter * 3} ${city.name} Blvd`,
+          city: city.name,
+          province: 'ON',
+          postalCode: city.pCode,
+          price,
+          bedrooms: beds,
+          beds,
+          bathrooms: baths,
+          baths,
+          sqft,
+          propertyType: t.type,
+          propertySubType: t.subType,
+          description: `Exceptional ${t.type.toLowerCase()} property located in the heart of ${city.name}, ON. Features open-concept floor plan, hardwood floors, high-end kitchen appliances, and proximity to transit & top schools.`,
+          imageUrl: images[idCounter % images.length],
+          images: [
+            images[idCounter % images.length],
+            images[(idCounter + 1) % images.length],
+            images[(idCounter + 2) % images.length]
+          ],
+          status: 'Active',
+          propertyStatus: 'Active',
+          daysOnMarket: 2 + (idCounter % 15),
+          mlsNumber: `C8${100000 + idCounter}`,
+          features: ['Hardwood Floors', 'Quartz Countertops', 'Garage Parking', 'Finished Basement'],
+          lat: Number((city.lat + (Math.sin(idCounter) * 0.03)).toFixed(4)),
+          lng: Number((city.lng + (Math.cos(idCounter) * 0.03)).toFixed(4)),
+          schoolScore: Number((8.5 + (idCounter % 10) * 0.1).toFixed(1)),
+          listOfficeName: 'Royal LePage Pinnacle Real Estate'
+        });
+      }
+    });
+  });
+
+  return list;
+};
+
 export class PropertyService {
   private propertyRepo: PropertyRepository;
 
@@ -57,137 +145,18 @@ export class PropertyService {
         finalProperties = dbResult.items.map(p => this.mapDbProperty(p));
         totalCount = dbResult.total;
       } catch (dbErr) {
-        console.warn('⚠️ [PropertyService] Local database query failed, returning built-in luxury listings:', dbErr);
-        finalProperties = [
-          {
-            id: '1',
-            listingKey: 'TRREB-101',
-            title: 'Penthouse Condo with Panoramic CN Tower Views',
-            address: '180 University Ave #5201',
-            city: 'Toronto',
-            province: 'ON',
-            postalCode: 'M5H 0A2',
-            price: 4850000,
-            bedrooms: 3,
-            beds: 3,
-            bathrooms: 4,
-            baths: 4,
-            sqft: 2850,
-            propertyType: 'Condo',
-            propertySubType: 'Condo Apartment',
-            description: 'Ultra-luxury penthouse featuring floor-to-ceiling glass walls, 10ft ceilings, private elevator access, and unobstructed lake & skyline vistas.',
-            imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80',
-            images: [
-              'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80',
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-              'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'
-            ],
-            status: 'Active',
-            propertyStatus: 'Active',
-            daysOnMarket: 3,
-            mlsNumber: 'C8092145',
-            features: ['Floor-to-Ceiling Windows', 'Concierge 24/7', 'Valet Parking', 'Wine Cellar'],
-            lat: 43.6510,
-            lng: -79.3870,
-            schoolScore: 9.2,
-            listOfficeName: 'Royal LePage Pinnacle Real Estate'
-          },
-          {
-            id: '2',
-            listingKey: 'TRREB-102',
-            title: 'Modern Waterfront Villa on Lake Ontario',
-            address: '102 Radcliffe Ridge',
-            city: 'Oakville',
-            province: 'ON',
-            postalCode: 'L6J 5B4',
-            price: 8900000,
-            bedrooms: 5,
-            beds: 5,
-            bathrooms: 6,
-            baths: 6,
-            sqft: 6500,
-            propertyType: 'Detached',
-            propertySubType: 'Single Family Residence',
-            description: 'Custom-built waterfront architectural masterpiece with private deep-water dock, heated infinity pool, and smart home automation.',
-            imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-            images: [
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-              'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80'
-            ],
-            status: 'Active',
-            propertyStatus: 'Active',
-            daysOnMarket: 8,
-            mlsNumber: 'W8103391',
-            features: ['Private Dock', 'Infinity Pool', 'Smart Home', 'Gated Driveway'],
-            lat: 43.4675,
-            lng: -79.6877,
-            schoolScore: 9.5,
-            listOfficeName: 'Royal LePage Pinnacle Real Estate'
-          },
-          {
-            id: '3',
-            listingKey: 'TRREB-103',
-            title: 'Executive Detached Home in Credit Valley',
-            address: '45 Chinguacousy Rd',
-            city: 'Brampton',
-            province: 'ON',
-            postalCode: 'L6X 0P3',
-            price: 1899000,
-            bedrooms: 4,
-            beds: 4,
-            bathrooms: 4,
-            baths: 4,
-            sqft: 3200,
-            propertyType: 'Detached',
-            propertySubType: 'Single Family Residence',
-            description: 'Spacious executive home with double garage, finished basement suite, open-concept chef kitchen, and lush landscaped backyard.',
-            imageUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
-            images: [
-              'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80'
-            ],
-            status: 'Active',
-            propertyStatus: 'Active',
-            daysOnMarket: 5,
-            mlsNumber: 'W8129482',
-            features: ['Finished Basement', 'Chef Kitchen', 'Double Garage', 'Hardwood Floors'],
-            lat: 43.7315,
-            lng: -79.7624,
-            schoolScore: 8.8,
-            listOfficeName: 'Royal LePage Pinnacle Real Estate'
-          },
-          {
-            id: '4',
-            listingKey: 'TRREB-104',
-            title: 'Luxury Estate in Mississauga Road Corridor',
-            address: '2210 Mississauga Rd',
-            city: 'Mississauga',
-            province: 'ON',
-            postalCode: 'L5H 2L1',
-            price: 3450000,
-            bedrooms: 4,
-            beds: 4,
-            bathrooms: 5,
-            baths: 5,
-            sqft: 4200,
-            propertyType: 'Detached',
-            propertySubType: 'Single Family Residence',
-            description: 'Gated luxury residence backing onto ravine with gourmet kitchen, wine cellar, and outdoor kitchen pavilion.',
-            imageUrl: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80',
-            images: [
-              'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80'
-            ],
-            status: 'Active',
-            propertyStatus: 'Active',
-            daysOnMarket: 12,
-            mlsNumber: 'W8140029',
-            features: ['Ravine Lot', 'Gated Entry', 'Outdoor Pavilion', '3-Car Garage'],
-            lat: 43.5890,
-            lng: -79.6441,
-            schoolScore: 9.0,
-            listOfficeName: 'Royal LePage Pinnacle Real Estate'
-          }
-        ];
-        totalCount = finalProperties.length;
+        console.warn('⚠️ [PropertyService] Local database query failed, returning built-in luxury listings dataset:', dbErr);
+        const builtInList = generateBuiltInProperties();
+        
+        // Filter by city if queried
+        let filtered = builtInList;
+        if (query.city && query.city !== 'All' && query.city !== 'Any') {
+          const targetCity = String(query.city).toLowerCase().trim();
+          filtered = builtInList.filter(p => p.city.toLowerCase().includes(targetCity));
+        }
+
+        finalProperties = filtered.slice(skip, skip + limit);
+        totalCount = filtered.length;
       }
     }
 
