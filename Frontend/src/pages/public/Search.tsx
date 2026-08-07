@@ -460,7 +460,10 @@ export const Search: React.FC = () => {
         const communityMatch = (((prop as any).community) || prop.location || '').toLowerCase().includes(searchVal);
         const addressMatch = (prop.address || '').toLowerCase().includes(searchVal);
         const mlsMatch = (prop.mlsNumber || '').toLowerCase().includes(searchVal);
-        matchesSearch = titleMatch || cityMatch || communityMatch || addressMatch || mlsMatch;
+        const postalMatch = (prop.postalCode || '').toLowerCase().replace(/\s+/g, '').includes(searchVal.replace(/\s+/g, ''));
+        const provinceMatch = (prop.province || 'ON').toLowerCase().includes(searchVal) || (searchVal === 'ontario' && (prop.province || 'ON').toLowerCase() === 'on');
+        const descMatch = (prop.description || '').toLowerCase().includes(searchVal);
+        matchesSearch = titleMatch || cityMatch || communityMatch || addressMatch || mlsMatch || postalMatch || provinceMatch || descMatch;
       } else if (currentSearchType === 'city') {
         matchesSearch = (prop.city || '').toLowerCase().includes(searchVal);
       } else if (currentSearchType === 'neighbourhood') {
