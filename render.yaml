@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: canadian-realtor-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build:backend
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: TRREB_API_URL
+        value: "https://query.ampre.ca/odata"
+      - key: TRREB_ACCESS_TOKEN
+        sync: false
