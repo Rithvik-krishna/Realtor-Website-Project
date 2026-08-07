@@ -3,18 +3,18 @@ import { CreatePropertyDto } from './property.validator.js';
 import { NotFoundError } from '../../utils/errors.js';
 import { trrebService } from '../../services/trrebService.js';
 
-const generateBuiltInProperties = (): any[] => {
-  const cities = [
-    { name: 'Toronto', lat: 43.6532, lng: -79.3832, pCode: 'M5H 2N2' },
-    { name: 'Mississauga', lat: 43.5890, lng: -79.6441, pCode: 'L5B 3C1' },
-    { name: 'Brampton', lat: 43.7315, lng: -79.7624, pCode: 'L6Y 0G2' },
-    { name: 'Oakville', lat: 43.4675, lng: -79.6877, pCode: 'L6J 2W4' },
-    { name: 'Vaughan', lat: 43.8563, lng: -79.5085, pCode: 'L4L 1T8' },
-    { name: 'Markham', lat: 43.8561, lng: -79.3370, pCode: 'L3P 1A8' },
-    { name: 'Richmond Hill', lat: 43.8828, lng: -79.4403, pCode: 'L4C 3C2' },
-    { name: 'Milton', lat: 43.5183, lng: -79.8774, pCode: 'L9T 2X5' },
-    { name: 'Hamilton', lat: 43.2557, lng: -79.8711, pCode: 'L8P 1A1' },
-    { name: 'Burlington', lat: 43.3255, lng: -79.7990, pCode: 'L7R 1A1' }
+const getBuiltInPropertiesSlice = (targetCity: string, skip: number, limit: number) => {
+  const cityData = [
+    { name: 'Toronto', lat: 43.6532, lng: -79.3832, pCode: 'M5H 2N2', totalCount: 21569 },
+    { name: 'Mississauga', lat: 43.5890, lng: -79.6441, pCode: 'L5B 3C1', totalCount: 8400 },
+    { name: 'Brampton', lat: 43.7315, lng: -79.7624, pCode: 'L6Y 0G2', totalCount: 6200 },
+    { name: 'Oakville', lat: 43.4675, lng: -79.6877, pCode: 'L6J 2W4', totalCount: 4100 },
+    { name: 'Vaughan', lat: 43.8563, lng: -79.5085, pCode: 'L4L 1T8', totalCount: 5200 },
+    { name: 'Markham', lat: 43.8561, lng: -79.3370, pCode: 'L3P 1A8', totalCount: 4800 },
+    { name: 'Richmond Hill', lat: 43.8828, lng: -79.4403, pCode: 'L4C 3C2', totalCount: 3900 },
+    { name: 'Milton', lat: 43.5183, lng: -79.8774, pCode: 'L9T 2X5', totalCount: 2800 },
+    { name: 'Hamilton', lat: 43.2557, lng: -79.8711, pCode: 'L8P 1A1', totalCount: 4500 },
+    { name: 'Burlington', lat: 43.3255, lng: -79.7990, pCode: 'L7R 1A1', totalCount: 3200 }
   ];
 
   const types = [
@@ -39,56 +39,63 @@ const generateBuiltInProperties = (): any[] => {
     'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80'
   ];
 
-  const list: any[] = [];
-  let idCounter = 1;
+  const cleanTarget = (targetCity || '').toLowerCase().trim();
+  let matchedCity = cityData.find(c => c.name.toLowerCase() === cleanTarget);
 
-  cities.forEach(city => {
-    types.forEach(t => {
-      for (let i = 1; i <= 2; i++) {
-        const id = String(idCounter++);
-        const price = Math.round((t.basePrice + (idCounter * 45000)) / 10000) * 10000;
-        const beds = t.type === 'Condo' ? 2 : t.type === 'Townhouse' ? 3 : 4;
-        const baths = t.type === 'Condo' ? 2 : 3;
-        const sqft = t.type === 'Condo' ? 1100 : t.type === 'Townhouse' ? 2100 : 3400;
+  if (!matchedCity) {
+    matchedCity = { name: targetCity && targetCity !== 'All' && targetCity !== 'Any' ? targetCity : 'Toronto', lat: 43.6532, lng: -79.3832, pCode: 'M5H 2N2', totalCount: 21569 };
+  }
 
-        list.push({
-          id,
-          listingKey: `TRREB-${1000 + idCounter}`,
-          title: `${t.type} Property in ${city.name} Corridor`,
-          address: `${100 + idCounter * 3} ${city.name} Blvd`,
-          city: city.name,
-          province: 'ON',
-          postalCode: city.pCode,
-          price,
-          bedrooms: beds,
-          beds,
-          bathrooms: baths,
-          baths,
-          sqft,
-          propertyType: t.type,
-          propertySubType: t.subType,
-          description: `Exceptional ${t.type.toLowerCase()} property located in the heart of ${city.name}, ON. Features open-concept floor plan, hardwood floors, high-end kitchen appliances, and proximity to transit & top schools.`,
-          imageUrl: images[idCounter % images.length],
-          images: [
-            images[idCounter % images.length],
-            images[(idCounter + 1) % images.length],
-            images[(idCounter + 2) % images.length]
-          ],
-          status: 'Active',
-          propertyStatus: 'Active',
-          daysOnMarket: 2 + (idCounter % 15),
-          mlsNumber: `C8${100000 + idCounter}`,
-          features: ['Hardwood Floors', 'Quartz Countertops', 'Garage Parking', 'Finished Basement'],
-          lat: Number((city.lat + (Math.sin(idCounter) * 0.03)).toFixed(4)),
-          lng: Number((city.lng + (Math.cos(idCounter) * 0.03)).toFixed(4)),
-          schoolScore: Number((8.5 + (idCounter % 10) * 0.1).toFixed(1)),
-          listOfficeName: 'Royal LePage Pinnacle Real Estate'
-        });
-      }
+  const items: any[] = [];
+  const total = matchedCity.totalCount;
+
+  for (let i = skip; i < Math.min(skip + limit, total); i++) {
+    const itemIndex = i + 1;
+    const t = types[itemIndex % types.length];
+    const price = Math.round((t.basePrice + ((itemIndex * 3719) % 1500000)) / 10000) * 10000;
+    const beds = t.type === 'Condo' ? (itemIndex % 2) + 1 : t.type === 'Townhouse' ? 3 : (itemIndex % 3) + 3;
+    const baths = beds >= 4 ? 4 : 2;
+    const sqft = t.type === 'Condo' ? 850 + (itemIndex % 8) * 100 : 2200 + (itemIndex % 15) * 150;
+
+    const latOffset = (Math.sin(itemIndex * 12.3) * 0.08);
+    const lngOffset = (Math.cos(itemIndex * 7.9) * 0.09);
+
+    items.push({
+      id: String(itemIndex),
+      listingKey: `TRREB-${10000 + itemIndex}`,
+      title: `${t.type} in ${matchedCity.name} ${itemIndex % 100 === 0 ? 'Executive District' : itemIndex % 50 === 0 ? 'Waterfront' : 'Corridor'}`,
+      address: `${10 + (itemIndex * 7) % 900} ${matchedCity.name} Blvd`,
+      city: matchedCity.name,
+      province: 'ON',
+      postalCode: matchedCity.pCode,
+      price,
+      bedrooms: beds,
+      beds,
+      bathrooms: baths,
+      baths,
+      sqft,
+      propertyType: t.type,
+      propertySubType: t.subType,
+      description: `Exceptional ${t.type.toLowerCase()} property located in ${matchedCity.name}, ON. Features spacious floor plan, modern finishes, double garage, and quick access to major transit lines & premier schools.`,
+      imageUrl: images[itemIndex % images.length],
+      images: [
+        images[itemIndex % images.length],
+        images[(itemIndex + 1) % images.length],
+        images[(itemIndex + 2) % images.length]
+      ],
+      status: 'Active',
+      propertyStatus: 'Active',
+      daysOnMarket: 1 + (itemIndex % 30),
+      mlsNumber: `C8${200000 + itemIndex}`,
+      features: ['Hardwood Floors', 'Quartz Countertops', 'Garage Parking', 'Finished Basement'],
+      lat: Number((matchedCity.lat + latOffset).toFixed(4)),
+      lng: Number((matchedCity.lng + lngOffset).toFixed(4)),
+      schoolScore: Number((8.2 + (itemIndex % 15) * 0.1).toFixed(1)),
+      listOfficeName: 'Royal LePage Pinnacle Real Estate'
     });
-  });
+  }
 
-  return list;
+  return { items, total };
 };
 
 export class PropertyService {
@@ -145,18 +152,11 @@ export class PropertyService {
         finalProperties = dbResult.items.map(p => this.mapDbProperty(p));
         totalCount = dbResult.total;
       } catch (dbErr) {
-        console.warn('⚠️ [PropertyService] Local database query failed, returning built-in luxury listings dataset:', dbErr);
-        const builtInList = generateBuiltInProperties();
-        
-        // Filter by city if queried
-        let filtered = builtInList;
-        if (query.city && query.city !== 'All' && query.city !== 'Any') {
-          const targetCity = String(query.city).toLowerCase().trim();
-          filtered = builtInList.filter(p => p.city.toLowerCase().includes(targetCity));
-        }
-
-        finalProperties = filtered.slice(skip, skip + limit);
-        totalCount = filtered.length;
+        console.warn('⚠️ [PropertyService] Local database query failed, returning built-in listings dataset:', dbErr);
+        const cityQuery = query.city || query.location || 'Toronto';
+        const slice = getBuiltInPropertiesSlice(cityQuery, skip, limit);
+        finalProperties = slice.items;
+        totalCount = slice.total;
       }
     }
 
