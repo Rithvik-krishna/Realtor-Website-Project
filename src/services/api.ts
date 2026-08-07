@@ -27,7 +27,7 @@ class ApiService {
   async checkBackendHealth(): Promise<{ isConnected: boolean; message: string }> {
     try {
       const healthUrl = API_BASE_URL.replace('/api/v1', '/health');
-      const res = await fetch(healthUrl).catch(() => fetch('https://realtor-website-project.onrender.com/health'));
+      const res = await fetch(healthUrl);
       if (!res || !res.ok) throw new Error(res ? `HTTP ${res.status}` : 'Offline');
       const data = await res.json();
       return { isConnected: data.success === true, message: data.message || 'Connected to Canadian Realtor Backend API' };
