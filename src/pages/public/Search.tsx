@@ -893,7 +893,7 @@ export const Search: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             <div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                {displayedProperties.length} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
+                {displayedProperties.length.toLocaleString()} {displayedProperties.length === 1 ? 'Property' : 'Properties'}{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
               </h2>
               <p style={{ fontSize: '0.78rem', color: '#475569', margin: '2px 0 0 0' }}>
                 Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{selectedCity}, Ontario</span>
