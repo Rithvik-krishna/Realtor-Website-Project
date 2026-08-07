@@ -9,6 +9,7 @@
     "build:backend": "tsc -p tsconfig.server.json",
     "build:frontend": "tsc -b && vite build",
     "build": "tsc -p tsconfig.server.json",
+    "postinstall": "tsc -p tsconfig.server.json",
     "dev:backend": "node dist/server.js",
     "dev": "vite",
     "lint": "oxlint",

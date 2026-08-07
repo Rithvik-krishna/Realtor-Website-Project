@@ -28,7 +28,7 @@ export const getProperties = async (req: Request, res: Response, next: NextFunct
 
 export const getPropertyById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const property = await trrebService.getPropertyByKey(id);
 
     if (!property) {

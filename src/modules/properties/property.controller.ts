@@ -21,7 +21,7 @@ export class PropertyController {
 
   getPropertyDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const property = await this.propertyService.getPropertyDetails(req.params.identifier);
+      const property = await this.propertyService.getPropertyDetails(req.params.identifier as string);
       return ResponseUtil.success(res, property, 'Property details retrieved successfully', 200);
     } catch (error) {
       next(error);

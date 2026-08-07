@@ -31,7 +31,7 @@ export class BuyerController {
 
   removeSavedProperty = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const { propertyId } = req.params;
+      const propertyId = req.params.propertyId as string;
       await this.buyerService.removeSavedProperty(req.user!.id, propertyId);
       return ResponseUtil.success(res, null, 'Property removed from favorites', 200);
     } catch (error) {
