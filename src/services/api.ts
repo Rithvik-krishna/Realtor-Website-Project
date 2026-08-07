@@ -3,7 +3,7 @@
  * Handles HTTP requests, JWT authentication tokens, and backend communication.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://realtor-website-project.onrender.com/api/v1';
 
 class ApiService {
   private getToken(): string | null {
@@ -26,7 +26,8 @@ class ApiService {
    */
   async checkBackendHealth(): Promise<{ isConnected: boolean; message: string }> {
     try {
-      const res = await fetch('/health').catch(() => fetch('http://localhost:5000/health'));
+      const healthUrl = API_BASE_URL.replace('/api/v1', '/health');
+      const res = await fetch(healthUrl).catch(() => fetch('https://realtor-website-project.onrender.com/health'));
       if (!res || !res.ok) throw new Error(res ? `HTTP ${res.status}` : 'Offline');
       const data = await res.json();
       return { isConnected: data.success === true, message: data.message || 'Connected to Canadian Realtor Backend API' };
