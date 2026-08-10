@@ -83,7 +83,7 @@ class ApiService {
     isFeatured?: boolean;
     page?: number;
     limit?: number;
-  }) {
+  }, signal?: AbortSignal) {
     const queryParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, val]) => {
@@ -93,7 +93,7 @@ class ApiService {
       });
     }
     const url = `${API_BASE_URL}/properties?${queryParams.toString()}`;
-    const res = await fetch(url, { headers: this.getHeaders() });
+    const res = await fetch(url, { headers: this.getHeaders(), signal });
     return await res.json();
   }
 

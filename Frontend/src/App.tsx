@@ -18,6 +18,7 @@ import { SellerLanding } from './pages/public/SellerLanding';
 
 import { ScheduleViewingPage } from './pages/public/ScheduleViewingPage';
 import { PurchaseOfferPage } from './pages/public/PurchaseOfferPage';
+import { CityRealEstateLanding } from './pages/public/CityRealEstateLanding';
 
 // Auth Gateway
 import { Auth } from './pages/auth/Auth';
@@ -60,6 +61,12 @@ function App() {
         return <ValuationReport />;
       case 'search':
         return <Search />;
+      case 'mississauga-real-estate':
+        return <CityRealEstateLanding city="Mississauga" minPrice={500000} maxPrice={1300000} />;
+      case 'brampton-real-estate':
+        return <CityRealEstateLanding city="Brampton" minPrice={500000} maxPrice={1300000} />;
+      case 'gta-real-estate':
+        return <CityRealEstateLanding city="GTA" minPrice={500000} maxPrice={1300000} />;
       case 'property-detail':
         return <PropertyDetail />;
       case 'schedule-viewing':

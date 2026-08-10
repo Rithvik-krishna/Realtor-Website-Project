@@ -1,0 +1,21 @@
+# Robots.txt for NovaEstate / Kang Homes Real Estate Platform
+User-agent: *
+Allow: /
+Allow: /mississauga-real-estate
+Allow: /brampton-real-estate
+Allow: /gta-real-estate
+Allow: /search
+Allow: /community
+Allow: /about
+Allow: /blog
+Allow: /contact
+
+# Disallow internal admin, auth, and private buyer/seller dashboards
+Disallow: /admin
+Disallow: /dashboard-buyer
+Disallow: /dashboard-seller
+Disallow: /dashboard-admin
+Disallow: /auth
+
+# Sitemap Location
+Sitemap: https://novaestate.ca/sitemap.xml

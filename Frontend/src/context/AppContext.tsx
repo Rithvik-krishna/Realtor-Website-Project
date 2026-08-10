@@ -609,10 +609,16 @@ const communities: Community[] = [
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentPage, setCurrentPageRaw] = useState<string>(() => {
-    if (typeof window !== 'undefined' && window.location.hash) {
-      const hash = window.location.hash.replace('#', '');
-      const [pageName] = hash.split('?');
-      if (pageName) return pageName;
+    if (typeof window !== 'undefined') {
+      const pathname = window.location.pathname.replace(/^\//, '');
+      if (['mississauga-real-estate', 'brampton-real-estate', 'gta-real-estate', 'search', 'about', 'contact', 'community'].includes(pathname)) {
+        return pathname;
+      }
+      if (window.location.hash) {
+        const hash = window.location.hash.replace('#', '');
+        const [pageName] = hash.split('?');
+        if (pageName) return pageName;
+      }
     }
     return 'home';
   });
@@ -1107,12 +1113,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [activeFilters.city]);
 
-  // Fetch Page 1 whenever activeFilters.city changes (or on initial mount)
+  // Sequence tracking & AbortController to prevent race conditions during city switching
+  const requestSequenceRef = useRef(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Fetch Page 1 whenever activeFilters.city or activeFilters.priceRange changes (or on initial mount)
   useEffect(() => {
+    // Abort previous in-flight request if present
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    const currentSeq = ++requestSequenceRef.current;
+
     const cityParam = activeFilters.city && activeFilters.city !== 'All' ? activeFilters.city : undefined;
+    const minPriceParam = activeFilters.priceRange && activeFilters.priceRange[0] > 0 ? activeFilters.priceRange[0] : undefined;
+    const maxPriceParam = activeFilters.priceRange && activeFilters.priceRange[1] < 50000000 ? activeFilters.priceRange[1] : undefined;
+
     currentPageRef.current = 1;
 
-    apiService.getProperties({ page: 1, limit: 100, city: cityParam }).then(res => {
+    apiService.getProperties(
+      { page: 1, limit: 100, city: cityParam, minPrice: minPriceParam, maxPrice: maxPriceParam },
+      controller.signal
+    ).then(res => {
+      // Race condition protection: Ignore response if a newer request was dispatched
+      if (currentSeq !== requestSequenceRef.current) {
+        console.log(`⏹️ [AppContext] Stale request ignored for sequence #${currentSeq} (latest is #${requestSequenceRef.current})`);
+        return;
+      }
+
       if (res && res.success && Array.isArray(res.data)) {
         console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1, Total ${res.meta?.total ?? res.data.length})!`);
         setPropertiesList(res.data);
@@ -1127,9 +1158,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         savePropertiesCache(res.data);
       }
     }).catch(err => {
-      console.warn('⚠️ Could not fetch live TRREB properties from backend:', err);
+      if (err.name === 'AbortError') {
+        console.log(`⏹️ [AppContext] Cancelled previous request for city switching (Sequence #${currentSeq})`);
+        return;
+      }
+      if (currentSeq === requestSequenceRef.current) {
+        console.warn('⚠️ Could not fetch live TRREB properties from backend:', err);
+      }
     });
-  }, [activeFilters.city]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [activeFilters.city, activeFilters.priceRange]);
 
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([
     { id: 'usr-1', name: 'Baron Von Roth', email: 'baron@swissholding.ch', phone: '+1 (416) 555-0188', role: 'buyer', status: 'Active', registrationDate: '2026-05-12', lastLogin: '10 mins ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },

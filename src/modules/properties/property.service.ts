@@ -15,6 +15,11 @@ export class PropertyService {
     const limit = parseInt(query.limit as string, 10) || 100;
     const skip = (page - 1) * limit;
 
+    const minPriceRaw = query.minPrice || query.min_price;
+    const maxPriceRaw = query.maxPrice || query.max_price;
+    const minPrice = minPriceRaw !== undefined && minPriceRaw !== null ? parseInt(String(minPriceRaw), 10) : undefined;
+    const maxPrice = maxPriceRaw !== undefined && maxPriceRaw !== null ? parseInt(String(maxPriceRaw), 10) : undefined;
+
     let trrebProperties: any[] = [];
     let totalCount = 0;
 
@@ -22,6 +27,8 @@ export class PropertyService {
       // Fetch live listings from TRREB OData API
       const trrebResult = await trrebService.getProperties({
         city: query.city as string,
+        minPrice,
+        maxPrice,
         top: limit,
         skip: skip,
         filter: query.filter as string
@@ -44,12 +51,21 @@ export class PropertyService {
 
     let finalProperties = uniqueProperties;
 
+    // Enforce price filter safety guard if minPrice or maxPrice is specified
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      const pMin = minPrice !== undefined ? minPrice : 0;
+      const pMax = maxPrice !== undefined ? maxPrice : 50000000;
+      finalProperties = finalProperties.filter((p: any) => p.price >= pMin && p.price <= pMax);
+    }
+
     // Local DB Fallback: if TRREB is unconfigured / unauthenticated or empty, use database
     if (finalProperties.length === 0) {
       console.log('📡 [PropertyService] Falling back to local SQLite database!');
       const dbResult = await this.propertyRepo.findAll({
         skip,
         take: limit,
+        minPrice,
+        maxPrice,
         ...query
       });
 

@@ -53,9 +53,11 @@ export const Footer: React.FC = () => {
               {[
                 { id: 'home', name: 'Home' },
                 { id: 'search', name: 'Buy Homes' },
+                { id: 'mississauga-real-estate', name: 'Mississauga Real Estate ($500K-$1.3M)' },
+                { id: 'brampton-real-estate', name: 'Brampton Real Estate ($500K-$1.3M)' },
+                { id: 'gta-real-estate', name: 'GTA Real Estate ($500K-$1.3M)' },
                 { id: 'seller', name: 'Sell Your Property' },
                 { id: 'community', name: 'Communities' },
-                { id: 'featured', name: 'Featured Listings' },
                 { id: 'about', name: 'About Karan Kang' },
                 { id: 'contact', name: 'Contact Us' }
               ].map(page => (

@@ -72,13 +72,15 @@ export class PropertyRepository {
     }
 
     // 6. Price Range Filters
-    if (params.minPrice !== undefined || params.maxPrice !== undefined) {
+    const minP = params.minPrice ?? params.min_price;
+    const maxP = params.maxPrice ?? params.max_price;
+    if (minP !== undefined || maxP !== undefined) {
       where.price = {};
-      if (params.minPrice !== undefined && params.minPrice !== null) {
-        where.price.gte = parseFloat(String(params.minPrice));
+      if (minP !== undefined && minP !== null && !isNaN(parseFloat(String(minP)))) {
+        where.price.gte = parseFloat(String(minP));
       }
-      if (params.maxPrice !== undefined && params.maxPrice !== null && parseFloat(String(params.maxPrice)) < 50000000) {
-        where.price.lte = parseFloat(String(params.maxPrice));
+      if (maxP !== undefined && maxP !== null && !isNaN(parseFloat(String(maxP))) && parseFloat(String(maxP)) < 50000000) {
+        where.price.lte = parseFloat(String(maxP));
       }
     }
 

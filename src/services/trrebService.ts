@@ -206,11 +206,11 @@ export class TRREBService {
    * GET /Property?$top=60 with In-Memory Caching (0ms response time)
    * Enforces 100 Max limit per search request per TRREB IDX rules
    */
-  async getProperties(options?: { top?: number; skip?: number; city?: string; orderby?: string; filter?: string }): Promise<{ properties: TRREBPropertyMapped[]; nextLink?: string; count?: number }> {
+  async getProperties(options?: { top?: number; skip?: number; city?: string; orderby?: string; filter?: string; minPrice?: number; maxPrice?: number }): Promise<{ properties: TRREBPropertyMapped[]; nextLink?: string; count?: number }> {
     // TRREB IDX Rule 2: Limit search response to maximum of 100 listings
     const top = Math.min(100, Math.max(1, options?.top || 100));
     const skip = options?.skip || 0;
-    const cacheKey = `props_${options?.city || 'all'}_${top}_${skip}_${options?.orderby || 'default'}`;
+    const cacheKey = `props_${options?.city || 'all'}_${top}_${skip}_${options?.minPrice || 0}_${options?.maxPrice || 0}_${options?.orderby || 'default'}`;
 
     // Check In-Memory Cache for instant 0ms delivery
     const cached = this.cache.get(cacheKey);
@@ -232,6 +232,8 @@ export class TRREBService {
 
         if (lower === 'toronto') {
           filters.push(`contains(City, 'Toronto')`);
+        } else if (lower === 'gta' || lower.includes('greater toronto')) {
+          filters.push(`(contains(City, 'Toronto') or contains(City, 'Mississauga') or contains(City, 'Brampton') or contains(City, 'Vaughan') or contains(City, 'Markham') or contains(City, 'Richmond Hill') or contains(City, 'Oakville') or contains(City, 'Milton'))`);
         } else if (lower.includes('etobicoke')) {
           filters.push(`(contains(City, 'Etobicoke') or contains(City, 'Toronto W') or contains(UnparsedAddress, 'Etobicoke'))`);
         } else if (lower.includes('scarborough')) {
@@ -255,6 +257,13 @@ export class TRREBService {
         } else {
           filters.push(`(City eq '${cityClean}' or contains(City, '${cityClean}') or contains(UnparsedAddress, '${cityClean}'))`);
         }
+      }
+
+      if (options?.minPrice !== undefined && options.minPrice > 0) {
+        filters.push(`ListPrice ge ${options.minPrice}`);
+      }
+      if (options?.maxPrice !== undefined && options.maxPrice < 50000000) {
+        filters.push(`ListPrice le ${options.maxPrice}`);
       }
 
       if (options?.filter) {
