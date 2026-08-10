@@ -3,6 +3,12 @@ import { useApp } from '../../context/AppContext';
 import { ArrowRight, MapPin, Award, ShieldCheck } from 'lucide-react';
 import { HeroSearch } from '../../components/search/HeroSearch';
 import { RealtorProfileCard } from '../../components/RealtorProfileCard';
+import { SEOHead } from '../../components/seo/SEOHead';
+import { 
+  generateOrganizationSchema, 
+  generateRealEstateAgentSchema, 
+  generateWebSiteSchema 
+} from '../../components/seo/schemaGenerators';
 
 export const Home: React.FC = () => {
   const { 
@@ -14,6 +20,10 @@ export const Home: React.FC = () => {
   } = useApp();
   
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
+
+  const orgSchema = generateOrganizationSchema();
+  const agentSchema = generateRealEstateAgentSchema();
+  const websiteSchema = generateWebSiteSchema();
 
   const selectProperty = (id: string) => {
     setSelectedPropertyId(id);
@@ -29,6 +39,13 @@ export const Home: React.FC = () => {
 
   return (
     <div className="fade-in" style={{ position: 'relative', zIndex: 1, background: '#ffffff' }}>
+      <SEOHead
+        title="Kang Homes | Canadian Real Estate & Royal LePage Pinnacle Real Estate"
+        description="Find homes, condos, and luxury properties for sale across Oakville, Mississauga, Brampton, Toronto, and Ontario with Karan Kang, REALTOR®, Royal LePage Pinnacle."
+        canonicalPath="/"
+        keywords={['Canadian Real Estate', 'Homes for sale Toronto', 'Mississauga REALTOR', 'Karan Kang Real Estate', 'Royal LePage Pinnacle']}
+        schemas={[orgSchema, agentSchema, websiteSchema]}
+      />
       
       {/* 1. HERO SECTION - CLEAN CANADIAN REAL ESTATE DESIGN */}
       <header

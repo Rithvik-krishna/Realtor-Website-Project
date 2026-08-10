@@ -10,7 +10,18 @@
     "allowSyntheticDefaultImports": true,
     "strict": false
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/server.ts",
+    "src/app.ts",
+    "src/config/**/*",
+    "src/controllers/**/*",
+    "src/database/**/*",
+    "src/middleware/**/*",
+    "src/modules/**/*",
+    "src/routes/**/*",
+    "src/services/trrebService.ts",
+    "src/utils/**/*"
+  ],
   "exclude": [
     "Frontend/**/*", 
     "src/pages/**/*", 

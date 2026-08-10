@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import type { Property } from '../../context/AppContext';
 import { GooglePropertyMap } from '../../components/GooglePropertyMap';
@@ -46,8 +46,7 @@ export const Search: React.FC = () => {
     triggerRoleSwitchWarning,
     fetchNextPropertiesPage,
     hasNextPage,
-    isFetchingNextPage,
-    totalPropertiesCount
+    isFetchingNextPage
   } = useApp();
 
   // Screen Layout & View States
@@ -190,21 +189,32 @@ export const Search: React.FC = () => {
 
   // Synchronize search query and custom parameters from global state
   useEffect(() => {
-    if (searchQuery) {
-      setSearchTerm(searchQuery);
-    } else if (activeFilters.address) {
-      setSearchTerm(activeFilters.address);
-    } else if (activeFilters.postalCode) {
-      setSearchTerm(activeFilters.postalCode);
-    } else if (activeFilters.mlsNumber) {
-      setSearchTerm(activeFilters.mlsNumber);
-    } else {
-      setSearchTerm('');
+    const activeText = searchQuery || activeFilters.address || activeFilters.postalCode || activeFilters.mlsNumber || '';
+    if (activeText) {
+      setSearchTerm(activeText);
+      const clean = activeText.trim().toLowerCase();
+      const matchedCity = CITIES.find(c => c !== 'All' && c.toLowerCase() === clean);
+      if (matchedCity) {
+        setSelectedCity(matchedCity);
+      }
     }
     if (activeFilters.schoolZone) {
       setSchoolZoneFilter(true);
     }
   }, [searchQuery, activeFilters.address, activeFilters.postalCode, activeFilters.mlsNumber, activeFilters.schoolZone]);
+
+  const activeSearchArea = useMemo(() => {
+    if (selectedCity && selectedCity !== 'All') {
+      return selectedCity;
+    }
+    if (searchTerm && searchTerm.trim().length > 0) {
+      const clean = searchTerm.trim().toLowerCase();
+      const matchedCity = CITIES.find(c => c !== 'All' && c.toLowerCase() === clean);
+      if (matchedCity) return matchedCity;
+      return searchTerm.trim().charAt(0).toUpperCase() + searchTerm.trim().slice(1);
+    }
+    return 'All';
+  }, [selectedCity, searchTerm]);
 
   // Sync selection from map
   const handleSelectPropertyFromMap = (prop: Property) => {
@@ -450,7 +460,10 @@ export const Search: React.FC = () => {
         const communityMatch = (((prop as any).community) || prop.location || '').toLowerCase().includes(searchVal);
         const addressMatch = (prop.address || '').toLowerCase().includes(searchVal);
         const mlsMatch = (prop.mlsNumber || '').toLowerCase().includes(searchVal);
-        matchesSearch = titleMatch || cityMatch || communityMatch || addressMatch || mlsMatch;
+        const postalMatch = (prop.postalCode || '').toLowerCase().replace(/\s+/g, '').includes(searchVal.replace(/\s+/g, ''));
+        const provinceMatch = (prop.province || 'ON').toLowerCase().includes(searchVal) || (searchVal === 'ontario' && (prop.province || 'ON').toLowerCase() === 'on');
+        const descMatch = (prop.description || '').toLowerCase().includes(searchVal);
+        matchesSearch = titleMatch || cityMatch || communityMatch || addressMatch || mlsMatch || postalMatch || provinceMatch || descMatch;
       } else if (currentSearchType === 'city') {
         matchesSearch = (prop.city || '').toLowerCase().includes(searchVal);
       } else if (currentSearchType === 'neighbourhood') {
@@ -876,9 +889,8 @@ export const Search: React.FC = () => {
             hoveredPropertyId={mapHoveredId}
             onSelectProperty={handleSelectPropertyFromMap}
             onHoverProperty={setMapHoveredId}
-            searchCity={selectedCity}
+            searchCity={activeSearchArea}
             onVisiblePropertiesChange={handleVisiblePropertiesChange}
-            totalPropertiesCount={totalPropertiesCount}
           />
         </div>
 
@@ -901,10 +913,10 @@ export const Search: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             <div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                {((totalPropertiesCount && totalPropertiesCount > 0) ? totalPropertiesCount : displayedProperties.length).toLocaleString()} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
+                {displayedProperties.length.toLocaleString()} {displayedProperties.length === 1 ? 'Property' : 'Properties'}{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
               </h2>
               <p style={{ fontSize: '0.78rem', color: '#475569', margin: '2px 0 0 0' }}>
-                Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{selectedCity}, Ontario</span>
+                Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{activeSearchArea}, Ontario</span>
                 {visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length && (
                   <span style={{ color: '#64748b', marginLeft: '6px' }}>· Zoom out to see all {filteredProperties.length}</span>
                 )}

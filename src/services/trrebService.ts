@@ -58,13 +58,16 @@ const CITY_COORDINATES: Record<string, { lat: number; lng: number }> = {
   'Richmond Hill': { lat: 43.8828, lng: -79.4403 }
 };
 
+const DEFAULT_TRREB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZW5kb3IvdHJyZWIvMTMxNjIiLCJhdWQiOiJBbXBVc2Vyc1ByZCIsInJvbGVzIjpbIkFtcFZlbmRvciJdLCJpc3MiOiJwcm9kLmFtcHJlLmNhIiwiZXhwIjoyNTM0MDIzMDA3OTksImlhdCI6MTc4NTE3OTE3OSwic3ViamVjdFR5cGUiOiJ2ZW5kb3IiLCJzdWJqZWN0S2V5IjoiMTMxNjIiLCJqdGkiOiI1ZTM4ZjZlYzY3YTJiYTNiIiwiY3VzdG9tZXJOYW1lIjoidHJyZWIifQ.EjK2dVzSaf3AvoL4US7HX6__iGmzskfrkP3qVjGOL0c';
+
 export class TRREBService {
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
   private CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache TTL for instant responses
 
   private getClient() {
     const baseURL = process.env.TRREB_API_URL || 'https://query.ampre.ca/odata';
-    const token = process.env.TRREB_ACCESS_TOKEN || '';
+    const rawToken = process.env.TRREB_ACCESS_TOKEN || DEFAULT_TRREB_TOKEN;
+    const token = rawToken.replace(/\s+/g, '');
 
     if (!token) {
       console.warn('⚠️ [TRREB Service] TRREB_ACCESS_TOKEN is missing in environment variables.');
@@ -77,7 +80,7 @@ export class TRREBService {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      timeout: 15000
+      timeout: 20000
     });
   }
 
@@ -133,9 +136,18 @@ export class TRREBService {
       images = mediaItems.map(m => m.url).filter(Boolean);
     }
 
+    if (images.length === 0) {
+      images = [FALLBACK_PROPERTY_IMAGES[Math.abs(listingKey.split('').reduce((a: number, b: string) => a + b.charCodeAt(0), 0)) % FALLBACK_PROPERTY_IMAGES.length]];
+    }
+
     const defaultCoords = CITY_COORDINATES[city] || CITY_COORDINATES['Toronto'];
-    const lat = item.Latitude ? parseFloat(item.Latitude) : defaultCoords.lat + (Math.random() - 0.5) * 0.04;
-    const lng = item.Longitude ? parseFloat(item.Longitude) : defaultCoords.lng + (Math.random() - 0.5) * 0.04;
+    let hash = 0;
+    for (let i = 0; i < listingKey.length; i++) hash = (hash << 5) - hash + listingKey.charCodeAt(i);
+    const latOffset = (Math.sin(hash) * 0.05);
+    const lngOffset = (Math.cos(hash) * 0.05);
+
+    const lat = item.Latitude ? parseFloat(item.Latitude) : Number((defaultCoords.lat + latOffset).toFixed(5));
+    const lng = item.Longitude ? parseFloat(item.Longitude) : Number((defaultCoords.lng + lngOffset).toFixed(5));
 
     const isLandOrCommercial = /land|commercial|industrial|farm|office|retail/i.test(`${item.PropertyType || ''} ${item.PropertySubType || ''}`);
 

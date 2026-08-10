@@ -7,6 +7,10 @@ import { OfferWizardModal } from '../../components/OfferWizardModal';
 import { PropertyCompareModal } from '../../components/PropertyCompareModal';
 import { PropertyGallery } from '../../components/PropertyGallery';
 import { apiService } from '../../services/api';
+import { SEOHead } from '../../components/seo/SEOHead';
+import { generatePropertySchema } from '../../components/seo/schemaGenerators';
+import { BreadcrumbBar } from '../../components/seo/BreadcrumbBar';
+import { InternalLinksEngine } from '../../components/seo/InternalLinksEngine';
 
 export const PropertyDetail: React.FC = () => {
   const { 
@@ -308,9 +312,49 @@ export const PropertyDetail: React.FC = () => {
     });
   };
 
+  const propertySchema = generatePropertySchema({
+    title: activeProperty.title || activeProperty.address || 'Property Listing',
+    description: activeProperty.description || `Property for sale in ${activeProperty.city || 'Toronto'}, ON.`,
+    price: activeProperty.price || 0,
+    address: activeProperty.address || activeProperty.location || 'Bay St',
+    city: activeProperty.city || 'Toronto',
+    province: activeProperty.province || 'ON',
+    postalCode: activeProperty.postalCode || 'L5B 2C9',
+    beds: activeProperty.beds || 3,
+    baths: activeProperty.baths || 2,
+    sqft: activeProperty.sqft,
+    propertyType: activeProperty.propertyType,
+    imageUrl: activeProperty.imageUrl,
+    images: activeProperty.images,
+    mlsNumber: activeProperty.mlsNumber || activeProperty.id,
+    url: `https://www.kanghomes.ca/property/${activeProperty.mlsNumber || activeProperty.id}`,
+    latitude: activeProperty.lat,
+    longitude: activeProperty.lng,
+    yearBuilt: activeProperty.yearBuilt
+  });
+
   return (
     <div className="fade-in" style={{ paddingTop: '10px', paddingBottom: '0px' }}>
+      <SEOHead
+        title={`${activeProperty.beds || 3} Bed ${activeProperty.propertyType || 'Home'} for Sale in ${activeProperty.city || 'Toronto'} | MLS® #${activeProperty.mlsNumber || activeProperty.id}`}
+        description={`${activeProperty.beds || 3} Bed, ${activeProperty.baths || 2} Bath ${activeProperty.propertyType || 'residence'} for sale at ${activeProperty.address || activeProperty.location}, ${activeProperty.city || 'Toronto'}, ON. Offered at $${(activeProperty.price || 0).toLocaleString()} by Karan Kang REALTOR®.`}
+        canonicalPath={`/property/${activeProperty.mlsNumber || activeProperty.id}`}
+        keywords={[`${activeProperty.city} real estate`, `homes for sale ${activeProperty.city}`, `${activeProperty.mlsNumber || activeProperty.id} MLS`]}
+        ogImage={activeProperty.imageUrl || activeProperty.images?.[0]}
+        schemas={[propertySchema]}
+      />
+
       <div className="container">
+        <BreadcrumbBar
+          items={[
+            { name: 'Properties', url: '/search' },
+            { name: activeProperty.city || 'Toronto', url: `/neighbourhoods/${(activeProperty.city || 'Toronto').toLowerCase()}` },
+            { name: activeProperty.title || activeProperty.address || 'Listing', url: `/property/${activeProperty.id}` }
+          ]}
+          onNavigate={(url) => {
+            if (url === '/search') setCurrentPage('search');
+          }}
+        />
         
         {/* Back Link and Quick Actions (Mobile Optimized Stack) */}
         <div className="top-nav-actions-bar">
@@ -1192,6 +1236,14 @@ export const PropertyDetail: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Contextual SEO Internal Linking Engine */}
+      <div className="container" style={{ marginBottom: '40px' }}>
+        <InternalLinksEngine
+          currentCity={activeProperty.city || 'Toronto'}
+          currentPropertyType={activeProperty.propertyType || 'Detached'}
+        />
+      </div>
 
       <style>{`
         @media (max-width: 900px) {

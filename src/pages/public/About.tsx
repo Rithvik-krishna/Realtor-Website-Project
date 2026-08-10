@@ -2,9 +2,14 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { ShieldCheck, Award, MapPin, Building2, CheckCircle2, ArrowRight } from 'lucide-react';
 import { RealtorProfileCard } from '../../components/RealtorProfileCard';
+import { SEOHead } from '../../components/seo/SEOHead';
+import { generateRealEstateAgentSchema } from '../../components/seo/schemaGenerators';
+import { BreadcrumbBar } from '../../components/seo/BreadcrumbBar';
 
 export const About: React.FC = () => {
   const { setCurrentPage } = useApp();
+
+  const agentSchema = generateRealEstateAgentSchema();
 
   const areasServed = [
     { city: 'Oakville', desc: 'Lakeshore waterfront estates, Joshua Creek family homes, Glen Abbey & Bronte Creek.' },
@@ -15,7 +20,16 @@ export const About: React.FC = () => {
 
   return (
     <div className="fade-in" style={{ paddingTop: '24px', minHeight: '100vh', paddingBottom: '60px', background: '#ffffff' }}>
+      <SEOHead
+        title="About Karan Kang, REALTOR® | Royal LePage Pinnacle Real Estate"
+        description="Learn about Karan Kang, REALTOR® at Royal LePage Pinnacle Real Estate. Serving home buyers and sellers across Oakville, Mississauga, Brampton, Toronto, and Ontario."
+        canonicalPath="/about"
+        keywords={['Karan Kang REALTOR', 'Royal LePage Pinnacle Real Estate agent', 'Oakville real estate agent', 'Mississauga realtor']}
+        schemas={[agentSchema]}
+      />
+
       <div className="container">
+        <BreadcrumbBar items={[{ name: 'About Karan Kang', url: '/about' }]} />
         
         {/* 1. HERO BRAND SECTION */}
         <section style={{ textAlign: 'center', maxWidth: '800px', margin: '16px auto 40px auto' }}>

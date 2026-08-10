@@ -2,9 +2,15 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Mail, Phone, Calendar, Clock, CheckCircle, Building2, Award } from 'lucide-react';
 import { RealtorProfileCard } from '../../components/RealtorProfileCard';
+import { SEOHead } from '../../components/seo/SEOHead';
+import { generateOrganizationSchema, generateRealEstateAgentSchema } from '../../components/seo/schemaGenerators';
+import { BreadcrumbBar } from '../../components/seo/BreadcrumbBar';
 
 export const Contact: React.FC = () => {
   const { showToast } = useApp();
+
+  const orgSchema = generateOrganizationSchema();
+  const agentSchema = generateRealEstateAgentSchema();
   
   // Interactive Form State
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: 'Property Inquiry', message: '' });
@@ -38,7 +44,16 @@ export const Contact: React.FC = () => {
 
   return (
     <div className="fade-in" style={{ paddingTop: '24px', minHeight: '100vh', paddingBottom: '60px', background: '#ffffff' }}>
+      <SEOHead
+        title="Contact Karan Kang, REALTOR® | Kang Homes Royal LePage Pinnacle"
+        description="Book a home viewing or real estate consultation with Karan Kang, REALTOR® at Royal LePage Pinnacle Real Estate. Phone: (416) 555-0199."
+        canonicalPath="/contact"
+        keywords={['Contact REALTOR Toronto', 'Karan Kang phone number', 'Royal LePage Pinnacle contact']}
+        schemas={[orgSchema, agentSchema]}
+      />
+
       <div className="container">
+        <BreadcrumbBar items={[{ name: 'Contact Us', url: '/contact' }]} />
         
         {/* Page Header */}
         <section style={{ textAlign: 'center', maxWidth: '750px', margin: '16px auto 36px auto' }}>

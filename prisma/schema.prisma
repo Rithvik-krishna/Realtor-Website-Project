@@ -333,3 +333,26 @@ model SyncJob {
   startedAt    DateTime   @default(now())
   completedAt  DateTime?
 }
+
+model Lead {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String?
+  leadType       String   @default("BUYER") // BUYER, SELLER, INVESTOR, GENERAL
+  source         String   @default("ORGANIC") // ORGANIC, PROPERTY_PAGE, LANDING_PAGE, BLOG, DIRECT
+  location       String?
+  propertyId     String?
+  searchCriteria String?  // JSON string
+  pageUrl        String?
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  status         String   @default("NEW") // NEW, CONTACTED, QUALIFIED, CLOSED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([email])
+  @@index([leadType])
+  @@index([source])
+}

@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import type { Property } from '../../context/AppContext';
 import { GooglePropertyMap } from '../../components/GooglePropertyMap';
 import { ShareModal } from '../../components/ShareModal';
 import { MapPin, Grid, List, SlidersHorizontal, Heart, RefreshCw, X, ChevronDown, Share2, Eye, Map, Check, ChevronRight } from 'lucide-react';
+import { SEOHead } from '../../components/seo/SEOHead';
 
 const CITIES = [
   'All', 'Toronto', 'Mississauga', 'Brampton', 'Oakville', 'Milton', 'Vaughan', 'Markham', 
@@ -180,18 +181,29 @@ export const Search: React.FC = () => {
 
   // Synchronize search query and custom parameters from global state
   useEffect(() => {
-    if (searchQuery) {
-      setSearchTerm(searchQuery);
-    } else if (activeFilters.address) {
-      setSearchTerm(activeFilters.address);
-    } else if (activeFilters.postalCode) {
-      setSearchTerm(activeFilters.postalCode);
-    } else if (activeFilters.mlsNumber) {
-      setSearchTerm(activeFilters.mlsNumber);
-    } else {
-      setSearchTerm('');
+    const activeText = searchQuery || activeFilters.address || activeFilters.postalCode || activeFilters.mlsNumber || '';
+    if (activeText) {
+      setSearchTerm(activeText);
+      const clean = activeText.trim().toLowerCase();
+      const matchedCity = CITIES.find(c => c !== 'All' && c.toLowerCase() === clean);
+      if (matchedCity) {
+        setSelectedCity(matchedCity);
+      }
     }
   }, [searchQuery, activeFilters.address, activeFilters.postalCode, activeFilters.mlsNumber]);
+
+  const activeSearchArea = useMemo(() => {
+    if (selectedCity && selectedCity !== 'All') {
+      return selectedCity;
+    }
+    if (searchTerm && searchTerm.trim().length > 0) {
+      const clean = searchTerm.trim().toLowerCase();
+      const matchedCity = CITIES.find(c => c !== 'All' && c.toLowerCase() === clean);
+      if (matchedCity) return matchedCity;
+      return searchTerm.trim().charAt(0).toUpperCase() + searchTerm.trim().slice(1);
+    }
+    return 'All';
+  }, [selectedCity, searchTerm]);
 
   // Sync selection from map
   const handleSelectPropertyFromMap = (prop: Property) => {
@@ -580,8 +592,24 @@ export const Search: React.FC = () => {
     }
   };
 
+  const isFilteredSearch = selectedCity !== 'All' || selectedType !== 'All' || bedsCount !== 'All' || searchTerm.trim() !== '';
+  const searchTitle = isFilteredSearch 
+    ? `${selectedType !== 'All' ? selectedType : 'Homes'} for Sale in ${selectedCity !== 'All' ? selectedCity : 'Ontario'} | TRREB MLS® Listings`
+    : `MLS® Property Search | Homes & Condos for Sale in Greater Toronto & Ontario`;
+
+  const searchDesc = `Browse live TRREB MLS® property listings in ${selectedCity !== 'All' ? selectedCity : 'Ontario'}. Filter by price, bedrooms, property type, and neighborhood with Karan Kang, REALTOR®.`;
+
+  const hasExtraFilterParams = sortOrder !== 'asc' || (activeFilters.status && activeFilters.status !== 'All') || minPrice > 0 || maxPrice < 50000000;
+
   return (
     <div style={{ height: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#ffffff' }}>
+      <SEOHead
+        title={searchTitle}
+        description={searchDesc}
+        canonicalPath={selectedCity !== 'All' ? `/properties/${selectedCity.toLowerCase()}` : '/search'}
+        keywords={[`${selectedCity} real estate`, `homes for sale ${selectedCity}`, `MLS search Ontario`]}
+        noIndex={hasExtraFilterParams}
+      />
       
       {/* 1. TOP HORIZONTAL FILTERS BAR */}
       <div
@@ -893,10 +921,10 @@ export const Search: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             <div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                {displayedProperties.length} Properties{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
+                {displayedProperties.length.toLocaleString()} {displayedProperties.length === 1 ? 'Property' : 'Properties'}{visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length ? <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E31837', marginLeft: '8px' }}>in map view</span> : ' Found'}
               </h2>
               <p style={{ fontSize: '0.78rem', color: '#475569', margin: '2px 0 0 0' }}>
-                Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{selectedCity}, Ontario</span>
+                Search Area: <span style={{ color: '#0f172a', fontWeight: 700 }}>{activeSearchArea}, Ontario</span>
                 {visiblePropertyIds !== null && displayedProperties.length !== filteredProperties.length && (
                   <span style={{ color: '#64748b', marginLeft: '6px' }}>· Zoom out to see all {filteredProperties.length}</span>
                 )}

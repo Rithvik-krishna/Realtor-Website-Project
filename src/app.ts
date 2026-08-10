@@ -7,6 +7,8 @@ import v1Router from './api/v1/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { ResponseUtil } from './utils/response.util.js';
 
+import { SEOController } from './modules/seo/seo.controller.js';
+
 const app: Application = express();
 
 // Middlewares
@@ -20,6 +22,14 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/health', (req: Request, res: Response) => {
   return ResponseUtil.success(res, { status: 'UP', timestamp: new Date() }, 'Canadian Realtor Backend API is healthy');
 });
+
+// Dynamic Root XML Sitemaps & Robots.txt
+app.get('/sitemap.xml', SEOController.getSitemapIndex);
+app.get('/sitemap-pages.xml', SEOController.getPagesSitemap);
+app.get('/sitemap-properties.xml', SEOController.getPropertiesSitemap);
+app.get('/sitemap-locations.xml', SEOController.getLocationsSitemap);
+app.get('/sitemap-blog.xml', SEOController.getBlogSitemap);
+app.get('/robots.txt', SEOController.getRobotsTxt);
 
 // API Routes
 app.use('/api/v1', v1Router);

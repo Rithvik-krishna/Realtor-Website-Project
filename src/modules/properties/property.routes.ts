@@ -9,6 +9,7 @@ const router = Router();
 const controller = new PropertyController();
 
 router.get('/', controller.getProperties);
+router.get('/inventory-stats', controller.getInventoryStats);
 router.get('/compare', controller.compareProperties);
 router.get('/:identifier', controller.getPropertyDetails);
 

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Search, X, ArrowLeft, Heart, Share2, Bookmark, TrendingUp, Clock, Compass, BookOpenCheck } from 'lucide-react';
+import { SEOHead } from '../../components/seo/SEOHead';
+import { generateArticleSchema } from '../../components/seo/schemaGenerators';
+import { BreadcrumbBar } from '../../components/seo/BreadcrumbBar';
+import { InternalLinksEngine } from '../../components/seo/InternalLinksEngine';
 
 export const Blog: React.FC = () => {
   const { blogArticles, showToast } = useApp();
@@ -99,9 +103,35 @@ export const Blog: React.FC = () => {
   // Grid holds the rest
   const gridArticles = filteredArticles.filter(art => art.id !== featuredArticle?.id);
 
+  const articleSchema = activeArticle ? generateArticleSchema({
+    title: activeArticle.title,
+    description: activeArticle.excerpt,
+    url: `https://www.kanghomes.ca/blog/${activeArticle.id}`,
+    imageUrl: activeArticle.imageUrl,
+    datePublished: activeArticle.date,
+    authorName: activeArticle.author,
+    category: activeArticle.category
+  }) : null;
+
   return (
     <div className="fade-in" style={{ paddingTop: '20px', minHeight: '100vh', paddingBottom: '40px', position: 'relative' }}>
+      <SEOHead
+        title={activeArticle ? `${activeArticle.title} | Kang Homes Market Insights` : "Canadian Real Estate Blog & Market Insights | Kang Homes"}
+        description={activeArticle ? activeArticle.excerpt : "Expert real estate market analysis, buying and selling guides, mortgage tips, and GTA property trends from Karan Kang, REALTOR®."}
+        canonicalPath={activeArticle ? `/blog/${activeArticle.id}` : "/blog"}
+        keywords={['Toronto real estate blog', 'GTA market insights', 'home buying tips Ontario', 'Karan Kang REALTOR blog']}
+        schemas={articleSchema ? [articleSchema] : []}
+      />
+
       <div className="container">
+        <BreadcrumbBar
+          items={activeArticle ? [
+            { name: 'Blog', url: '/blog' },
+            { name: activeArticle.title, url: `/blog/${activeArticle.id}` }
+          ] : [
+            { name: 'Real Estate Blog', url: '/blog' }
+          ]}
+        />
 
         {/* 1. HEADER HERO BANNER */}
         <section style={{ marginBottom: '32px' }}>
