@@ -4,6 +4,7 @@ import type { Property } from '../../context/AppContext';
 import { GooglePropertyMap } from '../../components/GooglePropertyMap';
 import { ShareModal } from '../../components/ShareModal';
 import { MapPin, Grid, List, SlidersHorizontal, Heart, RefreshCw, X, ChevronDown, Share2, Eye, Map, Check, ChevronRight } from 'lucide-react';
+import { SEOHead } from '../../components/seo/SEOHead';
 
 const CITIES = [
   'All', 'Toronto', 'Mississauga', 'Brampton', 'Oakville', 'Milton', 'Vaughan', 'Markham', 
@@ -591,8 +592,24 @@ export const Search: React.FC = () => {
     }
   };
 
+  const isFilteredSearch = selectedCity !== 'All' || selectedType !== 'All' || bedsCount !== 'All' || searchTerm.trim() !== '';
+  const searchTitle = isFilteredSearch 
+    ? `${selectedType !== 'All' ? selectedType : 'Homes'} for Sale in ${selectedCity !== 'All' ? selectedCity : 'Ontario'} | TRREB MLS® Listings`
+    : `MLS® Property Search | Homes & Condos for Sale in Greater Toronto & Ontario`;
+
+  const searchDesc = `Browse live TRREB MLS® property listings in ${selectedCity !== 'All' ? selectedCity : 'Ontario'}. Filter by price, bedrooms, property type, and neighborhood with Karan Kang, REALTOR®.`;
+
+  const hasExtraFilterParams = sortOrder !== 'asc' || (activeFilters.status && activeFilters.status !== 'All') || minPrice > 0 || maxPrice < 50000000;
+
   return (
     <div style={{ height: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#ffffff' }}>
+      <SEOHead
+        title={searchTitle}
+        description={searchDesc}
+        canonicalPath={selectedCity !== 'All' ? `/properties/${selectedCity.toLowerCase()}` : '/search'}
+        keywords={[`${selectedCity} real estate`, `homes for sale ${selectedCity}`, `MLS search Ontario`]}
+        noIndex={hasExtraFilterParams}
+      />
       
       {/* 1. TOP HORIZONTAL FILTERS BAR */}
       <div

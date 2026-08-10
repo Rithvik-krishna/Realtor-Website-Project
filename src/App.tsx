@@ -9,6 +9,7 @@ import { Home } from './pages/public/Home';
 import { Search } from './pages/public/Search';
 import { PropertyDetail } from './pages/public/PropertyDetail';
 import { Community } from './pages/public/Community';
+import { LocationLanding } from './pages/public/LocationLanding';
 import { About } from './pages/public/About';
 import { Blog } from './pages/public/Blog';
 import { Contact } from './pages/public/Contact';
@@ -62,6 +63,9 @@ function App() {
         return <Search />;
       case 'property-detail':
         return <PropertyDetail />;
+      case 'location-landing':
+      case 'neighbourhoods':
+        return <LocationLanding />;
       case 'schedule-viewing':
         return user && user.role === 'buyer' ? <ScheduleViewingPage /> : <Auth initialRole="buyer" />;
       case 'purchase-offer':

@@ -137,7 +137,7 @@ export class TRREBService {
     }
 
     if (images.length === 0) {
-      images = [FALLBACK_PROPERTY_IMAGES[Math.abs(listingKey.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % FALLBACK_PROPERTY_IMAGES.length]];
+      images = [FALLBACK_PROPERTY_IMAGES[Math.abs(listingKey.split('').reduce((a: number, b: string) => a + b.charCodeAt(0), 0)) % FALLBACK_PROPERTY_IMAGES.length]];
     }
 
     const defaultCoords = CITY_COORDINATES[city] || CITY_COORDINATES['Toronto'];
