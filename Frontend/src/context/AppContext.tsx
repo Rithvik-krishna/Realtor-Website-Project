@@ -610,14 +610,25 @@ const communities: Community[] = [
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentPage, setCurrentPageRaw] = useState<string>(() => {
     if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname.replace(/^\//, '');
-      if (['mississauga-real-estate', 'brampton-real-estate', 'gta-real-estate', 'search', 'about', 'contact', 'community'].includes(pathname)) {
-        return pathname;
+      const rawPath = decodeURIComponent(window.location.pathname.replace(/^\//, '')).trim().toLowerCase();
+      const normalizedPath = rawPath.replace(/\s+/g, '-');
+
+      if (['mississauga-real-estate', 'mississauga-homes-for-sale'].includes(normalizedPath)) {
+        return 'mississauga-real-estate';
+      }
+      if (['brampton-real-estate', 'brampton-homes-for-sale'].includes(normalizedPath)) {
+        return 'brampton-real-estate';
+      }
+      if (['gta-real-estate', 'gta-homes-for-sale'].includes(normalizedPath)) {
+        return 'gta-real-estate';
+      }
+      if (['search', 'about', 'contact', 'community', 'seller', 'buyer', 'featured'].includes(normalizedPath)) {
+        return normalizedPath;
       }
       if (window.location.hash) {
-        const hash = window.location.hash.replace('#', '');
+        const hash = decodeURIComponent(window.location.hash.replace('#', '')).trim().toLowerCase();
         const [pageName] = hash.split('?');
-        if (pageName) return pageName;
+        if (pageName) return pageName.replace(/\s+/g, '-');
       }
     }
     return 'home';
@@ -1032,20 +1043,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   // Instantiated datasets loaded on provider compile
-  const [propertiesList, setPropertiesList] = useState<Property[]>(() => {
-    if (typeof window !== 'undefined') {
-      const cachedSession = sessionStorage.getItem('trreb_properties_cache');
-      const cachedLocal = localStorage.getItem('trreb_properties_cache');
-      const cached = cachedSession || cachedLocal;
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        } catch {}
-      }
-    }
-    return [];
-  });
+  const [propertiesList, setPropertiesList] = useState<Property[]>([]);
   const [blogArticles] = useState<BlogArticle[]>(() => generateBlogArticlesList());
 
   // Pagination & Infinite Scroll Refs & State
@@ -1113,64 +1111,47 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [activeFilters.city]);
 
-  // Sequence tracking & AbortController to prevent race conditions during city switching
-  const requestSequenceRef = useRef(0);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  // Sequence tracking to prevent race conditions during city/filter switching
+  const fetchPropertiesSeqRef = useRef(0);
 
   // Fetch Page 1 whenever activeFilters.city or activeFilters.priceRange changes (or on initial mount)
   useEffect(() => {
-    // Abort previous in-flight request if present
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    const controller = new AbortController();
-    abortControllerRef.current = controller;
-
-    const currentSeq = ++requestSequenceRef.current;
+    const seq = ++fetchPropertiesSeqRef.current;
 
     const cityParam = activeFilters.city && activeFilters.city !== 'All' ? activeFilters.city : undefined;
-    const minPriceParam = activeFilters.priceRange && activeFilters.priceRange[0] > 0 ? activeFilters.priceRange[0] : undefined;
-    const maxPriceParam = activeFilters.priceRange && activeFilters.priceRange[1] < 50000000 ? activeFilters.priceRange[1] : undefined;
+    const minPriceVal = activeFilters.priceRange ? activeFilters.priceRange[0] : 0;
+    const maxPriceVal = activeFilters.priceRange ? activeFilters.priceRange[1] : 50000000;
+
+    const minPriceParam = minPriceVal > 0 ? minPriceVal : undefined;
+    const maxPriceParam = maxPriceVal < 50000000 ? maxPriceVal : undefined;
 
     currentPageRef.current = 1;
 
     apiService.getProperties(
-      { page: 1, limit: 100, city: cityParam, minPrice: minPriceParam, maxPrice: maxPriceParam },
-      controller.signal
+      { page: 1, limit: 300, city: cityParam, minPrice: minPriceParam, maxPrice: maxPriceParam }
     ).then(res => {
-      // Race condition protection: Ignore response if a newer request was dispatched
-      if (currentSeq !== requestSequenceRef.current) {
-        console.log(`⏹️ [AppContext] Stale request ignored for sequence #${currentSeq} (latest is #${requestSequenceRef.current})`);
-        return;
-      }
-
-      if (res && res.success && Array.isArray(res.data)) {
-        console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1, Total ${res.meta?.total ?? res.data.length})!`);
-        setPropertiesList(res.data);
-        if (res.meta) {
-          currentPageRef.current = res.meta.page;
-          totalPagesRef.current = res.meta.totalPages;
-          setHasNextPage(res.meta.page < res.meta.totalPages);
-          setTotalPropertiesCount(res.meta.total ?? res.data.length);
-        } else {
-          setTotalPropertiesCount(res.data.length);
+      // Only process response if this is still the latest fetch request sequence
+      if (seq === fetchPropertiesSeqRef.current) {
+        if (res && res.success && Array.isArray(res.data)) {
+          console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1, Total ${res.meta?.total ?? res.data.length})!`);
+          setPropertiesList(res.data);
+          if (res.meta) {
+            currentPageRef.current = res.meta.page;
+            totalPagesRef.current = res.meta.totalPages;
+            setHasNextPage(res.meta.page < res.meta.totalPages);
+            setTotalPropertiesCount(res.meta.total ?? res.data.length);
+          } else {
+            setTotalPropertiesCount(res.data.length);
+          }
+          savePropertiesCache(res.data);
         }
-        savePropertiesCache(res.data);
       }
     }).catch(err => {
-      if (err.name === 'AbortError') {
-        console.log(`⏹️ [AppContext] Cancelled previous request for city switching (Sequence #${currentSeq})`);
-        return;
-      }
-      if (currentSeq === requestSequenceRef.current) {
+      if (seq === fetchPropertiesSeqRef.current) {
         console.warn('⚠️ Could not fetch live TRREB properties from backend:', err);
       }
     });
-
-    return () => {
-      controller.abort();
-    };
-  }, [activeFilters.city, activeFilters.priceRange]);
+  }, [activeFilters.city, activeFilters.priceRange ? activeFilters.priceRange[0] : 0, activeFilters.priceRange ? activeFilters.priceRange[1] : 50000000]);
 
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([
     { id: 'usr-1', name: 'Baron Von Roth', email: 'baron@swissholding.ch', phone: '+1 (416) 555-0188', role: 'buyer', status: 'Active', registrationDate: '2026-05-12', lastLogin: '10 mins ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },

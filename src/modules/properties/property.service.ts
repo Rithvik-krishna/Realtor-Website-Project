@@ -119,18 +119,38 @@ export class PropertyService {
     let totalCount = 0;
 
     try {
-      // Fetch live listings from TRREB OData API
-      const trrebResult = await trrebService.getProperties({
-        city: query.city as string,
-        minPrice,
-        maxPrice,
-        top: limit,
-        skip: skip,
-        filter: query.filter as string
-      });
+      // Fetch live listings from TRREB OData API (supports fetching up to 300+ listings via multi-page batching)
+      if (limit > 100) {
+        const pagesToFetch = Math.ceil(limit / 100);
+        const fetchPromises = [];
+        for (let i = 0; i < pagesToFetch; i++) {
+          fetchPromises.push(
+            trrebService.getProperties({
+              city: query.city as string,
+              minPrice,
+              maxPrice,
+              top: 100,
+              skip: skip + (i * 100),
+              filter: query.filter as string
+            })
+          );
+        }
+        const results = await Promise.all(fetchPromises);
+        trrebProperties = results.flatMap(r => r.properties || []);
+        totalCount = results[0]?.count || trrebProperties.length;
+      } else {
+        const trrebResult = await trrebService.getProperties({
+          city: query.city as string,
+          minPrice,
+          maxPrice,
+          top: limit,
+          skip: skip,
+          filter: query.filter as string
+        });
 
-      trrebProperties = trrebResult.properties || [];
-      totalCount = trrebResult.count || trrebProperties.length;
+        trrebProperties = trrebResult.properties || [];
+        totalCount = trrebResult.count || trrebProperties.length;
+      }
     } catch (err) {
       console.warn('⚠️ live TRREB property fetch failed, falling back to database:', err);
     }

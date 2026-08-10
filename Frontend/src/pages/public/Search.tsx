@@ -6,7 +6,7 @@ import { ShareModal } from '../../components/ShareModal';
 import { MapPin, Grid, List, SlidersHorizontal, Heart, RefreshCw, X, ChevronDown, Share2, Eye, Map, Check, ChevronRight } from 'lucide-react';
 
 const CITIES = [
-  'All', 'Toronto', 'Mississauga', 'Brampton', 'Oakville', 'Milton', 'Vaughan', 'Markham', 
+  'All', 'GTA', 'Mississauga', 'Brampton', 'Toronto', 'Oakville', 'Milton', 'Vaughan', 'Markham', 
   'Richmond Hill', 'Scarborough', 'Etobicoke', 'Hamilton', 'Ajax', 'Pickering', 'Whitby', 
   'Burlington', 'Newmarket', 'Aurora', 'King', 'Caledon', 'Halton Hills', 'Oshawa', 
   'Clarington', 'Whitchurch-Stouffville', 'Georgina', 'Brock', 'Scugog', 'Uxbridge', 
@@ -248,6 +248,22 @@ export const Search: React.FC = () => {
     if (!targetCity || targetCity === 'All' || targetCity === 'Any') return true;
     const cleanTarget = cleanCityName(targetCity);
     if (!cleanTarget) return true;
+
+    if (cleanTarget === 'gta' || cleanTarget.includes('greater toronto')) {
+      const gtaMunicipalities = [
+        'toronto', 'mississauga', 'brampton', 'vaughan', 'markham', 'richmond hill',
+        'oakville', 'milton', 'burlington', 'pickering', 'ajax', 'whitby', 'oshawa',
+        'caledon', 'halton hills', 'king', 'aurora', 'newmarket', 'stouffville', 'georgina'
+      ];
+      const propCity = cleanCityName(prop.city);
+      const propAddress = (prop.address || '').toLowerCase();
+      return (
+        gtaMunicipalities.some(m => propCity.includes(m) || m.includes(propCity) || propAddress.includes(m)) ||
+        propCity.includes('toronto') ||
+        propAddress.includes('toronto') ||
+        propAddress.includes('gta')
+      );
+    }
 
     const propCity = cleanCityName(prop.city);
     const propAddress = (prop.address || '').toLowerCase();
@@ -495,7 +511,7 @@ export const Search: React.FC = () => {
       }
     }
 
-    const matchesCity = true; // Backend API handles city filtering directly via live TRREB OData query
+    const matchesCity = matchCity(prop, selectedCity);
     const matchesSchoolFilter = !schoolZoneFilter || !!(prop.schoolScore && prop.schoolScore >= 8);
 
     return (

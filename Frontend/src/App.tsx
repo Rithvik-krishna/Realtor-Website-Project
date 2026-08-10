@@ -62,10 +62,13 @@ function App() {
       case 'search':
         return <Search />;
       case 'mississauga-real-estate':
+      case 'mississauga-homes-for-sale':
         return <CityRealEstateLanding city="Mississauga" minPrice={500000} maxPrice={1300000} />;
       case 'brampton-real-estate':
+      case 'brampton-homes-for-sale':
         return <CityRealEstateLanding city="Brampton" minPrice={500000} maxPrice={1300000} />;
       case 'gta-real-estate':
+      case 'gta-homes-for-sale':
         return <CityRealEstateLanding city="GTA" minPrice={500000} maxPrice={1300000} />;
       case 'property-detail':
         return <PropertyDetail />;

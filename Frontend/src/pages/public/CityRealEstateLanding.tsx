@@ -70,7 +70,7 @@ export const CityRealEstateLanding: React.FC<CityRealEstateLandingProps> = ({
           minPrice: minPrice,
           maxPrice: maxPrice,
           page: 1,
-          limit: 100
+          limit: 300
         });
 
         if (isMounted && res && res.success && Array.isArray(res.data)) {
