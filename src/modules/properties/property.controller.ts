@@ -46,4 +46,13 @@ export class PropertyController {
       next(error);
     }
   };
+
+  getInventoryStats = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const stats = await this.propertyService.getInventoryStats();
+      return ResponseUtil.success(res, stats, 'Property inventory statistics retrieved successfully', 200);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

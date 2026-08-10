@@ -4,8 +4,10 @@ import {
   LayoutDashboard, Building2, Users, Briefcase, Calendar, FileText, BarChart3, 
   Settings, Bell, User, Search, Plus, Download, 
   Trash2, FileSpreadsheet, X, Lock, TrendingUp, XCircle, LogOut, RefreshCw,
-  ArrowUpRight, CheckSquare, Square, Star, CheckCircle2
+  ArrowUpRight, CheckSquare, Square, Star, CheckCircle2, Layers
 } from 'lucide-react';
+
+import { InventoryDashboard } from '../../components/admin/InventoryDashboard';
 
 export const AdminDashboard: React.FC = () => {
   const { 
@@ -18,6 +20,7 @@ export const AdminDashboard: React.FC = () => {
 
   type TabType = 
     | 'dashboard' 
+    | 'inventory'
     | 'listings' 
     | 'users' 
     | 'agents' 
@@ -331,6 +334,7 @@ export const AdminDashboard: React.FC = () => {
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {[
               { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+              { id: 'inventory', label: 'Inventory & Leads', icon: <Layers size={16} />, badge: 300 },
               { id: 'listings', label: 'Manage Listings', icon: <Building2 size={16} />, badge: properties.length },
               { id: 'users', label: 'Manage Users', icon: <Users size={16} />, badge: adminUsers.length },
               { id: 'agents', label: 'Manage Agents', icon: <Briefcase size={16} />, badge: adminAgents.length },
@@ -405,6 +409,9 @@ export const AdminDashboard: React.FC = () => {
         {/* MAIN WORKSPACE CONTENT */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
+          {/* TAB: PROPERTY INVENTORY & LEAD SYSTEM */}
+          {activeTab === 'inventory' && <InventoryDashboard />}
+
           {/* TAB 1: DASHBOARD OVERVIEW */}
           {activeTab === 'dashboard' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

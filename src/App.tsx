@@ -10,6 +10,7 @@ import { Search } from './pages/public/Search';
 import { PropertyDetail } from './pages/public/PropertyDetail';
 import { Community } from './pages/public/Community';
 import { LocationLanding } from './pages/public/LocationLanding';
+import { HomesForSaleLanding } from './pages/public/HomesForSaleLanding';
 import { About } from './pages/public/About';
 import { Blog } from './pages/public/Blog';
 import { Contact } from './pages/public/Contact';
@@ -27,6 +28,7 @@ import { Auth } from './pages/auth/Auth';
 import { BuyerDashboard } from './pages/buyer/BuyerDashboard';
 import { SellerDashboard } from './pages/seller/SellerDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { InventoryDashboard } from './components/admin/InventoryDashboard';
 import { HomeValuation } from './pages/seller/HomeValuation';
 import { ValuationReport } from './pages/seller/ValuationReport';
 
@@ -63,6 +65,10 @@ function App() {
         return <Search />;
       case 'property-detail':
         return <PropertyDetail />;
+      case 'homes-for-sale':
+        return <HomesForSaleLanding />;
+      case 'inventory-dashboard':
+        return <InventoryDashboard />;
       case 'location-landing':
       case 'neighbourhoods':
         return <LocationLanding />;
