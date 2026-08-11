@@ -136,7 +136,7 @@ class ApiService {
     isFeatured?: boolean;
     page?: number;
     limit?: number;
-  }) {
+  }, signal?: AbortSignal) {
     const queryParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, val]) => {
@@ -145,9 +145,31 @@ class ApiService {
         }
       });
     }
-    const url = `${API_BASE_URL}/properties?${queryParams.toString()}`;
-    const res = await fetch(url, { headers: this.getHeaders() });
-    return await res.json();
+
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const primaryBase = isLocal ? 'http://localhost:5000/api/v1' : 'https://realtor-website-project.onrender.com/api/v1';
+    const url = `${primaryBase}/properties?${queryParams.toString()}`;
+
+    try {
+      const res = await fetch(url, { headers: { ...this.getHeaders(), 'Accept': 'application/json' }, signal });
+      const text = await res.text();
+
+      // Defensively detect if HTML index page was returned (e.g. proxy misconfiguration or Vercel SPA rewrite)
+      if (text.trim().startsWith('<!') || text.trim().startsWith('<html')) {
+        console.warn('⚠️ Received HTML response from primary URL, retrying direct fallback to Render API...');
+        const directUrl = `https://realtor-website-project.onrender.com/api/v1/properties?${queryParams.toString()}`;
+        const fallbackRes = await fetch(directUrl, { headers: { 'Accept': 'application/json' } });
+        return await fallbackRes.json();
+      }
+
+      return JSON.parse(text);
+    } catch (err: any) {
+      if (err.name === 'AbortError') throw err;
+      console.warn('⚠️ Primary property fetch failed, attempting direct Render API fallback:', err);
+      const directUrl = `https://realtor-website-project.onrender.com/api/v1/properties?${queryParams.toString()}`;
+      const fallbackRes = await fetch(directUrl, { headers: { 'Accept': 'application/json' } });
+      return await fallbackRes.json();
+    }
   }
 
   /**
