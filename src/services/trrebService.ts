@@ -63,6 +63,18 @@ const DEFAULT_TRREB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZW5kb3IvdHJyZWIvMT
 export class TRREBService {
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
   private CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache TTL for instant responses
+  private MAX_CACHE_ENTRIES = 15; // Bounded LRU cache size to prevent 512MB RAM OOM on Render
+
+  private setCache(key: string, data: any) {
+    if (this.cache.size >= this.MAX_CACHE_ENTRIES) {
+      // Evict oldest entry (first key in Map iterator)
+      const oldestKey = this.cache.keys().next().value;
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
+    }
+    this.cache.set(key, { data, timestamp: Date.now() });
+  }
 
   private getClient() {
     const baseURL = process.env.TRREB_API_URL || 'https://query.ampre.ca/odata';
@@ -309,7 +321,7 @@ export class TRREBService {
       };
 
       if (mapped.length > 0) {
-        this.cache.set(cacheKey, { data: result, timestamp: Date.now() });
+        this.setCache(cacheKey, result);
       }
 
       return result;
