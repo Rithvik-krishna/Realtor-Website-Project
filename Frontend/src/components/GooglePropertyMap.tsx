@@ -54,7 +54,7 @@ export const GooglePropertyMap: React.FC<GooglePropertyMapProps> = ({
   searchCity = 'Toronto',
   onVisiblePropertiesChange
 }) => {
-  const apiKey = (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyC6D_AoRBq3Fpg3BOdgs2wuDNuJRf27k-8';
+  const apiKey = (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY || '';
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',

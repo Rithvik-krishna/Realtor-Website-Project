@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://canadian-realtor-backend.onrender.com/api/$1"
+      "destination": "https://realtor-website-project.onrender.com/api/$1"
     },
     {
       "source": "/((?!api|sitemap|robots\\.txt).*)",

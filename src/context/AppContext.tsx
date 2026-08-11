@@ -1110,29 +1110,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  // Initial fetch for Page 1 (GET /api/v1/properties?page=1&limit=100) with React StrictMode duplicate prevention
-  useEffect(() => {
-    if (initialFetchRef.current) return;
-    initialFetchRef.current = true;
+  // Sequence tracking to prevent race conditions during city/filter switching
+  const fetchPropertiesSeqRef = useRef(0);
 
-    apiService.getProperties({ page: 1, limit: 100 }).then(res => {
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-        console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend (Page 1)!`);
-        setPropertiesList(res.data);
-        if (res.meta) {
-          currentPageRef.current = res.meta.page;
-          totalPagesRef.current = res.meta.totalPages;
-          setHasNextPage(res.meta.page < res.meta.totalPages);
-        }
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('trreb_properties_cache', JSON.stringify(res.data));
-          localStorage.setItem('trreb_properties_cache', JSON.stringify(res.data));
+  // Fetch Page 1 whenever activeFilters.city or activeFilters.priceRange changes (or on initial mount)
+  useEffect(() => {
+    const seq = ++fetchPropertiesSeqRef.current;
+
+    const cityParam = activeFilters.city && activeFilters.city !== 'All' ? activeFilters.city : undefined;
+    const minPriceVal = activeFilters.priceRange ? activeFilters.priceRange[0] : 0;
+    const maxPriceVal = activeFilters.priceRange ? activeFilters.priceRange[1] : 50000000;
+
+    const minPriceParam = minPriceVal > 0 ? minPriceVal : undefined;
+    const maxPriceParam = maxPriceVal < 50000000 ? maxPriceVal : undefined;
+
+    currentPageRef.current = 1;
+
+    apiService.getProperties(
+      { page: 1, limit: 300, city: cityParam, minPrice: minPriceParam, maxPrice: maxPriceParam }
+    ).then(res => {
+      // Only process response if this is still the latest fetch request sequence
+      if (seq === fetchPropertiesSeqRef.current) {
+        if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+          console.log(`✨ Loaded ${res.data.length} live TRREB MLS properties from backend for city "${cityParam || 'All'}" (Page 1)!`);
+          setPropertiesList(res.data);
+          if (res.meta) {
+            currentPageRef.current = res.meta.page;
+            totalPagesRef.current = res.meta.totalPages;
+            setHasNextPage(res.meta.page < res.meta.totalPages);
+          }
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('trreb_properties_cache', JSON.stringify(res.data));
+            localStorage.setItem('trreb_properties_cache', JSON.stringify(res.data));
+          }
         }
       }
     }).catch(err => {
       console.warn('⚠️ Could not fetch live TRREB properties from backend:', err);
     });
-  }, []);
+  }, [activeFilters.city, activeFilters.priceRange]);
 
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([
     { id: 'usr-1', name: 'Baron Von Roth', email: 'baron@swissholding.ch', phone: '+1 (416) 555-0188', role: 'buyer', status: 'Active', registrationDate: '2026-05-12', lastLogin: '10 mins ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
