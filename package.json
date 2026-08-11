@@ -11,7 +11,7 @@
     "build:backend": "tsc -p tsconfig.server.json",
     "build:frontend": "tsc -b && vite build",
     "build": "tsc -p tsconfig.server.json",
-    "postinstall": "tsc -p tsconfig.server.json",
+    "postinstall": "prisma generate && tsc -p tsconfig.server.json",
     "lint": "oxlint",
     "preview": "vite preview",
     "prisma:generate": "prisma generate",

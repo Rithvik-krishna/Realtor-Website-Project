@@ -3,7 +3,7 @@ services:
     name: canadian-realtor-backend
     env: node
     plan: free
-    buildCommand: npm install && npm run build:backend
+    buildCommand: npm install && npx prisma generate && npm run build:backend
     startCommand: npm start
     healthCheckPath: /health
     envVars:
