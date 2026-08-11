@@ -3,7 +3,18 @@
  * Handles HTTP requests, JWT authentication tokens, and backend communication.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://realtor-website-project.onrender.com/api/v1';
+const getApiBaseUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api/v1';
+    }
+  }
+  // Production / Remote Host: Always point directly to the live Render Backend API
+  return 'https://realtor-website-project.onrender.com/api/v1';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiService {
   private getToken(): string | null {
