@@ -10,7 +10,7 @@
     "start": "node --max-old-space-size=384 dist/server.js",
     "build:backend": "tsc -p tsconfig.server.json",
     "build:frontend": "tsc -b && vite build",
-    "build": "tsc -p tsconfig.server.json",
+    "build": "npm run build:frontend && npm run build:backend",
     "postinstall": "prisma generate && tsc -p tsconfig.server.json",
     "lint": "oxlint",
     "preview": "vite preview",
