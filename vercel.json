@@ -1,7 +1,14 @@
 {
   "buildCommand": "npm run build:frontend",
-  "outputDirectory": "Frontend/dist",
+  "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "https://canadian-realtor-backend.onrender.com/api/$1"
+    },
+    {
+      "source": "/((?!api|sitemap|robots\\.txt).*)",
+      "destination": "/index.html"
+    }
   ]
 }

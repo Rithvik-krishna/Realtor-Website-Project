@@ -1,96 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Home Page -->
-  <url>
-    <loc>https://novaestate.ca/</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <!-- Target Location SEO Landing Pages ($500K–$1.3M CAD) -->
-  <url>
-    <loc>https://novaestate.ca/mississauga-real-estate</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <url>
-    <loc>https://novaestate.ca/brampton-real-estate</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <url>
-    <loc>https://novaestate.ca/gta-real-estate</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <!-- Search & Buy Portal -->
-  <url>
-    <loc>https://novaestate.ca/search</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Featured Listings -->
-  <url>
-    <loc>https://novaestate.ca/featured</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Seller Services -->
-  <url>
-    <loc>https://novaestate.ca/seller</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Buyer Services -->
-  <url>
-    <loc>https://novaestate.ca/buyer</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Communities & Neighborhood Guides -->
-  <url>
-    <loc>https://novaestate.ca/community</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Real Estate Blog & Insights -->
-  <url>
-    <loc>https://novaestate.ca/blog</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- About Realtor -->
-  <url>
-    <loc>https://novaestate.ca/about</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Contact Us -->
-  <url>
-    <loc>https://novaestate.ca/contact</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://www.kanghomes.ca/sitemap-pages.xml</loc>
+    <lastmod>2026-08-11</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.kanghomes.ca/sitemap-locations.xml</loc>
+    <lastmod>2026-08-11</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.kanghomes.ca/sitemap-properties.xml</loc>
+    <lastmod>2026-08-11</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.kanghomes.ca/sitemap-blog.xml</loc>
+    <lastmod>2026-08-11</lastmod>
+  </sitemap>
+</sitemapindex>
