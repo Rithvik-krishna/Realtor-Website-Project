@@ -15,7 +15,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "scrape:benchmark": "npx tsx src/scraper/benchmarkCli.ts",
+    "scrape:all": "npx tsx src/scraper/benchmarkCli.ts --all"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",

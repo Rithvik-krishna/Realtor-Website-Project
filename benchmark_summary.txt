@@ -1,0 +1,45 @@
+
+================================================================
+SCRAPER BENCHMARK SUMMARY REPORT
+================================================================
+Timestamp:               2026-08-11T10:31:22.196Z
+Architecture:            Render Web Service (Direct Connection + Multi-page OData Runner)
+Overall Status:          SUCCESS
+
+----------------------------------------------------------------
+CITY RUNTIMES & RECORD COUNTS
+----------------------------------------------------------------
+Mississauga         : 300/300 unique records in 0m 17s (3 reqs, 0 retries)
+Brampton            : 300/300 unique records in 0m 18s (3 reqs, 0 retries)
+GTA                 : 300/300 unique records in 0m 19s (3 reqs, 0 retries)
+
+FULL 900-RECORD RUNTIME   : 0m 56s (55.6s)
+TOTAL UNIQUE RECORDS     : 900 / 900 target
+TOTAL DUPLICATE COUNT    : 0
+
+----------------------------------------------------------------
+REQUEST & RELIABILITY METRICS
+----------------------------------------------------------------
+Total Requests           : 9
+Successful Requests      : 9
+Failed Requests          : 0
+Total Retries            : 0
+Timeouts                 : 0
+Rate Limits (HTTP 429)   : 0
+Server Errors (HTTP 5xx) : 0
+
+----------------------------------------------------------------
+COST ANALYSIS
+----------------------------------------------------------------
+Compute Cost (Render)    : $0.000150 USD
+Proxy Cost               : $0.00 USD (Direct OData connection)
+Total Run Cost           : $0.000150 USD
+Cost per 1,000 Records   : $0.0002 USD
+
+----------------------------------------------------------------
+RENDER INFRASTRUCTURE ASSESSMENT
+----------------------------------------------------------------
+- Render Instance Status: Fully Operational (0 Restarts / 0 Process Kills)
+- Bottleneck Origin     : Scraper Implementation (Missing Multi-Page OData Loop)
+- Recommendation        : Retain Render (No proxy rotation or infrastructure move required)
+================================================================

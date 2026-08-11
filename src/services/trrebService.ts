@@ -218,7 +218,7 @@ export class TRREBService {
    * GET /Property?$top=60 with In-Memory Caching (0ms response time)
    * Enforces 100 Max limit per search request per TRREB IDX rules
    */
-  async getProperties(options?: { top?: number; skip?: number; city?: string; orderby?: string; filter?: string; minPrice?: number; maxPrice?: number }): Promise<{ properties: TRREBPropertyMapped[]; nextLink?: string; count?: number }> {
+  async getProperties(options?: { top?: number; skip?: number; city?: string; orderby?: string; filter?: string; minPrice?: number; maxPrice?: number; throwOnError?: boolean }): Promise<{ properties: TRREBPropertyMapped[]; nextLink?: string; count?: number }> {
     // TRREB IDX Rule 2: Limit search response to maximum of 100 listings
     const top = Math.min(100, Math.max(1, options?.top || 100));
     const skip = options?.skip || 0;
@@ -226,7 +226,7 @@ export class TRREBService {
 
     // Check In-Memory Cache for instant 0ms delivery
     const cached = this.cache.get(cacheKey);
-    if (cached && (Date.now() - cached.timestamp < this.CACHE_TTL_MS)) {
+    if (!options?.throwOnError && cached && (Date.now() - cached.timestamp < this.CACHE_TTL_MS)) {
       console.log(`⚡ [TRREB Cache] Serving ${cached.data.properties.length} listings from In-Memory Cache (0ms)`);
       return cached.data;
     }
@@ -315,6 +315,9 @@ export class TRREBService {
       return result;
     } catch (error: any) {
       this.handleError(error, 'getProperties');
+      if (options?.throwOnError) {
+        throw error;
+      }
       if (cached) return cached.data;
       return { properties: [], count: 0 };
     }
